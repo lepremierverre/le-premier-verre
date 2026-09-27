@@ -7,6 +7,7 @@ import type { SanityImageSource } from "@sanity/image-url";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { guideBySlugQuery } from "@/sanity/lib/queries";
+import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
 
 export const revalidate = 60;
 
@@ -51,6 +52,20 @@ function formatLabel(value?: string) {
   };
 
   return labels[value] || value.replace(/[-_]/g, " ");
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return buildDynamicMetadata({
+    entity: "guide",
+    slug,
+    locale: "fr",
+  });
 }
 
 export default async function GuidePage({

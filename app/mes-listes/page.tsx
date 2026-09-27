@@ -33,5 +33,6 @@ export default async function MesListesPage() {
     );
   }
 
-  return <WineListsClient />;
+
+  return <WineListsClient locale="fr" />;
 }

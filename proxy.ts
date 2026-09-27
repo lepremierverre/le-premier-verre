@@ -15,6 +15,27 @@ const isAdminRoute = createRouteMatcher([
   "/admin(.*)",
 ]);
 
+/*
+ * Fonctionnalités conservées dans le code,
+ * mais volontairement invisibles au public
+ * jusqu'à leur lancement officiel.
+ *
+ * Elles restent accessibles sur localhost
+ * pour permettre leur développement et leurs tests.
+ */
+const isFutureRoute = createRouteMatcher([
+  "/carte(.*)",
+  "/sommelier(.*)",
+  "/scan(.*)",
+  "/premium(.*)",
+  "/boutique(.*)",
+  "/panier(.*)",
+  "/recommandation(.*)",
+  "/ma-cave(.*)",
+  "/apercu(.*)",
+  "/vignobles(.*)",
+]);
+
 export default clerkMiddleware(async (auth, req) => {
   const { pathname } = req.nextUrl;
 
@@ -23,6 +44,11 @@ export default clerkMiddleware(async (auth, req) => {
     hostname === "localhost" ||
     hostname === "127.0.0.1";
 
+  /*
+   * Pré-lancement :
+   * la vraie page d'accueil reste visible localement,
+   * tandis que le domaine public affiche la page d'attente.
+   */
   if (pathname === "/" && !isLocal) {
     return NextResponse.rewrite(
       new URL("/disponible-bientot", req.url)
@@ -32,6 +58,16 @@ export default clerkMiddleware(async (auth, req) => {
   if (pathname === "/en" && !isLocal) {
     return NextResponse.rewrite(
       new URL("/en/disponible-bientot", req.url)
+    );
+  }
+
+  /*
+   * Routes des fonctionnalités futures :
+   * invisibles en production, disponibles localement.
+   */
+  if (!isLocal && isFutureRoute(req)) {
+    return NextResponse.rewrite(
+      new URL("/_indisponible", req.url)
     );
   }
 

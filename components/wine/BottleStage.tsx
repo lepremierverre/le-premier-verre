@@ -76,7 +76,7 @@ export default function BottleStage({
     variant === "hero"
       ? "h-[125%] w-[125%] max-w-none object-contain"
       : variant === "card"
-        ? "h-[145%] w-[145%] max-w-none object-contain"
+        ? "h-[130%] w-[130%] max-w-none object-contain"
         : "h-[135%] w-[135%] max-w-none object-contain";
 
   return (

@@ -1,10 +1,8 @@
 export type SearchType =
   | "wine"
   | "producer"
-  | "vineyard"
   | "country"
   | "region"
-  | "appellation"
   | "grape"
   | "article"
   | "guide";

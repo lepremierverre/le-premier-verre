@@ -42,6 +42,14 @@ export const grape = defineType({
   ],
 
   fields: [
+    {
+      name: "translationSourceHash",
+      title: "Translation source hash",
+      type: "string",
+      hidden: true,
+      readOnly: true,
+    },
+
     // IDENTITÉ
     defineField({
       name: "name",
@@ -100,6 +108,14 @@ export const grape = defineType({
       validation: (Rule) => Rule.required().max(220),
     }),
 
+    defineField({
+      name: "oneLinerEn",
+      title: "En une phrase — anglais",
+      type: "text",
+      group: "lpv",
+      rows: 3,
+    }),
+
     // PROFIL
     defineField({
       name: "aromas",
@@ -112,6 +128,15 @@ export const grape = defineType({
         layout: "tags",
       },
       validation: (Rule) => Rule.required().min(3).max(5),
+    }),
+
+    defineField({
+      name: "aromasEn",
+      title: "Arômes typiques — anglais",
+      type: "array",
+      group: "profile",
+      of: [defineArrayMember({ type: "string" })],
+      options: { layout: "tags" },
     }),
 
     defineField({
@@ -163,6 +188,14 @@ export const grape = defineType({
       validation: (Rule) => Rule.required().min(4).max(4),
     }),
 
+    defineField({
+      name: "simplePairingsEn",
+      title: "4 accords simples — anglais",
+      type: "array",
+      group: "food",
+      of: [defineArrayMember({ type: "string" })],
+    }),
+
     // GÉOGRAPHIE
     defineField({
       name: "mainRegions",
@@ -209,6 +242,11 @@ export const grape = defineType({
                 "Ex. Pour son fruit croquant et sa fraîcheur.",
               validation: (Rule) => Rule.max(160),
             }),
+            defineField({
+              name: "reasonEn",
+              title: "Pourquoi l'essayer? — anglais",
+              type: "string",
+            }),
           ],
           preview: {
             select: {
@@ -231,8 +269,24 @@ export const grape = defineType({
     }),
 
     defineField({
+      name: "descriptionEn",
+      title: "Description courte — anglais",
+      type: "text",
+      rows: 4,
+      group: "advanced",
+    }),
+
+    defineField({
       name: "history",
       title: "Histoire",
+      type: "array",
+      group: "advanced",
+      of: [defineArrayMember({ type: "block" })],
+    }),
+
+    defineField({
+      name: "historyEn",
+      title: "Histoire — anglais",
       type: "array",
       group: "advanced",
       of: [defineArrayMember({ type: "block" })],
@@ -258,8 +312,24 @@ export const grape = defineType({
     }),
 
     defineField({
+      name: "flavorsEn",
+      title: "Saveurs dominantes — anglais",
+      type: "array",
+      group: "advanced",
+      of: [defineArrayMember({ type: "string" })],
+      options: { layout: "tags" },
+    }),
+
+    defineField({
       name: "agingPotential",
       title: "Potentiel de garde",
+      type: "string",
+      group: "advanced",
+    }),
+
+    defineField({
+      name: "agingPotentialEn",
+      title: "Potentiel de garde — anglais",
       type: "string",
       group: "advanced",
     }),
@@ -288,6 +358,21 @@ export const grape = defineType({
     defineField({
       name: "seoDescription",
       title: "Description SEO",
+      type: "text",
+      rows: 3,
+      group: "publication",
+    }),
+
+    defineField({
+      name: "seoTitleEn",
+      title: "Titre SEO — anglais",
+      type: "string",
+      group: "publication",
+    }),
+
+    defineField({
+      name: "seoDescriptionEn",
+      title: "Description SEO — anglais",
       type: "text",
       rows: 3,
       group: "publication",

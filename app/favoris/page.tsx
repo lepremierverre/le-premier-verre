@@ -6,7 +6,7 @@ import BottleStage from "@/components/wine/BottleStage";
 import { auth } from "@clerk/nextjs/server";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import { enforceAccountLanguage } from "@/lib/i18n/account-language";
+import CaveNav from "@/components/cave/CaveNav";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -54,7 +54,6 @@ export default async function FavoritesPage() {
   const { userId } = await auth();
 
   if (userId) {
-    await enforceAccountLanguage(userId, "fr", "favorites");
   }
 
   const orderedWines = userId
@@ -86,39 +85,41 @@ export default async function FavoritesPage() {
 
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
-      <section className="border-b border-[var(--lpv-line)]">
-        <div className="lpv-container grid gap-10 py-16 md:grid-cols-[0.68fr_0.32fr] md:items-end md:py-24">
+      {/* MA CAVE */}
+      <section>
+        <div className="lpv-container grid gap-6 py-9 md:grid-cols-[1fr_0.42fr] md:items-end md:gap-12 md:py-14">
           <div>
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              Collection personnelle
+              Ma cave
             </p>
 
-            <h1 className="lpv-display mt-7 max-w-5xl text-[clamp(4.8rem,10vw,10rem)] leading-[0.82]">
+            <h1 className="lpv-display mt-4 text-[clamp(3.2rem,13vw,4.2rem)] leading-[0.86] md:mt-5 md:text-[clamp(4rem,7vw,6.5rem)] md:leading-[0.84]">
               Mes favoris.
             </h1>
           </div>
 
-          <div className="border-t border-[var(--lpv-line)] pt-6 md:border-t-0 md:pb-2">
-            <p className="max-w-md text-base leading-8 text-[var(--lpv-muted)]">
-              Les bouteilles mises de côté au fil des découvertes.
+          <div className="border-t border-[var(--lpv-line)] pt-5 md:border-t-0 md:pb-1">
+            <p className="max-w-sm text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
+              Les bouteilles mises de côté au fil de tes découvertes.
             </p>
 
-            <p className="mt-7 text-xs uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
-              {orderedWines.length} favori
-              {orderedWines.length > 1 ? "s" : ""}
+            <p className="mt-5 text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
+              {orderedWines.length} favori{orderedWines.length > 1 ? "s" : ""}
             </p>
           </div>
         </div>
       </section>
 
-      <section className="lpv-container py-16 md:py-24">
-        <div className="flex items-end justify-between border-b border-[var(--lpv-line)] pb-6">
+      <CaveNav />
+
+      <section className="lpv-container py-10 md:py-24">
+        <div className="flex items-end justify-between border-b border-[var(--lpv-line)] pb-5 md:pb-6">
           <div>
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            <p className="text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
               À garder
             </p>
 
-            <h2 className="lpv-display mt-5 text-5xl leading-none md:text-7xl">
+            <h2 className="lpv-display mt-3 text-[2.8rem] leading-none md:mt-5 md:text-7xl">
               Les bouteilles.
             </h2>
           </div>
@@ -129,14 +130,14 @@ export default async function FavoritesPage() {
         </div>
 
         {orderedWines.length > 0 ? (
-          <div className="grid gap-x-8 md:grid-cols-2 xl:grid-cols-3 xl:gap-x-12">
+          <div className="grid grid-cols-2 gap-x-4 md:gap-x-8 xl:grid-cols-3 xl:gap-x-12">
             {orderedWines.map((wine, index) => {
 const price = wine.approxPrice;
 
               return (
                 <article
                   key={wine._id}
-                  className="group flex min-w-0 flex-col border-b border-[var(--lpv-line)] py-10"
+                  className="group flex min-w-0 flex-col border-b border-[var(--lpv-line)] py-6 md:py-10"
                 >
                   <div className="relative">
                     <Link
@@ -152,7 +153,7 @@ const price = wine.approxPrice;
                             : wine.color ?? undefined
                         }
                         variant="card"
-                        className="transition duration-700 group-hover:scale-[1.025]"
+                        className="h-[250px] [&>div]:!overflow-visible [&>div]:h-[210px] [&_img]:object-contain transition duration-700 group-hover:scale-[1.025] md:h-[360px] md:[&>div]:h-[300px]"
                       />
                     </Link>
 
@@ -161,9 +162,9 @@ const price = wine.approxPrice;
                     </div>
                   </div>
 
-                  <div className="pt-7">
-                    <div className="flex items-start justify-between gap-6">
-                      <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  <div className="flex flex-1 flex-col pt-4 md:pt-7">
+                    <div className="flex items-baseline justify-between gap-2 md:gap-6">
+                      <p className="text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
                         {[
                           wine.beverageType === "cider"
                             ? "Cidre"
@@ -175,33 +176,33 @@ const price = wine.approxPrice;
                           .join(" · ")}
                       </p>
 
-                      <span className="text-[0.6rem] tracking-[0.16em] text-[var(--lpv-muted)]">
+                      <span className="relative -top-[1px] text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                     </div>
 
                     <Link href={`/vins/${wine.slug}`}>
-                      <h2 className="lpv-display mt-5 text-4xl leading-[0.92] transition-opacity group-hover:opacity-60 md:text-5xl">
+                      <h2 className="lpv-display mt-3 min-h-[3.35rem] text-[1.8rem] leading-[0.92] transition-opacity group-hover:opacity-60 md:mt-5 md:min-h-[5.6rem] md:text-5xl">
                         {wine.name}
                       </h2>
                     </Link>
 
                     {wine.producer?.name ? (
-                      <p className="mt-5 text-sm text-[var(--lpv-muted)]">
+                      <p className="mt-3 min-h-5 text-xs leading-5 text-[var(--lpv-muted)] md:mt-5 md:min-h-6 md:text-sm">
                         {wine.producer.name}
                       </p>
                     ) : null}
 
-                    <div className="mt-7 flex items-end justify-between gap-6 border-t border-[var(--lpv-line)] pt-5">
+                    <div className="mt-auto flex items-end justify-between gap-2 border-t border-[var(--lpv-line)] pt-3 md:mt-7 md:gap-6 md:pt-5">
                       <div>
-                        <p className="text-xs leading-6 text-[var(--lpv-muted)]">
+                        <p className="text-[0.68rem] leading-5 text-[var(--lpv-muted)] md:text-xs md:leading-6">
                           {[wine.region?.name, wine.country?.name]
                             .filter(Boolean)
                             .join(" · ")}
                         </p>
 
                         {price ? (
-                          <p className="mt-2 text-sm">
+                          <p className="mt-1 text-xs md:mt-2 md:text-sm">
                             {formatPrice(price)}
                           </p>
                         ) : null}
@@ -221,7 +222,7 @@ const price = wine.approxPrice;
           </div>
         ) : (
           <div className="py-24 text-center">
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            <p className="text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
               Rien pour le moment
             </p>
 

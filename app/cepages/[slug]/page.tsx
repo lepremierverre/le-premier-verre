@@ -5,6 +5,9 @@ import { client } from "@/sanity/lib/client";
 import { grapeBySlugQuery } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 
+import BottleStage from "@/components/wine/BottleStage";
+import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
+
 type GrapeDetail = {
   _id: string;
   name: string;
@@ -117,6 +120,20 @@ function ProfileScale({
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return buildDynamicMetadata({
+    entity: "grape",
+    slug,
+    locale: "fr",
+  });
 }
 
 export default async function GrapePage({
@@ -354,57 +371,74 @@ export default async function GrapePage({
         </div>
 
         {grape.wines?.length ? (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {grape.wines.map((wine) => (
-              <Link
+          <div className="grid gap-x-8 md:grid-cols-2 xl:grid-cols-3 xl:gap-x-12">
+            {grape.wines.map((wine, index) => (
+              <article
                 key={wine._id}
-                href={`/vins/${wine.slug}`}
-                className="group flex min-h-[420px] flex-col border border-[var(--lpv-line)] bg-[var(--lpv-paper-light)] p-7"
+                className="group flex min-w-0 flex-col border-b border-[var(--lpv-line)] py-10"
               >
-                <div className="flex min-h-[260px] flex-1 items-center justify-center">
-                  {wine.bottleImage ? (
-                    <img
-                      src={urlFor(wine.bottleImage)
-                        .width(700)
-                        .fit("max")
-                        .url()}
-                      alt={wine.name}
-                      className="h-auto max-h-[250px] w-auto max-w-[65%] object-contain transition duration-700 group-hover:scale-[1.025]"
-                    />
-                  ) : (
-                    <span className="text-xs uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
-                      Le Premier Verre
-                    </span>
-                  )}
-                </div>
+                <Link
+                  href={`/vins/${wine.slug}`}
+                  className="block w-full"
+                >
+                  <BottleStage
+                    image={wine.bottleImage}
+                    alt={wine.name ?? "Bouteille de vin"}
+                    variant="card"
+                    className="transition duration-700 group-hover:scale-[1.025]"
+                  />
+                </Link>
 
-                <div className="border-t border-[var(--lpv-line)] pt-5">
-                  {wine.producer?.name && (
-                    <p className="text-xs uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
-                      {wine.producer.name}
+                <div className="flex flex-1 flex-col pt-7">
+                  <div className="flex min-h-[18px] items-start justify-between gap-6">
+                    <p className="lpv-kicker min-w-0 text-[var(--lpv-cocoa)]">
+                      {wine.vintage || "Vin"}
                     </p>
-                  )}
 
-                  <div className="mt-2 flex items-end justify-between gap-4">
-                    <div>
-                      <h3 className="text-lg">{wine.name}</h3>
+                    <span className="shrink-0 text-[0.6rem] tracking-[0.16em] text-[var(--lpv-muted)]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
 
-                      <p className="mt-1 text-sm text-[var(--lpv-muted)]">
-                        {[wine.vintage, wine.approxPrice ? `${wine.approxPrice.toFixed(2)} $` : null]
-                          .filter(Boolean)
-                          .join(" · ")}
+                  <Link
+                    href={`/vins/${wine.slug}`}
+                    className="mt-5 block"
+                  >
+                    <h3 className="lpv-display min-h-[5.6rem] text-4xl leading-[0.92] transition-opacity group-hover:opacity-60 md:text-5xl xl:min-h-[6.6rem]">
+                      {wine.name}
+                    </h3>
+                  </Link>
+
+                  <div className="min-h-[3.75rem] pt-5">
+                    {wine.producer?.name ? (
+                      <p className="text-sm text-[var(--lpv-muted)]">
+                        {wine.producer.name}
                       </p>
+                    ) : null}
+                  </div>
+
+                  <div className="mt-auto flex min-h-[5.25rem] items-end justify-between gap-6 border-t border-[var(--lpv-line)] pt-5">
+                    <div>
+                      {wine.approxPrice ? (
+                        <p className="text-sm">
+                          {wine.approxPrice.toFixed(2).replace(".", ",")} $
+                        </p>
+                      ) : (
+                        <p className="text-sm text-[var(--lpv-muted)]">
+                          Prix à vérifier
+                        </p>
+                      )}
                     </div>
 
                     <span
                       aria-hidden="true"
-                      className="transition-transform group-hover:translate-x-1"
+                      className="text-lg transition-transform duration-500 group-hover:translate-x-1"
                     >
                       →
                     </span>
                   </div>
                 </div>
-              </Link>
+              </article>
             ))}
           </div>
         ) : (

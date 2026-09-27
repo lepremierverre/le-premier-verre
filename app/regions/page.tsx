@@ -1,126 +1,125 @@
-import Link from "next/link";
-import type { SanityImageSource } from "@sanity/image-url";
-
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
-import { regionsQuery } from "@/sanity/lib/queries";
+import {
+  CountryRegionMap,
+  type AtlasRegion,
+} from "@/components/knowledge/country-region-map";
 
 export const revalidate = 60;
 
-type Region = {
+type Region = AtlasRegion;
+
+type AtlasTerritory = {
   _id: string;
   name: string;
   slug: string;
-  description?: string;
-  heroImage?: SanityImageSource;
-  country?: {
-    name?: string;
-    slug?: string;
-  };
+  order: number;
+  geometryKey: string;
+  mapLabel?: string;
+  regions: Region[];
 };
 
 export default async function RegionsPage() {
-  const regions = await client.fetch<Region[]>(regionsQuery);
+  const territories = await client.fetch<AtlasTerritory[]>(`
+    *[
+      _type == "atlasTerritory" &&
+      published == true &&
+      count(
+        *[
+          _type == "region" &&
+          !(_id in path("drafts.**")) &&
+          showInAtlas == true &&
+          references(^._id)
+        ]
+      ) > 0
+    ] | order(order asc, name asc) {
+      _id,
+      name,
+      "slug": slug.current,
+      order,
+      geometryKey,
+      mapLabel,
+
+      "regions": *[
+        _type == "region" &&
+        !(_id in path("drafts.**")) &&
+        showInAtlas == true &&
+        references(^._id)
+      ] | order(name asc) {
+        _id,
+        name,
+        "slug": slug.current,
+        latitude,
+        longitude
+      }
+    }
+  `);
+
+  const regionCount = territories.reduce(
+    (total, territory) => total + territory.regions.length,
+    0
+  );
 
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
-      <div className="lpv-container pb-24 pt-10 md:pt-16">
+      <div className="lpv-container pb-16 pt-8 md:pb-24 md:pt-16">
 
-        <section className="border-b border-[var(--lpv-line)] pb-14 md:pb-20">
-
+        {/* HERO */}
+        <section className="border-b border-[var(--lpv-line)] pb-9 md:pb-20">
           <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-            Référentiel
+            Atlas viticole
           </p>
 
-          <div className="mt-7 grid gap-10 lg:grid-cols-[0.7fr_0.3fr] lg:items-end">
-
-            <h1 className="lpv-display text-[clamp(4.5rem,9vw,9rem)] leading-[0.84]">
+          <div className="mt-5 grid gap-6 md:mt-7 md:gap-10 lg:grid-cols-[0.7fr_0.3fr] lg:items-end">
+            <h1 className="lpv-display text-[clamp(3.7rem,15vw,4.7rem)] leading-[0.84] md:text-[clamp(4.5rem,9vw,9rem)]">
               Régions
               <br />
               viticoles.
             </h1>
 
-            <p className="max-w-md text-base leading-8 text-[var(--lpv-muted)]">
-              Des climats, des sols et des façons de faire qui donnent une
-              identité aux vins. Explorez les régions suivies par Le Premier
-              Verre, d’ici et d’ailleurs.
-            </p>
+            <div>
+              <p className="max-w-md text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
+                Des climats, des sols et des façons de faire qui donnent une
+                identité aux vins. Explorez les régions suivies par Le Premier
+                Verre, d’ici et d’ailleurs.
+              </p>
 
+              <p className="lpv-kicker mt-5 text-[var(--lpv-cocoa)] md:mt-8">
+                {regionCount} régions · {territories.length} territoires
+              </p>
+            </div>
           </div>
         </section>
 
-        <section className="border-b border-[var(--lpv-line)]">
+        {/* ATLAS */}
+        <section>
+          {territories.map((territory, territoryIndex) => (
+            <article
+              key={territory._id}
+              className="border-b border-[var(--lpv-line)] py-9 md:py-20"
+            >
+              <header className="mb-6 flex items-end justify-between gap-4 md:mb-14 md:gap-8">
+                <div>
+                  <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                    {String(territoryIndex + 1).padStart(2, "0")} · Territoire
+                  </p>
 
-          <div className="grid md:grid-cols-2">
+                  <h2 className="lpv-display mt-3 text-[clamp(2.8rem,11.5vw,3.7rem)] leading-[0.88] md:mt-5 md:text-[clamp(3.5rem,7vw,7rem)] md:leading-[0.86]">
+                    {territory.mapLabel || territory.name}
+                  </h2>
+                </div>
 
-            {regions.map((region, index) => {
-              const imageSrc = region.heroImage
-                ? urlFor(region.heroImage)
-                    .width(1200)
-                    .fit("max")
-                    .url()
-                : null;
+                <p className="lpv-kicker shrink-0 pb-1 text-[var(--lpv-muted)] md:pb-2">
+                  {territory.regions.length}{" "}
+                  {territory.regions.length === 1 ? "région" : "régions"}
+                </p>
+              </header>
 
-              return (
-                <Link
-                  key={region._id}
-                  href={`/regions/${region.slug}`}
-                  className={`group border-b border-[var(--lpv-line)] py-10 md:py-14 ${
-                    index % 2 === 0
-                      ? "md:border-r md:pr-10"
-                      : "md:pl-10"
-                  }`}
-                >
-
-                  <div className="flex min-h-[320px] items-center justify-center overflow-hidden bg-[var(--lpv-paper-light)]">
-
-                    {imageSrc ? (
-                      <img
-                        src={imageSrc}
-                        alt={region.name}
-                        className="h-[320px] w-full object-cover transition duration-700 group-hover:scale-[1.02]"
-                      />
-                    ) : (
-                      <div className="px-8 text-center">
-                        <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                          {region.country?.name || "Région viticole"}
-                        </p>
-
-                        <p className="mt-5 text-sm text-[var(--lpv-muted)]">
-                          Photo à venir
-                        </p>
-                      </div>
-                    )}
-
-                  </div>
-
-                  <div className="pt-7">
-
-                    <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                      {region.country?.name || "Région viticole"}
-                    </p>
-
-                    <h2 className="lpv-display mt-5 text-5xl leading-[0.9] md:text-6xl">
-                      {region.name}
-                    </h2>
-
-                    {region.description ? (
-                      <p className="mt-6 max-w-xl text-sm leading-7 text-[var(--lpv-muted)]">
-                        {region.description}
-                      </p>
-                    ) : null}
-
-                    <span className="lpv-text-link mt-8">
-                      Explorer <span>→</span>
-                    </span>
-
-                  </div>
-
-                </Link>
-              );
-            })}
-
-          </div>
+              <CountryRegionMap
+                country={territory.name}
+                regions={territory.regions}
+              />
+            </article>
+          ))}
         </section>
 
       </div>

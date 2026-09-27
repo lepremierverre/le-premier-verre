@@ -5,11 +5,24 @@ export const article = defineType({
   title: "Article",
   type: "document",
   fields: [
+    {
+      name: "translationSourceHash",
+      title: "Translation source hash",
+      type: "string",
+      hidden: true,
+      readOnly: true,
+    },
+
     defineField({
       name: "title",
       title: "Titre",
       type: "string",
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "titleEn",
+      title: "Titre (EN)",
+      type: "string",
     }),
     defineField({
       name: "slug",
@@ -25,6 +38,12 @@ export const article = defineType({
       rows: 3,
     }),
     defineField({
+      name: "excerptEn",
+      title: "Résumé (EN)",
+      type: "text",
+      rows: 4,
+    }),
+    defineField({
       name: "content",
       title: "Contenu",
       type: "array",
@@ -36,6 +55,7 @@ export const article = defineType({
             { title: "Titre 2", value: "h2" },
             { title: "Titre 3", value: "h3" },
             { title: "Citation", value: "blockquote" },
+            { title: "À retenir", value: "takeaway" },
           ],
           lists: [
             { title: "Puces", value: "bullet" },
@@ -62,6 +82,146 @@ export const article = defineType({
             ],
           },
         },
+        {
+          type: "object",
+          name: "articleWineCard",
+          title: "Carte de vin",
+          fields: [
+            {
+              name: "wine",
+              title: "Vin",
+              type: "reference",
+              to: [{ type: "wine" }],
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {
+              title: "wine.name",
+              subtitle: "wine.producer.name",
+              media: "wine.bottleImage",
+            },
+            prepare({ title, subtitle, media }) {
+              return {
+                title: title || "Vin à sélectionner",
+                subtitle: subtitle
+                  ? `Carte de vin · ${subtitle}`
+                  : "Carte de vin",
+                media,
+              };
+            },
+          },
+        },
+        {
+          type: "object",
+          name: "articleProducerCard",
+          title: "Carte de producteur",
+          fields: [
+            {
+              name: "producer",
+              title: "Producteur",
+              type: "reference",
+              to: [{ type: "producer" }],
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {
+              title: "producer.name",
+              subtitle: "producer.municipality",
+              media: "producer.heroImage",
+            },
+            prepare({ title, subtitle, media }) {
+              return {
+                title: title || "Producteur à sélectionner",
+                subtitle: subtitle
+                  ? `Carte de producteur · ${subtitle}`
+                  : "Carte de producteur",
+                media,
+              };
+            },
+          },
+        },
+        {
+          type: "object",
+          name: "articlePlaceCard",
+          title: "Carte de bonne adresse",
+          fields: [
+            {
+              name: "place",
+              title: "Adresse",
+              type: "reference",
+              to: [{ type: "place" }],
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {
+              title: "place.name",
+              subtitle: "place.city",
+              media: "place.coverImage",
+            },
+            prepare({ title, subtitle, media }) {
+              return {
+                title: title || "Adresse à sélectionner",
+                subtitle: subtitle
+                  ? `Carte d’adresse · ${subtitle}`
+                  : "Carte de bonne adresse",
+                media,
+              };
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: "contentEn",
+      title: "Contenu (EN)",
+      type: "array",
+      of: [
+        { type: "block" },
+        {
+          type: "object",
+          name: "articleWineCard",
+          title: "Carte de vin",
+          fields: [
+            {
+              name: "wine",
+              title: "Vin",
+              type: "reference",
+              to: [{ type: "wine" }],
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+        },
+        {
+          type: "object",
+          name: "articleProducerCard",
+          title: "Carte de producteur",
+          fields: [
+            {
+              name: "producer",
+              title: "Producteur",
+              type: "reference",
+              to: [{ type: "producer" }],
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+        },
+        {
+          type: "object",
+          name: "articlePlaceCard",
+          title: "Carte de bonne adresse",
+          fields: [
+            {
+              name: "place",
+              title: "Adresse",
+              type: "reference",
+              to: [{ type: "place" }],
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+        },
       ],
     }),
     defineField({
@@ -76,6 +236,11 @@ export const article = defineType({
       type: "string",
     }),
     defineField({
+      name: "categoryEn",
+      title: "Catégorie (EN)",
+      type: "string",
+    }),
+    defineField({
       name: "author",
       title: "Auteur",
       type: "string",
@@ -86,6 +251,12 @@ export const article = defineType({
       type: "array",
       of: [{ type: "string" }],
       options: { layout: "tags" },
+    }),
+    defineField({
+      name: "tagsEn",
+      title: "Mots-clés (EN)",
+      type: "array",
+      of: [{ type: "string" }],
     }),
 
     defineField({
@@ -143,12 +314,7 @@ export const article = defineType({
       type: "boolean",
       initialValue: false,
     }),
-    defineField({
-      name: "published",
-      title: "Publié",
-      type: "boolean",
-      initialValue: true,
-    }),
+
     defineField({
       name: "publishedAt",
       title: "Date de publication",
@@ -160,8 +326,19 @@ export const article = defineType({
       type: "string",
     }),
     defineField({
+      name: "seoTitleEn",
+      title: "Titre SEO (EN)",
+      type: "string",
+    }),
+    defineField({
       name: "seoDescription",
       title: "Description SEO",
+      type: "text",
+      rows: 3,
+    }),
+    defineField({
+      name: "seoDescriptionEn",
+      title: "Description SEO (EN)",
       type: "text",
       rows: 3,
     }),

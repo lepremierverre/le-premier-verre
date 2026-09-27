@@ -3,7 +3,7 @@ import type { SanityImageSource } from "@sanity/image-url";
 
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import { articlesQuery } from "@/sanity/lib/queries";
+import { articlesQuery, guidesQuery } from "@/sanity/lib/queries";
 import BottleStage from "@/components/wine/BottleStage";
 
 export const revalidate = 60;
@@ -16,6 +16,19 @@ type HomeArticle = {
   excerpt?: string;
   excerptEn?: string;
   coverImage?: SanityImageSource;
+};
+
+type HomeGuide = {
+  _id: string;
+  title: string;
+  titleEn?: string;
+  slug: string;
+  excerpt?: string;
+  excerptEn?: string;
+  coverImage?: SanityImageSource;
+  guideType?: string;
+  difficulty?: string;
+  estimatedReadingTime?: string;
 };
 
 type FeaturedWine = {
@@ -69,10 +82,13 @@ export default async function HomePage() {
   const articles = await client.fetch<HomeArticle[]>(articlesQuery);
   const featuredArticle = articles[0] ?? null;
 
+  const guides = await client.fetch<HomeGuide[]>(guidesQuery);
+  const featuredGuide = guides[0] ?? null;
+
   const bottleImage = featuredWine?.bottleImage
     ? urlFor(featuredWine.bottleImage)
         .width(900)
-        .height(1200)
+        .height(1000)
         .fit("max")
         .url()
     : null;
@@ -80,22 +96,21 @@ export default async function HomePage() {
   const featuredProducer = await client.fetch<{
     name: string;
     slug: string;
-    image?: SanityImageSource;
+    municipality?: string;
+    oneLiner?: string;
   } | null>(
-    `*[_type == "producer" && defined(slug.current)] | order(_updatedAt desc)[0] {
+    `*[
+      _type == "producer" &&
+      published == true &&
+      lpvPartner == true &&
+      defined(slug.current)
+    ] | order(_updatedAt desc)[0] {
       name,
       "slug": slug.current,
-      "image": coalesce(image, mainImage, heroImage, photo, coverImage)
+      municipality,
+      oneLiner
     }`
   );
-
-  const producerImage = featuredProducer?.image
-    ? urlFor(featuredProducer.image)
-        .width(1200)
-        .height(900)
-        .fit("crop")
-        .url()
-    : null;
 
   return (
     <main className="bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
@@ -147,8 +162,8 @@ export default async function HomePage() {
 
       {/* BLOC ÉDITORIAL */}
       <section className="border-y border-[var(--lpv-line)]">
-        <div className="lpv-container grid gap-0 py-[3.5vw] md:grid-cols-2">
-          <div className="h-[500px] overflow-hidden md:h-auto md:min-h-[720px]">
+        <div className="lpv-container grid gap-0 py-8 md:grid-cols-2 md:py-[3.5vw]">
+          <div className="h-[320px] overflow-hidden sm:h-[380px] md:h-[580px] md:min-h-0">
             <Photo
               src="/images/lpv/bouteille-ce-soir.jpg"
               alt="A moment around the table and wine"
@@ -156,25 +171,25 @@ export default async function HomePage() {
             />
           </div>
 
-          <div className="flex flex-col justify-between border-t border-[var(--lpv-line)] px-0 py-10 md:border-l md:border-t-0 md:px-12 md:py-14 lg:px-16">
+          <div className="flex flex-col border-t border-[var(--lpv-line)] px-0 py-8 md:border-l md:border-t-0 md:px-12 md:py-12 lg:px-16">
             <div>
               <p className="lpv-kicker text-[var(--lpv-cocoa)]">
                 Start here
               </p>
 
-              <h2 className="lpv-display mt-8 text-[clamp(3.7rem,6vw,6.5rem)] leading-[0.9]">
+              <h2 className="lpv-display mt-5 text-[clamp(3.15rem,13vw,4rem)] leading-[0.9] md:mt-8 md:text-[clamp(3.7rem,6vw,6.5rem)]">
                 A bottle
                 <br />
                 for tonight.
               </h2>
 
-              <p className="mt-8 max-w-lg text-base leading-8 text-[var(--lpv-muted)]">
+              <p className="mt-6 max-w-lg text-base leading-7 text-[var(--lpv-muted)] md:mt-8 md:leading-8">
                 Choose by the meal, the mood or simply what you feel like
                 tonight. No need to know all the terminology.
               </p>
             </div>
 
-            <div className="mt-14 border-t border-[var(--lpv-line)] pt-7">
+            <div className="mt-8 border-t border-[var(--lpv-line)] pt-5 md:mt-10 md:pt-6">
               <Link href="/en/tonight" className="lpv-text-link w-fit">
                 What are we drinking tonight? <span>→</span>
               </Link>
@@ -184,14 +199,14 @@ export default async function HomePage() {
       </section>
 
       {/* SÉLECTION DU MOMENT */}
-      <section className="lpv-container py-20 md:py-28">
-        <div className="mb-10 flex flex-col gap-6 border-b border-[var(--lpv-line)] pb-6 md:flex-row md:items-end md:justify-between">
+      <section className="lpv-container py-12 md:pb-28 md:pt-20">
+        <div className="mb-7 flex flex-col gap-5 border-b border-[var(--lpv-line)] pb-5 md:mb-10 md:gap-6 md:pb-6 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               Current selection
             </p>
 
-            <h2 className="lpv-display mt-6 max-w-4xl text-[clamp(3.15rem,13vw,4.2rem)] leading-[0.92] md:text-[clamp(3.6rem,6vw,6.5rem)] md:leading-[0.9]">
+            <h2 className="lpv-display mt-4 max-w-4xl text-[clamp(2.8rem,11.5vw,3.65rem)] leading-[0.92] md:mt-6 md:text-[clamp(3.6rem,6vw,6.5rem)] md:leading-[0.9]">
               Three bottles we would open right now.
             </h2>
           </div>
@@ -201,13 +216,13 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        <div className="grid gap-10 md:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-3 md:gap-10">
           {selectionWines.map((wine) => {
             const image = wine.bottleImage
               ? urlFor(wine.bottleImage)
                   .ignoreImageParams()
                   .width(900)
-                  .height(1200)
+                  .height(1000)
                   .fit("max")
                   .url()
               : null;
@@ -216,19 +231,19 @@ export default async function HomePage() {
               <Link
                 key={wine.slug}
                 href={`/en/wines/${wine.slug}`}
-                className="group"
+                className="group md:flex md:h-full md:flex-col"
               >
-                <div className="aspect-[4/5]">
+                <div className="h-[300px] sm:h-[340px] md:h-[430px]">
                   <BottleStage
                     image={wine.bottleImage}
                     alt={wine.name}
                     color={wine.beverageType === "cider" ? undefined : wine.color}
                     variant="card"
-                    className="h-full transition duration-700 group-hover:scale-[1.02]"
+                    className="!h-[300px] [&>div]:!h-[260px] [&_img]:!max-w-[72%] sm:!h-[340px] sm:[&>div]:!h-[300px] md:!h-[430px] md:[&>div]:!h-[390px] md:[&_img]:!max-h-[390px] md:[&_img]:!max-w-[68%] transition duration-700 group-hover:scale-[1.02]"
                   />
                 </div>
 
-                <div className="border-t border-[var(--lpv-line)] pt-5">
+                <div className="border-t border-[var(--lpv-line)] pt-4 md:flex md:flex-1 md:flex-col md:pt-5">
                   <p className="lpv-kicker text-[var(--lpv-cocoa)]">
                     {[
                       wine.beverageType === "cider"
@@ -240,18 +255,18 @@ export default async function HomePage() {
                       .join(" · ")}
                   </p>
 
-                  <h3 className="lpv-display mt-4 text-3xl leading-[0.95]">
+                  <h3 className="lpv-display mt-3 text-[2rem] leading-[0.95] md:mt-4 md:text-3xl">
                     {wine.name}
                   </h3>
 
                   {wine.producer?.name ? (
-                    <p className="mt-3 text-sm leading-6 text-[var(--lpv-muted)]">
+                    <p className="mt-2 text-sm leading-6 text-[var(--lpv-muted)] md:mt-3">
                       {wine.producer.name}
                       {wine.vintage ? ` · ${wine.vintage}` : ""}
                     </p>
                   ) : null}
 
-                  <span className="lpv-text-link mt-5">
+                  <span className="lpv-text-link mt-4 md:mt-auto md:pt-5">
                     View the bottle <span>→</span>
                   </span>
                 </div>
@@ -261,141 +276,189 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ALCOHOL-FREE */}
+      {/* SANS ALCOOL */}
       <section className="border-t border-[var(--lpv-line)]">
-        <div className="lpv-container py-16 md:py-24">
-          <div className="grid gap-10 md:grid-cols-[0.28fr_0.72fr] md:gap-16">
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              Alcohol-free
-            </p>
+        <div className="lpv-container py-12 md:pb-16 md:pt-24">
+          <div className="grid gap-8 md:grid-cols-[0.58fr_0.42fr] md:items-stretch md:gap-12 lg:gap-16">
+            <div className="md:flex md:flex-col md:justify-center md:py-6">
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Alcohol-free
+              </p>
 
-            <div className="max-w-4xl">
-              <h2 className="lpv-display text-[clamp(3.5rem,12vw,4.5rem)] leading-[0.9] md:text-[clamp(4rem,6vw,6.5rem)]">
+              <h2 className="lpv-display mt-5 max-w-[8em] text-[clamp(3.5rem,12vw,4.5rem)] leading-[0.9] md:mt-7 md:text-[clamp(4rem,5vw,5.8rem)]">
                 What’s in
                 <br />
                 the glass.
               </h2>
 
-              <p className="mt-8 max-w-2xl text-base leading-8 text-[var(--lpv-muted)]">
-                What we love in a bottle goes far beyond alcohol. There is
-                taste, texture, balance, craft, place and the people behind
-                what we drink.
-              </p>
+              <div className="mt-8 max-w-2xl md:mt-9">
+                <p className="text-base leading-8 text-[var(--lpv-muted)]">
+                  What we love in a bottle goes far beyond alcohol. There is taste,
+                  texture, balance, craft, place and the people behind what we drink.
+                </p>
 
-              <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--lpv-muted)]">
-                Some alcohol-free bottles are simply good, precise and
-                thoughtfully made — and deserve a place at the table.
-              </p>
+                <p className="mt-5 text-base leading-8 text-[var(--lpv-muted)]">
+                  Some alcohol-free bottles are simply good, precise and thoughtfully
+                  made — and deserve a place at the table.
+                </p>
 
-              <div className="mt-10 border-t border-[var(--lpv-line)] pt-6">
-                <Link
-                  href="/en/alcohol-free"
-                  className="lpv-text-link w-fit"
-                >
-                  Explore alcohol-free <span>→</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* PRODUCTEUR À DÉCOUVRIR */}
-      <section className="border-t border-[var(--lpv-line)]">
-        <div className="lpv-container py-12 md:py-16">
-          <p className="lpv-kicker mb-6 text-[var(--lpv-cocoa)]">
-            Producer to discover
-          </p>
-
-          <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:items-center">
-            <Link
-              href={
-                featuredProducer
-                  ? `/en/producers/${featuredProducer.slug}`
-                  : "/en/producers"
-              }
-              className="group overflow-hidden"
-            >
-              {producerImage ? (
-                <img
-                  src={producerImage}
-                  alt={featuredProducer?.name || "Producer to discover"}
-                  className="aspect-[4/3] h-full w-full object-cover transition duration-700 group-hover:scale-[1.015]"
-                />
-              ) : (
-                <div className="flex aspect-[4/3] items-center justify-center bg-[var(--lpv-paper-light)]">
-                  <p className="text-sm text-[var(--lpv-muted)]">
-                    Producer photo coming soon
-                  </p>
+                <div className="mt-8">
+                  <Link href="/en/alcohol-free" className="lpv-text-link w-fit">
+                    Explore alcohol-free <span>→</span>
+                  </Link>
                 </div>
-              )}
-            </Link>
-
-            <div className="md:pl-8 lg:pl-14">
-              <h2 className="lpv-display text-[clamp(3.6rem,5vw,5.8rem)] leading-[0.9]">
-                {featuredProducer?.name ||
-                  "Meet the people behind the wine."}
-              </h2>
-
-              <p className="mt-7 max-w-xl text-base leading-8 text-[var(--lpv-muted)]">
-                Behind every bottle is a place, people and a way of seeing
-                  wine. Come meet them with us.
-              </p>
-
-              <div className="mt-10 border-t border-[var(--lpv-line)] pt-6">
-                <Link
-                  href={
-                    featuredProducer
-                      ? `/en/producers/${featuredProducer.slug}`
-                      : "/en/producers"
-                  }
-                  className="lpv-text-link w-fit"
-                >
-                  Discover the producer <span>→</span>
-                </Link>
               </div>
+            </div>
+
+            <div className="h-[300px] overflow-hidden sm:h-[380px] md:h-[540px]">
+              <Photo
+                src="/images/lpv/DSCF2438.jpg"
+                alt="Grapes in the vineyard"
+                className="object-cover saturate-[0.72] brightness-[0.9] contrast-[0.96] transition duration-700 hover:scale-[1.015]"
+              />
             </div>
           </div>
         </div>
       </section>
+
+      {/* PRODUCTEUR PARTENAIRE */}
+      {featuredProducer && (
+        <section className="border-t border-[var(--lpv-line)]">
+          <div className="lpv-container py-12 md:py-16">
+            <div className="grid gap-8 md:grid-cols-[0.34fr_0.66fr] md:gap-16">
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Partner producer
+              </p>
+
+              <div>
+                <h2 className="lpv-display text-[clamp(3rem,12vw,4rem)] leading-[0.9] md:text-[clamp(3.6rem,5vw,5.8rem)]">
+                  {featuredProducer.name}
+                </h2>
+
+                {featuredProducer.municipality ? (
+                  <p className="lpv-kicker mt-5 text-[var(--lpv-cocoa)]">
+                    {featuredProducer.municipality}
+                  </p>
+                ) : null}
+
+                {featuredProducer.oneLiner ? (
+                  <p className="mt-6 max-w-2xl text-base leading-7 text-[var(--lpv-muted)] md:leading-8">
+                    {featuredProducer.oneLiner}
+                  </p>
+                ) : null}
+
+                <div className="mt-8 border-t border-[var(--lpv-line)] pt-5 md:mt-10 md:pt-6">
+                  <Link
+                    href={`/en/producers/${featuredProducer.slug}`}
+                    className="lpv-text-link w-fit"
+                  >
+                    Discover the producer <span>→</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* GUIDE DU MOMENT */}
       <section className="border-t border-[var(--lpv-line)]">
-        <div className="lpv-container grid gap-10 py-12 md:grid-cols-[0.75fr_1.25fr] md:items-center md:py-16">
-          <div className="md:pr-8 lg:pr-14">
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              Featured guide
-            </p>
+        <div className="lpv-container pb-10 pt-0 md:pb-0 md:pt-0">
+          {featuredGuide ? (
+            <div className="grid gap-8 md:grid-cols-[0.78fr_1.22fr] md:items-center md:gap-12 lg:gap-16">
+              <div className="md:pr-6">
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  Featured guide
+                </p>
 
-            <h2 className="lpv-display mt-6 text-[clamp(3.1rem,12.5vw,4rem)] leading-[0.92] md:text-[clamp(3.5rem,5vw,5.6rem)] md:leading-[0.9]">
-              Guides to help you choose.
-            </h2>
+                <h2 className="lpv-display mt-4 text-[clamp(2.8rem,11vw,3.5rem)] leading-[0.92] md:mt-6 md:text-[clamp(3.5rem,4.8vw,5.4rem)] md:leading-[0.9]">
+                  {featuredGuide.titleEn || featuredGuide.title}
+                </h2>
 
-            <p className="mt-7 max-w-lg text-base leading-8 text-[var(--lpv-muted)]">
-              Regions, grapes, pairings and advice without unnecessary jargon.
-            </p>
+                <div className="mt-4 flex flex-wrap gap-3 text-xs uppercase tracking-[0.14em] text-[var(--lpv-muted)] md:mt-6">
+                  {featuredGuide.guideType ? (
+                    <span>{featuredGuide.guideType.replace(/[-_]/g, " ")}</span>
+                  ) : null}
 
-            <div className="mt-10 border-t border-[var(--lpv-line)] pt-6">
-              <Link href="/en/guides" className="lpv-text-link w-fit">
-                View the guides <span>→</span>
+                  {featuredGuide.estimatedReadingTime ? (
+                    <span>· {featuredGuide.estimatedReadingTime}</span>
+                  ) : null}
+                </div>
+
+                {featuredGuide.excerpt ? (
+                  <p className="mt-5 max-w-lg text-base leading-7 text-[var(--lpv-muted)] md:mt-7 md:leading-8">
+                    {featuredGuide.excerptEn || featuredGuide.excerpt}
+                  </p>
+                ) : null}
+
+                <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 border-t border-[var(--lpv-line)] pt-6 md:mt-10">
+                  <Link
+                    href={`/en/guides/${featuredGuide.slug}`}
+                    className="lpv-text-link w-fit"
+                  >
+                    Read the guide <span>→</span>
+                  </Link>
+
+                  <Link href="/en/guides" className="lpv-text-link w-fit">
+                    All guides <span>→</span>
+                  </Link>
+                </div>
+              </div>
+
+              <Link
+                href={`/en/guides/${featuredGuide.slug}`}
+                className="group block overflow-hidden bg-[var(--lpv-paper-light)]"
+              >
+                {featuredGuide.coverImage ? (
+                  <img
+                    src={urlFor(featuredGuide.coverImage)
+                      .width(1400)
+                      .height(1000)
+                      .fit("crop")
+                      .url()}
+                    alt={featuredGuide.titleEn || featuredGuide.title}
+                    className="aspect-[16/10] h-full w-full object-cover transition duration-700 group-hover:scale-[1.015] md:aspect-[7/5]"
+                  />
+                ) : (
+                  <div className="flex aspect-[16/10] items-center justify-center md:aspect-[7/5]">
+                    <p className="lpv-kicker text-[var(--lpv-muted)]">
+                      Image coming soon
+                    </p>
+                  </div>
+                )}
               </Link>
             </div>
-          </div>
+          ) : (
+              <div className="pt-6 md:pt-8">
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  Guides
+                </p>
 
-          <Link href="/en/guides" className="group overflow-hidden">
-            <Photo
-              src="/images/lpv/guides.jpg"
-              alt="Wine guide and discovery"
-              className="aspect-[4/3] transition duration-700 group-hover:scale-[1.015]"
-            />
-          </Link>
+                <div className="mx-auto max-w-3xl py-10 md:translate-x-12 md:py-14 lg:translate-x-16">
+                  <h2 className="lpv-display text-[clamp(2.8rem,11vw,3.5rem)] leading-[0.92] md:text-[clamp(3.7rem,5vw,5.8rem)] md:leading-[0.9]">
+                    The first guides
+                    <br className="hidden md:block" />
+                    are coming soon.
+                  </h2>
+
+                  <p className="mt-5 max-w-xl text-base leading-7 text-[var(--lpv-muted)] md:mt-7 md:leading-8">
+                    Simple guides to regions, grapes, pairings and the basics of wine
+                    are on the way.
+                  </p>
+
+                  <Link href="/en/guides" className="lpv-text-link mt-6 w-fit md:mt-8">
+                    Explore the guides <span>→</span>
+                  </Link>
+                </div>
+              </div>
+          )}
         </div>
       </section>
 
       {/* ARTICLE À LA UNE */}
       {featuredArticle && (
-        <section className="lpv-container py-20 md:py-28">
-          <div className="mb-10 flex items-end justify-between border-b border-[var(--lpv-line)] pb-5">
+        <section className="lpv-container border-t border-[var(--lpv-line)] pb-12 pt-6 md:pb-28 md:pt-8">
+          <div className="mb-7 flex items-end justify-between md:mb-8">
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               Journal
             </p>
@@ -413,15 +476,15 @@ export default async function HomePage() {
               {featuredArticle.coverImage ? (
                 <img
                   src={urlFor(featuredArticle.coverImage)
-                    .width(1600)
-                    .height(1200)
+                    .width(1500)
+                    .height(1000)
                     .fit("crop")
                     .url()}
                   alt={featuredArticle.titleEn || featuredArticle.title}
-                  className="aspect-[4/3] h-full w-full object-cover transition duration-700 group-hover:scale-[1.015]"
+                  className="aspect-[3/2] w-full object-cover transition duration-700 group-hover:scale-[1.015]"
                 />
               ) : (
-                <div className="flex aspect-[4/3] items-center justify-center">
+                <div className="flex aspect-[3/2] items-center justify-center">
                   <p className="text-sm text-[var(--lpv-muted)]">
                     Image coming soon
                   </p>
@@ -434,7 +497,7 @@ export default async function HomePage() {
                 Featured article
               </p>
 
-              <h2 className="lpv-display mt-6 text-[clamp(2.9rem,4.2vw,4.9rem)] leading-[0.92] md:max-w-[9.5em]">
+              <h2 className="lpv-display mt-4 text-[clamp(2.6rem,10.5vw,3.35rem)] leading-[0.92] md:mt-6 md:max-w-[9.5em] md:text-[clamp(2.9rem,4.2vw,4.9rem)]">
                 {featuredArticle.titleEn || featuredArticle.title}
               </h2>
 
@@ -452,83 +515,60 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* EXPLORER LES VINS */}
-      <section className="border-t border-[var(--lpv-line)]">
-        <div className="lpv-container py-16 md:py-24">
-          <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:items-end">
-            <div>
-              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                Explore
-              </p>
+        {/* EXPLORER LES BOUTEILLES */}
+        <section className="border-t border-[var(--lpv-line)]">
+          <div className="lpv-container py-10 md:py-14">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Explore
+            </p>
 
-              <h2 className="lpv-display mt-6 text-[clamp(3.8rem,6vw,6.8rem)] leading-[0.9]">
-                Find a bottle your way.
+            <div className="mt-7 grid gap-6 md:mt-9 md:grid-cols-[1.15fr_0.85fr] md:items-end md:gap-16">
+              <h2 className="lpv-display max-w-4xl text-[clamp(3.4rem,5.5vw,6rem)] leading-[0.9]">
+                Find the right bottle.
               </h2>
+
+              <p className="max-w-lg text-base leading-8 text-[var(--lpv-muted)] md:pb-1">
+                By colour, mood, budget or simply the moment.
+                Start wherever feels right.
+              </p>
             </div>
 
-            <p className="max-w-xl text-base leading-8 text-[var(--lpv-muted)]">
-              By colour, mood, budget or simply the moment.
-              Start wherever feels right.
-            </p>
+            <div className="mt-10 grid border-t border-[var(--lpv-line)] md:mt-12 md:grid-cols-3">
+              {[
+                ["Rouges", "/vins?color=rouge"],
+                ["Blancs", "/vins?color=blanc"],
+                ["Rosés", "/vins?color=rose"],
+                ["Bulles", "/vins?color=bulles"],
+                ["Cidres", "/vins?type=cider"],
+                ["Alcohol-free", "/sans-alcool"],
+              ].map(([label, href]) => (
+                <Link
+                  key={label}
+                  href={href}
+                  className="group flex items-center border-b border-[var(--lpv-line)] py-5 md:min-h-[92px] md:px-5 md:py-6 md:[&:not(:nth-child(3n))]:border-r"
+                >
+                  <span className="lpv-display flex-1 text-[1.75rem] leading-none md:text-[2.25rem]">
+                    {label}
+                  </span>
+
+                  <span className="ml-4 text-sm transition-transform duration-300 group-hover:translate-x-1">
+                    →
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-7 flex flex-wrap gap-x-8 gap-y-4">
+              <Link href="/en/wines" className="lpv-text-link">
+                View all bottles <span>→</span>
+              </Link>
+
+              <Link href="/en/tonight" className="lpv-text-link">
+                Choose for tonight <span>→</span>
+              </Link>
+            </div>
           </div>
-
-          <div className="mt-12 grid grid-cols-4 border-t border-[var(--lpv-line)]">
-            <Link
-              href="/en/wines?color=red"
-              className="group border-r border-[var(--lpv-line)] px-2 py-5 sm:px-4 md:px-6 md:py-6 md:first:pl-0"
-            >
-              <span className="lpv-display text-lg sm:text-2xl md:text-3xl">Reds</span>
-              <span className="ml-3 transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
-            </Link>
-
-            <Link
-              href="/en/wines?color=white"
-              className="group border-r border-[var(--lpv-line)] px-2 py-5 sm:px-4 md:px-6 md:py-6"
-            >
-              <span className="lpv-display text-lg sm:text-2xl md:text-3xl">Whites</span>
-              <span className="ml-3 transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
-            </Link>
-
-            <Link
-              href="/en/wines?color=rose"
-              className="group border-r border-[var(--lpv-line)] px-2 py-5 sm:px-4 md:px-6 md:py-6"
-            >
-              <span className="lpv-display text-lg sm:text-2xl md:text-3xl">Rosés</span>
-              <span className="ml-3 transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
-            </Link>
-
-            <Link
-              href="/en/wines?color=sparkling"
-              className="group px-2 py-5 sm:px-4 md:px-6 md:py-6 md:pr-0"
-            >
-              <span className="lpv-display text-lg sm:text-2xl md:text-3xl">Sparkling</span>
-              <span className="ml-3 transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
-            </Link>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 border-t border-[var(--lpv-line)] pt-6">
-            <Link href="/en/wines" className="lpv-text-link">
-              View all wines <span>→</span>
-            </Link>
-
-            <Link href="/en/tonight" className="lpv-text-link">
-              Choose for tonight <span>→</span>
-            </Link>
-
-            <Link href="/en/producers" className="lpv-text-link">
-              Explore producers <span>→</span>
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
 
       {/* NEWSLETTER */}
       <section className="bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)]">
@@ -553,7 +593,7 @@ export default async function HomePage() {
             </h2>
 
             <p className="mt-8 max-w-xl text-base leading-8 text-white/68">
-              One bottle, one place and one idea worth keeping close.
+              A bottle, une adresse et une idée à garder sous la main.
             </p>
 
             <Link

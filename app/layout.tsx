@@ -1,9 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { DM_Serif_Display, Manrope } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-import { frFR } from "@clerk/localizations";
-import { clerkAppearance } from "@/lib/clerk-theme";
+import ClerkLocaleProvider from "@/components/ClerkLocaleProvider";
 
 import { SearchProvider } from "@/providers/SearchProvider";
 import { SearchDialog } from "@/components/search/SearchDialog";
@@ -32,10 +30,6 @@ export const metadata: Metadata = {
   description:
     "Une plateforme québécoise pour découvrir des vins, des producteurs, des bonnes adresses et des guides avec simplicité.",
 
-  alternates: {
-    canonical: "/",
-  },
-
   verification: {
     google: "Sa-BZlUqEkzGY_W2pKwmF_q0Bf_sj8OfGxoJ0_2DN08",
     other: {
@@ -60,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider localization={frFR} appearance={clerkAppearance}>
+    <ClerkLocaleProvider>
       <html lang="fr" data-scroll-behavior="smooth">
         <body className={`${editorial.variable} ${sans.variable}`}>
           <SearchProvider>
@@ -71,6 +65,6 @@ export default function RootLayout({
           </SearchProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </ClerkLocaleProvider>
   );
 }

@@ -6,6 +6,7 @@ export async function POST(request: Request) {
 
     const email = String(body?.email ?? "").trim().toLowerCase();
     const firstName = String(body?.firstName ?? "").trim();
+    const language = body?.language === "en" ? "EN" : "FR";
 
     if (!email || !email.includes("@")) {
       return NextResponse.json(
@@ -26,7 +27,9 @@ export async function POST(request: Request) {
       );
     }
 
-    const attributes: Record<string, string> = {};
+    const attributes: Record<string, string> = {
+      LANGUAGE: language,
+    };
 
     if (firstName) {
       attributes.FIRSTNAME = firstName;

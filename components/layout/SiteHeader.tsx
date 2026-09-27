@@ -10,9 +10,9 @@ import {
 
 import { SearchButton } from "@/components/search/SearchButton";
 
-const navItems = [
+const navItemsFr = [
   ["Ce soir", "/ce-soir"],
-  ["Les vins", "/vins"],
+  ["Bouteilles", "/vins"],
   ["Producteurs", "/producteurs"],
   ["Régions", "/regions"],
   ["Cépages", "/cepages"],
@@ -21,12 +21,61 @@ const navItems = [
   ["Journal", "/blog"],
 ];
 
-const signedInItems = [
-  ["Mon carnet", "/mon-carnet"],
-  ["Favoris", "/favoris"],
-  ["Ma cave", "/ma-cave"],
-  ["Mes préférences", "/mes-preferences"],
+const navItemsEn = [
+  ["Tonight", "/en/tonight"],
+  ["Bottles", "/en/wines"],
+  ["Producers", "/en/producers"],
+  ["Regions", "/en/regions"],
+  ["Grapes", "/en/grapes"],
+  ["Places", "/en/places"],
+  ["Guides", "/en/guides"],
+  ["Journal", "/en/journal"],
 ];
+
+const bilingualRoutes = [
+  ["/ce-soir", "/en/tonight"],
+  ["/vins", "/en/wines"],
+  ["/sans-alcool", "/en/alcohol-free"],
+  ["/producteurs", "/en/producers"],
+  ["/regions", "/en/regions"],
+  ["/cepages", "/en/grapes"],
+  ["/accords", "/en/pairings"],
+  ["/bonnes-adresses", "/en/places"],
+  ["/guides", "/en/guides"],
+  ["/blog", "/en/journal"],
+  ["/recherche", "/en/search"],
+  ["/a-propos", "/en/about"],
+  ["/contact", "/en/contact"],
+  ["/newsletter", "/en/newsletter"],
+  ["/politique-confidentialite", "/en/privacy-policy"],
+  ["/connexion", "/en/sign-in"],
+  ["/inscription", "/en/sign-up"],
+  ["/ma-cave", "/en/cellar"],
+  ["/favoris", "/en/favorites"],
+  ["/mon-carnet", "/en/notebook"],
+  ["/mes-listes", "/en/lists"],
+  ["/mes-preferences", "/en/preferences"],
+] as const;
+
+function getLocalizedPath(pathname: string, target: "fr" | "en") {
+  if (pathname === "/" || pathname === "/en") {
+    return target === "en" ? "/en" : "/";
+  }
+
+  for (const [frBase, enBase] of bilingualRoutes) {
+    if (pathname === frBase || pathname.startsWith(`${frBase}/`)) {
+      const suffix = pathname.slice(frBase.length);
+      return target === "en" ? `${enBase}${suffix}` : `${frBase}${suffix}`;
+    }
+
+    if (pathname === enBase || pathname.startsWith(`${enBase}/`)) {
+      const suffix = pathname.slice(enBase.length);
+      return target === "fr" ? `${frBase}${suffix}` : `${enBase}${suffix}`;
+    }
+  }
+
+  return target === "en" ? "/en" : "/";
+}
 
 function getInitials(
   firstName?: string | null,
@@ -45,6 +94,12 @@ function getInitials(
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const locale = pathname?.startsWith("/en") ? "en" : "fr";
+  const isEnglish = locale === "en";
+  const navItems = isEnglish ? navItemsEn : navItemsFr;
+  const frenchPath = getLocalizedPath(pathname ?? "/", "fr");
+  const englishPath = getLocalizedPath(pathname ?? "/", "en");
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [isLocal, setIsLocal] = useState(false);
@@ -125,7 +180,7 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
-              aria-label="Ouvrir le menu"
+              aria-label={isEnglish ? "Open menu" : "Ouvrir le menu"}
               className="group flex h-10 w-10 items-center justify-center rounded-full border border-[var(--lpv-ink)] transition-colors hover:bg-[var(--lpv-ink)] hover:text-[var(--lpv-paper-light)]"
             >
               <span className="flex w-[17px] flex-col gap-[4px]">
@@ -135,7 +190,7 @@ export function SiteHeader() {
             </button>
 
             <Link
-              href="/"
+              href={isEnglish ? "/en" : "/"}
               className="lpv-display text-[1.65rem] leading-none sm:text-[2rem]"
             >
               Le Premier Verre
@@ -143,7 +198,33 @@ export function SiteHeader() {
           </div>
 
           <div className="flex items-center gap-5 md:gap-7">
-            <SearchButton />
+            <div className="hidden items-center gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.16em] sm:flex">
+              <Link
+                href={frenchPath}
+                className={
+                  !isEnglish
+                    ? "opacity-100"
+                    : "opacity-35 transition-opacity hover:opacity-100"
+                }
+              >
+                FR
+              </Link>
+
+              <span className="opacity-25">|</span>
+
+              <Link
+                href={englishPath}
+                className={
+                  isEnglish
+                    ? "opacity-100"
+                    : "opacity-35 transition-opacity hover:opacity-100"
+                }
+              >
+                EN
+              </Link>
+            </div>
+
+            <SearchButton locale={locale} />
 
             {!isLoaded ? (
               <span
@@ -158,7 +239,7 @@ export function SiteHeader() {
                 <button
                   type="button"
                   onClick={() => setAccountOpen((current) => !current)}
-                  aria-label="Ouvrir le menu du compte"
+                  aria-label={isEnglish ? "Open account menu" : "Ouvrir le menu du compte"}
                   aria-expanded={accountOpen}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--lpv-ink)] text-[0.68rem] font-semibold uppercase tracking-[0.08em] transition-colors hover:bg-[var(--lpv-ink)] hover:text-[var(--lpv-paper-light)]"
                 >
@@ -169,7 +250,7 @@ export function SiteHeader() {
                   <div className="absolute right-0 top-[calc(100%+14px)] w-[280px] border border-[var(--lpv-line)] bg-[var(--lpv-paper-light)] p-5 shadow-[0_18px_50px_rgba(33,29,26,0.10)]">
                     <div className="border-b border-[var(--lpv-line)] pb-5">
                       <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                        Mon compte
+                        {isEnglish ? "My account" : "Mon compte"}
                       </p>
 
                       <p className="mt-3 truncate text-sm">
@@ -179,24 +260,46 @@ export function SiteHeader() {
                     </div>
 
                     <nav className="flex flex-col py-3">
-                      {signedInItems.map(([label, href]) => (
-                        <Link
-                          key={href}
-                          href={href}
-                          onClick={() => setAccountOpen(false)}
-                          className="border-b border-[var(--lpv-line-light)] py-3 text-sm transition-opacity hover:opacity-50"
-                        >
-                          {label}
-                        </Link>
-                      ))}
+                      <Link
+                        href={isEnglish ? "/en/cellar" : "/ma-cave"}
+                        onClick={() => setAccountOpen(false)}
+                        className="group border-b border-[var(--lpv-line)] py-4 transition-opacity hover:opacity-60"
+                      >
+                        <span className="block text-[0.56rem] font-medium uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                          {isEnglish ? "My personal space" : "Mon espace personnel"}
+                        </span>
+
+                        <span className="mt-2 flex items-center justify-between">
+                          <span className="lpv-display text-[1.75rem] leading-none">
+                            {isEnglish ? "My cellar" : "Ma cave"}
+                          </span>
+
+                          <span className="text-base transition-transform duration-300 group-hover:translate-x-1">
+                            →
+                          </span>
+                        </span>
+                      </Link>
+
+                      <Link
+                        href={isEnglish ? "/en/profile" : "/mon-profil"}
+                        onClick={() => setAccountOpen(false)}
+                        className="group flex items-center justify-between border-b border-[var(--lpv-line-light)] py-3 text-sm transition-opacity hover:opacity-50"
+                      >
+                        <span>
+                          {isEnglish
+                            ? "Profile information"
+                            : "Informations du profil"}
+                        </span>
+                        <span className="text-xs">→</span>
+                      </Link>
                     </nav>
 
-                    <SignOutButton redirectUrl="/">
+                    <SignOutButton redirectUrl={isEnglish ? "/en" : "/"}>
                       <button
                         type="button"
                         className="mt-3 flex w-full items-center justify-between text-left text-[0.68rem] font-semibold uppercase tracking-[0.17em] text-[var(--lpv-cocoa)] transition-opacity hover:opacity-50"
                       >
-                        Se déconnecter
+                        {isEnglish ? "Sign out" : "Se déconnecter"}
                         <span>→</span>
                       </button>
                     </SignOutButton>
@@ -205,10 +308,10 @@ export function SiteHeader() {
               </div>
             ) : (
               <Link
-                href="/connexion"
+                href={isEnglish ? "/en/sign-in" : "/connexion"}
                 className="hidden text-[0.68rem] font-semibold uppercase tracking-[0.18em] transition-opacity hover:opacity-50 sm:inline"
               >
-                Connexion
+                {isEnglish ? "Sign in" : "Connexion"}
               </Link>
             )}
           </div>
@@ -219,7 +322,7 @@ export function SiteHeader() {
         <div className="fixed inset-0 z-[10000]">
           <button
             type="button"
-            aria-label="Fermer le menu"
+            aria-label={isEnglish ? "Close menu" : "Fermer le menu"}
             onClick={() => setMenuOpen(false)}
             className="absolute inset-0 bg-black/32"
           />
@@ -235,12 +338,12 @@ export function SiteHeader() {
                 onClick={() => setMenuOpen(false)}
                 className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] opacity-70 transition-opacity hover:opacity-100"
               >
-                Fermer
+                {isEnglish ? "Close" : "Fermer"}
               </button>
             </div>
 
             <nav
-              aria-label="Navigation principale"
+              aria-label={isEnglish ? "Main navigation" : "Navigation principale"}
               className="flex flex-1 flex-col justify-center gap-2 py-12"
             >
               {navItems.map(([label, href], index) => (
@@ -261,49 +364,36 @@ export function SiteHeader() {
               ))}
             </nav>
 
-            <div className="border-t border-white/20 pt-6">
-              {isSignedIn ? (
-                <div className="grid gap-5 sm:grid-cols-3">
-                  {signedInItems.map(([label, href]) => (
+              <div className="pt-6">
+                {isSignedIn ? (
+                  <SignOutButton redirectUrl={isEnglish ? "/en" : "/"}>
+                    <button
+                      type="button"
+                      className="text-left text-[0.62rem] uppercase tracking-[0.18em] text-white/50 transition-opacity hover:text-white"
+                    >
+                      {isEnglish ? "Sign out" : "Se déconnecter"} →
+                    </button>
+                  </SignOutButton>
+                ) : (
+                  <div className="flex gap-7">
                     <Link
-                      key={href}
-                      href={href}
+                      href={isEnglish ? "/en/sign-in" : "/connexion"}
                       onClick={() => setMenuOpen(false)}
                       className="text-[0.68rem] uppercase tracking-[0.18em] opacity-65 transition-opacity hover:opacity-100"
                     >
-                      {label}
+                      {isEnglish ? "Sign in" : "Connexion"}
                     </Link>
-                  ))}
 
-                  <SignOutButton redirectUrl="/">
-                    <button
-                      type="button"
-                      className="text-left text-[0.68rem] uppercase tracking-[0.18em] text-white/65 transition-opacity hover:text-white"
+                    <Link
+                      href={isEnglish ? "/en/sign-up" : "/inscription"}
+                      onClick={() => setMenuOpen(false)}
+                      className="text-[0.68rem] uppercase tracking-[0.18em] opacity-65 transition-opacity hover:opacity-100"
                     >
-                      Se déconnecter
-                    </button>
-                  </SignOutButton>
-                </div>
-              ) : (
-                <div className="flex gap-7">
-                  <Link
-                    href="/connexion"
-                    onClick={() => setMenuOpen(false)}
-                    className="text-[0.68rem] uppercase tracking-[0.18em] opacity-65 transition-opacity hover:opacity-100"
-                  >
-                    Connexion
-                  </Link>
-
-                  <Link
-                    href="/inscription"
-                    onClick={() => setMenuOpen(false)}
-                    className="text-[0.68rem] uppercase tracking-[0.18em] opacity-65 transition-opacity hover:opacity-100"
-                  >
-                    Inscription
-                  </Link>
-                </div>
-              )}
-            </div>
+                      {isEnglish ? "Sign up" : "Inscription"}
+                    </Link>
+                  </div>
+                )}
+              </div>
           </aside>
         </div>
       ) : null}

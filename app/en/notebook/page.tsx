@@ -4,7 +4,7 @@ import type { SanityImageSource } from "@sanity/image-url";
 
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import { enforceAccountLanguage } from "@/lib/i18n/account-language";
+import CaveNav from "@/components/cave/CaveNav";
 
 type JournalEntry = {
   _id: string;
@@ -55,9 +55,9 @@ export default async function NotebookPage() {
             </p>
 
             <h1 className="lpv-display mt-7 max-w-5xl text-[clamp(4.8rem,10vw,10rem)] leading-[0.82]">
-              My wine
+              Mon carnet
               <br />
-              notebook.
+              de vin.
             </h1>
 
             <p className="mt-8 max-w-xl text-base leading-8 text-[var(--lpv-muted)]">
@@ -76,7 +76,8 @@ export default async function NotebookPage() {
           </h2>
 
           <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-[var(--lpv-muted)]">
-            Sign in to find the bottles you’ve tried and the notes you want to keep.
+            Connecte-toi pour retrouver les bouteilles que tu as bues et les
+            notes que tu veux garder.
           </p>
 
           <Link href="/en/sign-in" className="lpv-button lpv-button-dark mt-9">
@@ -87,7 +88,6 @@ export default async function NotebookPage() {
     );
   }
 
-  await enforceAccountLanguage(userId, "en", "notebook");
 
   const entries = await client.fetch<JournalEntry[]>(
     `*[
@@ -125,36 +125,36 @@ export default async function NotebookPage() {
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
 
-      {/* HERO */}
-      <section className="border-b border-[var(--lpv-line)]">
-        <div className="lpv-container grid gap-12 py-16 md:grid-cols-[1fr_0.42fr] md:items-end md:py-24">
+      {/* MA CAVE */}
+      <section>
+        <div className="lpv-container grid gap-6 py-9 md:grid-cols-[1fr_0.42fr] md:items-end md:gap-12 md:py-14">
           <div>
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              My space
+              My cellar
             </p>
 
-            <h1 className="lpv-display mt-7 text-[clamp(4.8rem,10vw,10rem)] leading-[0.8]">
-              My wine
-              <br />
-              notebook.
+            <h1 className="lpv-display mt-4 text-[clamp(3.2rem,13vw,4.2rem)] leading-[0.86] md:mt-5 md:text-[clamp(4rem,7vw,6.5rem)] md:leading-[0.84]">
+              My notebook.
             </h1>
           </div>
 
-          <div className="border-t border-[var(--lpv-line)] pt-6 md:border-t-0 md:pb-2">
-            <p className="max-w-sm text-base leading-8 text-[var(--lpv-muted)]">
+          <div className="border-t border-[var(--lpv-line)] pt-5 md:border-t-0 md:pb-1">
+            <p className="max-w-sm text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
               The bottles you’ve tried. The impressions worth remembering.
-              Nothing more complicated than that.
+              Rien de plus compliqué.
             </p>
 
             <Link
               href="/en/wines"
-              className="lpv-text-link mt-7 inline-flex"
+              className="lpv-text-link mt-5 inline-flex"
             >
               Add a bottle <span>→</span>
             </Link>
           </div>
         </div>
       </section>
+
+      <CaveNav />
 
       {/* STATS */}
       <section className="border-b border-[var(--lpv-line)]">
@@ -166,18 +166,18 @@ export default async function NotebookPage() {
           ].map(([label, value], index) => (
             <div
               key={label}
-              className={`py-8 md:px-8 md:py-10 ${
+              className={`py-5 md:px-8 md:py-10 ${
                 index < 2
                   ? "border-b border-[var(--lpv-line)] md:border-b-0 md:border-r"
                   : ""
               }`}
             >
               <div className="flex items-end justify-between gap-6">
-                <p className="lpv-kicker pb-2 text-[var(--lpv-cocoa)]">
+                <p className="lpv-kicker pb-1 text-[var(--lpv-cocoa)] md:pb-2">
                   {label}
                 </p>
 
-                <p className="lpv-display text-6xl leading-none md:text-7xl">
+                <p className="lpv-display text-5xl leading-none md:text-7xl">
                   {value}
                 </p>
               </div>
@@ -187,13 +187,13 @@ export default async function NotebookPage() {
       </section>
 
       {/* CARNET */}
-      <section className="lpv-container py-16 md:py-24">
-        <div className="border-b border-[var(--lpv-line)] pb-7">
+      <section className="lpv-container py-10 md:py-24">
+        <div className="border-b border-[var(--lpv-line)] pb-5 md:pb-7">
           <p className="lpv-kicker text-[var(--lpv-cocoa)]">
             My history
           </p>
 
-          <h2 className="lpv-display mt-5 text-5xl leading-[0.9] md:text-7xl">
+          <h2 className="lpv-display mt-3 text-[2.8rem] leading-[0.9] md:mt-5 md:text-7xl">
             Worth remembering.
           </h2>
         </div>
@@ -214,10 +214,10 @@ export default async function NotebookPage() {
               return (
                 <article
                   key={entry._id}
-                  className="grid gap-8 border-b border-[var(--lpv-line)] py-10 md:grid-cols-[45px_150px_1fr] md:gap-10 md:py-14"
+                  className="relative grid border-b border-[var(--lpv-line)] py-8 md:grid-cols-[45px_150px_1fr] md:gap-10 md:py-14"
                 >
                   {/* NUMÉRO */}
-                  <div>
+                  <div className="absolute left-0 top-8 md:static">
                     <span className="text-[0.62rem] tracking-[0.18em] text-[var(--lpv-muted)]">
                       {String(index + 1).padStart(2, "0")}
                     </span>
@@ -226,13 +226,13 @@ export default async function NotebookPage() {
                   {/* BOUTEILLE */}
                   <Link
                     href={wine?.slug ? `/en/wines/${wine.slug}` : "/en/wines"}
-                    className="flex h-48 items-center justify-center md:h-60"
+                    className="flex h-[230px] items-center justify-center px-16 md:h-60 md:px-0"
                   >
                     {imageSrc ? (
                       <img
                         src={imageSrc}
                         alt={wine?.name || "Bottle"}
-                        className="h-full w-auto object-contain transition-transform duration-500 hover:-translate-y-1"
+                        className="max-h-[215px] w-auto object-contain transition-transform duration-500 hover:-translate-y-1 md:h-full md:max-h-none"
                       />
                     ) : (
                       <div className="h-full w-20 border border-[var(--lpv-line)]" />
@@ -240,12 +240,12 @@ export default async function NotebookPage() {
                   </Link>
 
                   {/* CONTENU */}
-                  <div className="flex flex-col justify-between">
-                    <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:gap-16">
+                  <div className="mt-4 flex flex-col justify-between md:col-span-1 md:mt-0">
+                    <div className="grid gap-6 md:gap-8 lg:grid-cols-[1fr_0.85fr] lg:gap-16">
 
                       {/* IDENTITÉ */}
                       <div>
-                        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 md:gap-x-5">
                           <p className="lpv-kicker text-[var(--lpv-cocoa)]">
                             {appreciationLabels[entry.appreciation]}
                           </p>
@@ -260,12 +260,12 @@ export default async function NotebookPage() {
                         <Link
                           href={wine?.slug ? `/en/wines/${wine.slug}` : "/en/wines"}
                         >
-                          <h3 className="lpv-display mt-5 text-5xl leading-[0.86] transition-opacity hover:opacity-60 md:text-6xl">
+                          <h3 className="lpv-display mt-3 text-[2.65rem] leading-[0.88] transition-opacity hover:opacity-60 md:mt-5 md:text-6xl md:leading-[0.86]">
                             {wine?.name || "Bottle"}
                           </h3>
                         </Link>
 
-                        <p className="mt-5 text-sm text-[var(--lpv-muted)]">
+                        <p className="mt-3 text-sm text-[var(--lpv-muted)] md:mt-5">
                           {[wine?.producer?.name, wine?.vintage]
                             .filter(Boolean)
                             .join(" · ")}
@@ -273,12 +273,12 @@ export default async function NotebookPage() {
                       </div>
 
                       {/* SOUVENIR */}
-                      <div className="border-t border-[var(--lpv-line)] pt-5 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+                      <div className="border-t border-[var(--lpv-line)] pt-4 md:pt-5 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
                         <p className="lpv-kicker text-[var(--lpv-cocoa)]">
                           What I remember
                         </p>
 
-                        <p className="mt-5 max-w-md text-base leading-7 text-[var(--lpv-ink)]">
+                        <p className="mt-3 max-w-md text-[0.95rem] leading-6 text-[var(--lpv-ink)] md:mt-5 md:text-base md:leading-7">
                           {entry.note?.trim() || (
                             <span className="text-[var(--lpv-muted)]">
                               No notes for this bottle.
@@ -289,7 +289,7 @@ export default async function NotebookPage() {
                     </div>
 
                     {/* BAS */}
-                    <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t border-[var(--lpv-line)] pt-5">
+                    <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--lpv-line)] pt-4 md:mt-10 md:gap-6 md:pt-5">
                       <p className="text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
                         Buy again{" "}
                         <span className="ml-2 text-[var(--lpv-ink)]">
@@ -320,7 +320,8 @@ export default async function NotebookPage() {
             </h2>
 
             <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-[var(--lpv-muted)]">
-              After trying a bottle, add it here to keep track of what you thought.
+              Après avoir bu une bouteille, ajoute-la ici pour garder une trace de
+              ce que tu en as pensé.
             </p>
 
             <Link href="/en/wines" className="lpv-button lpv-button-dark mt-9">

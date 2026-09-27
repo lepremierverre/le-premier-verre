@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 import { client } from "@/sanity/lib/client";
 import { writeClient } from "@/sanity/lib/write-client";
@@ -11,6 +11,7 @@ type UserPreferences = {
   bodyPreference: number;
   stylePreference: string;
   mainOccasion: string;
+  communicationLanguage?: "fr" | "en";
 };
 
 const allowedWineTypes = [
@@ -43,6 +44,84 @@ const allowedOccasions = [
   "special-occasions",
 ];
 
+
+async function syncBrevoLanguageIfSubscribed(
+  email: string,
+  language: "fr" | "en"
+) {
+  const apiKey = process.env.BREVO_API_KEY;
+
+  if (!apiKey) {
+    console.warn("BREVO_API_KEY absente — synchronisation de langue ignorée.");
+    return;
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const contactUrl =
+    "https://api.brevo.com/v3/contacts/" +
+    encodeURIComponent(normalizedEmail) +
+    "?identifierType=email_id";
+
+  try {
+    const contactResponse = await fetch(contactUrl, {
+      method: "GET",
+      headers: {
+        "api-key": apiKey,
+        Accept: "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (contactResponse.status === 404) {
+      console.log(
+        "Brevo : contact non abonné, aucune modification.",
+        normalizedEmail
+      );
+      return;
+    }
+
+    if (!contactResponse.ok) {
+      const errorText = await contactResponse.text();
+      console.error(
+        "Brevo contact lookup error:",
+        contactResponse.status,
+        errorText
+      );
+      return;
+    }
+
+    const updateResponse = await fetch(contactUrl, {
+      method: "PUT",
+      headers: {
+        "api-key": apiKey,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        attributes: {
+          LANGUAGE: language.toUpperCase(),
+        },
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      const errorText = await updateResponse.text();
+      console.error(
+        "Brevo language update error:",
+        updateResponse.status,
+        errorText
+      );
+      return;
+    }
+
+    console.log(
+      `Brevo : LANGUAGE mis à jour → ${language.toUpperCase()}`
+    );
+  } catch (error) {
+    console.error("Brevo language sync error:", error);
+  }
+}
+
 export async function GET() {
   const { userId } = await auth();
 
@@ -63,7 +142,8 @@ export async function GET() {
       budget,
       bodyPreference,
       stylePreference,
-      mainOccasion
+      mainOccasion,
+      communicationLanguage
     }`,
     { userId }
   );
@@ -88,6 +168,9 @@ export async function PUT(request: Request) {
   const bodyPreference = Number(body.bodyPreference);
   const stylePreference = String(body.stylePreference || "").trim();
   const mainOccasion = String(body.mainOccasion || "").trim();
+  const communicationLanguage = String(
+    body.communicationLanguage || ""
+  ).trim();
 
   if (!allowedWineTypes.includes(mainWineType)) {
     return NextResponse.json(
@@ -128,6 +211,13 @@ export async function PUT(request: Request) {
     );
   }
 
+  if (!["fr", "en"].includes(communicationLanguage)) {
+    return NextResponse.json(
+      { error: "La langue de communication sélectionnée est invalide." },
+      { status: 400 }
+    );
+  }
+
   const existing = await client.fetch<{ _id: string } | null>(
     `*[
       _type == "userPreferences" &&
@@ -149,6 +239,7 @@ export async function PUT(request: Request) {
           bodyPreference,
           stylePreference,
           mainOccasion,
+          communicationLanguage,
           updatedAt: now,
         })
         .commit()
@@ -160,9 +251,22 @@ export async function PUT(request: Request) {
         bodyPreference,
         stylePreference,
         mainOccasion,
+        communicationLanguage,
         createdAt: now,
         updatedAt: now,
       });
+
+  const clerkUser = await currentUser();
+  const email =
+    clerkUser?.primaryEmailAddress?.emailAddress ||
+    clerkUser?.emailAddresses?.[0]?.emailAddress;
+
+  if (email) {
+    await syncBrevoLanguageIfSubscribed(
+      email,
+      communicationLanguage as "fr" | "en"
+    );
+  }
 
   return NextResponse.json({ preferences });
 }

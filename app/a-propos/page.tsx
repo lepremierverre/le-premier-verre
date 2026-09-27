@@ -3,6 +3,14 @@ import Link from "next/link";
 export const metadata = {
   title: "À propos | Le Premier Verre",
   description: "À propos du Premier Verre, plateforme éditoriale québécoise consacrée au vin.",
+  alternates: {
+    canonical: "/a-propos",
+    languages: {
+      "fr-CA": "/a-propos",
+      "en-CA": "/en/about",
+      "x-default": "/a-propos",
+    },
+  },
 };
 
 export default function AProposPage() {

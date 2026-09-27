@@ -3,6 +3,14 @@ import Link from "next/link";
 export const metadata = {
   title: "Contact | Le Premier Verre",
   description: "Nous joindre au Premier Verre.",
+  alternates: {
+    canonical: "/contact",
+    languages: {
+      "fr-CA": "/contact",
+      "en-CA": "/en/contact",
+      "x-default": "/contact",
+    },
+  },
 };
 
 export default function ContactPage() {

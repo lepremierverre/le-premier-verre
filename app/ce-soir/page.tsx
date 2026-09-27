@@ -49,42 +49,34 @@ const moments = [
       "Quelques questions simples pour trouver la bouteille qui correspond au moment.",
     href: "/vins",
   },
-  {
-    number: "07",
-    eyebrow: "Sans alcool",
-    title: "Je ne bois pas ce soir.",
-    description:
-      "Des bouteilles choisies pour ce qu’elles ont à offrir dans le verre, avec ou sans occasion particulière.",
-    href: "/sans-alcool",
-  },
 ];
 
 export default function CeSoirPage() {
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
       <section className="border-b border-[var(--lpv-line)]">
-        <div className="lpv-container grid gap-12 py-16 md:grid-cols-[0.68fr_0.32fr] md:items-end md:py-24">
+        <div className="lpv-container grid gap-8 py-12 md:grid-cols-[0.68fr_0.32fr] md:items-end md:gap-12 md:py-24">
           <div>
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               Ce soir
             </p>
 
-            <h1 className="lpv-display mt-7 max-w-6xl text-[clamp(4.8rem,10vw,10rem)] leading-[0.82]">
+            <h1 className="lpv-display mt-5 max-w-6xl text-[clamp(4rem,17vw,5.2rem)] leading-[0.84] md:mt-7 md:text-[clamp(4.8rem,10vw,10rem)] md:leading-[0.82]">
               Qu’est-ce
               <br />
               qu’on ouvre?
             </h1>
           </div>
 
-          <div className="border-t border-[var(--lpv-line)] pt-6 md:border-t-0 md:pb-2">
-            <p className="max-w-md text-base leading-8 text-[var(--lpv-muted)]">
+          <div className="border-t border-[var(--lpv-line)] pt-5 md:border-t-0 md:pb-2 md:pt-6">
+            <p className="max-w-md text-base leading-7 text-[var(--lpv-muted)] md:leading-8">
               Commence par le moment. Le repas, les gens, l’envie ou le budget
               viennent ensuite.
             </p>
 
             <Link
               href="/accords"
-              className="lpv-text-link mt-8"
+              className="lpv-text-link mt-6 md:mt-8"
             >
               Partir de ce qu’on mange <span>→</span>
             </Link>
@@ -92,13 +84,13 @@ export default function CeSoirPage() {
         </div>
       </section>
 
-      <section className="lpv-container py-16 md:py-24">
-        <div className="border-b border-[var(--lpv-line)] pb-6">
+      <section className="lpv-container py-12 md:py-24">
+        <div className="border-b border-[var(--lpv-line)] pb-5 md:pb-6">
           <p className="lpv-kicker text-[var(--lpv-cocoa)]">
             Choisir le moment
           </p>
 
-          <h2 className="lpv-display mt-5 text-5xl leading-none md:text-7xl">
+          <h2 className="lpv-display mt-4 text-[2.75rem] leading-none md:mt-5 md:text-7xl">
             Par où commencer.
           </h2>
         </div>
@@ -108,7 +100,7 @@ export default function CeSoirPage() {
             <Link
               key={moment.number}
               href={moment.href}
-              className="group grid gap-5 border-b border-[var(--lpv-line)] py-8 transition-opacity hover:opacity-60 md:grid-cols-[70px_0.9fr_1.1fr_30px] md:items-center md:py-10"
+              className="group grid gap-2 border-b border-[var(--lpv-line)] py-5 transition-opacity hover:opacity-60 md:grid-cols-[70px_0.9fr_1.1fr_30px] md:items-center md:gap-5 md:py-10"
             >
               <span className="text-[0.62rem] tracking-[0.18em] text-[var(--lpv-muted)]">
                 {moment.number}
@@ -119,16 +111,16 @@ export default function CeSoirPage() {
                   {moment.eyebrow}
                 </p>
 
-                <h3 className="lpv-display mt-4 text-[clamp(3rem,5vw,5.5rem)] leading-[0.88]">
+                <h3 className="lpv-display mt-2 text-[clamp(2.2rem,9vw,2.7rem)] leading-[0.92] md:mt-4 md:text-[clamp(3rem,5vw,5.5rem)] md:leading-[0.88]">
                   {moment.title}
                 </h3>
               </div>
 
-              <p className="max-w-xl text-sm leading-7 text-[var(--lpv-muted)]">
+              <p className="max-w-xl text-sm leading-[1.45rem] text-[var(--lpv-muted)] md:leading-7">
                 {moment.description}
               </p>
 
-              <span className="text-xl transition-transform duration-500 group-hover:translate-x-2">
+              <span className="mt-1 text-lg transition-transform duration-500 group-hover:translate-x-2 md:mt-0 md:text-xl">
                 →
               </span>
             </Link>
@@ -137,91 +129,91 @@ export default function CeSoirPage() {
       </section>
 
       <section className="border-y border-[var(--lpv-line)] bg-[var(--lpv-paper-light)]">
-        <div className="lpv-container grid gap-12 py-16 md:grid-cols-[0.38fr_0.62fr] md:items-end md:py-24">
+        <div className="lpv-container grid gap-7 py-12 md:grid-cols-[0.38fr_0.62fr] md:items-end md:gap-12 md:py-24">
           <div>
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              À table
+              Sans alcool
             </p>
 
-            <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-7xl">
-              Qu’est-ce
+            <h2 className="lpv-display mt-4 text-[2.75rem] leading-[0.92] md:mt-6 md:text-7xl md:leading-[0.9]">
+              Je ne bois pas
               <br />
-              qu’on mange?
+              ce soir.
             </h2>
           </div>
 
           <div>
-            <p className="max-w-2xl text-lg leading-8 text-[var(--lpv-muted)]">
-              Pizza, sushis, pâtes, grillades ou quelque chose de plus précis.
-              Pars de ce qu’il y a dans l’assiette et trouve les styles de vins
-              qui fonctionnent vraiment avec le repas.
+            <p className="max-w-2xl text-base leading-7 text-[var(--lpv-muted)] md:text-lg md:leading-8">
+              Pas besoin d’alcool pour avoir quelque chose de bon dans le verre.
+              Découvre des bouteilles choisies pour ce qu’elles ont à offrir,
+              tout simplement.
             </p>
 
             <Link
-              href="/accords"
-              className="lpv-button lpv-button-dark mt-9"
+              href="/sans-alcool"
+              className="lpv-button lpv-button-dark mt-7 md:mt-9"
             >
-              Trouver un accord
+              Découvrir le sans-alcool
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="lpv-container py-16 md:py-24">
-        <div className="grid gap-10 md:grid-cols-3">
+      <section className="lpv-container py-12 md:py-24">
+        <div className="grid gap-0 md:grid-cols-3 md:gap-10">
           <Link
             href="/vins"
-            className="group border-t border-[var(--lpv-line)] pt-6"
+            className="group border-t border-[var(--lpv-line)] py-7 md:py-0 md:pt-6"
           >
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               Répertoire
             </p>
 
-            <h2 className="lpv-display mt-6 text-4xl leading-[0.92] md:text-5xl">
+            <h2 className="lpv-display mt-4 text-[2.15rem] leading-[0.94] md:mt-6 md:text-5xl md:leading-[0.92]">
               Voir toutes
               <br />
               les bouteilles.
             </h2>
 
-            <span className="lpv-text-link mt-8">
+            <span className="lpv-text-link mt-6 md:mt-8">
               Explorer <span>→</span>
             </span>
           </Link>
 
           <Link
             href="/guides"
-            className="group border-t border-[var(--lpv-line)] pt-6"
+            className="group border-t border-[var(--lpv-line)] py-7 md:py-0 md:pt-6"
           >
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               Comprendre
             </p>
 
-            <h2 className="lpv-display mt-6 text-4xl leading-[0.92] md:text-5xl">
+            <h2 className="lpv-display mt-4 text-[2.15rem] leading-[0.94] md:mt-6 md:text-5xl md:leading-[0.92]">
               Lire sans
               <br />
               trop compliquer.
             </h2>
 
-            <span className="lpv-text-link mt-8">
+            <span className="lpv-text-link mt-6 md:mt-8">
               Voir les guides <span>→</span>
             </span>
           </Link>
 
           <Link
             href="/bonnes-adresses"
-            className="group border-t border-[var(--lpv-line)] pt-6"
+            className="group border-t border-[var(--lpv-line)] py-7 md:py-0 md:pt-6"
           >
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               Sortir
             </p>
 
-            <h2 className="lpv-display mt-6 text-4xl leading-[0.92] md:text-5xl">
+            <h2 className="lpv-display mt-4 text-[2.15rem] leading-[0.94] md:mt-6 md:text-5xl md:leading-[0.92]">
               Trouver une
               <br />
               bonne adresse.
             </h2>
 
-            <span className="lpv-text-link mt-8">
+            <span className="lpv-text-link mt-6 md:mt-8">
               Découvrir <span>→</span>
             </span>
           </Link>

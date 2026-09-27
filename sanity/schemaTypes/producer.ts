@@ -7,6 +7,7 @@ export const producer = defineType({
 
   groups: [
     { name: "identity", title: "Identité", default: true },
+    { name: "media", title: "Photos & droits" },
     { name: "lpv", title: "Le Premier Verre" },
     { name: "approach", title: "Approche & cépages" },
     { name: "visit", title: "Visiter" },
@@ -15,6 +16,14 @@ export const producer = defineType({
   ],
 
   fields: [
+    {
+      name: "translationSourceHash",
+      title: "Translation source hash",
+      type: "string",
+      hidden: true,
+      readOnly: true,
+    },
+
     defineField({
       name: "name",
       title: "Nom",
@@ -65,9 +74,81 @@ export const producer = defineType({
       name: "heroImage",
       title: "Photo principale",
       type: "image",
-      group: "identity",
+      group: "media",
       options: { hotspot: true },
+      description:
+        "Ne sera affichée publiquement que si le statut des droits ci-dessous autorise son utilisation.",
+    }),
+
+    defineField({
+      name: "mediaPermissionStatus",
+      title: "Droits d’utilisation du visuel",
+      type: "string",
+      group: "media",
+      description:
+        "Ce statut détermine si la photo peut être affichée publiquement sur Le Premier Verre.",
+      initialValue: "none",
+      options: {
+        layout: "radio",
+        list: [
+          {
+            title: "Aucune autorisation — ne pas publier",
+            value: "none",
+          },
+          {
+            title: "Visuel fourni directement par le domaine",
+            value: "provided_by_producer",
+          },
+          {
+            title: "Utilisation autorisée par le domaine",
+            value: "authorized_by_producer",
+          },
+          {
+            title: "Photo originale Le Premier Verre",
+            value: "lpv_original",
+          },
+          {
+            title: "Visuel sous licence",
+            value: "licensed",
+          },
+        ],
+      },
       validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "mediaCredit",
+      title: "Crédit du visuel",
+      type: "string",
+      group: "media",
+      description:
+        "Ex. Domaine Bergeville, photographe, agence ou Le Premier Verre.",
+      hidden: ({ document }) =>
+        !document?.mediaPermissionStatus ||
+        document.mediaPermissionStatus === "none",
+    }),
+
+    defineField({
+      name: "mediaPermissionDate",
+      title: "Date de l’autorisation / réception",
+      type: "date",
+      group: "media",
+      hidden: ({ document }) =>
+        !document?.mediaPermissionStatus ||
+        document.mediaPermissionStatus === "none",
+    }),
+
+    defineField({
+      name: "mediaPermissionNote",
+      title: "Note interne sur les droits",
+      type: "text",
+      rows: 3,
+      group: "media",
+      description:
+        "Usage interne seulement. Ex. autorisation reçue par courriel, photos transmises directement, portée de la licence, etc.",
+      hidden: ({ document }) =>
+        !document?.mediaPermissionStatus ||
+        document.mediaPermissionStatus === "none",
     }),
 
     defineField({
@@ -89,6 +170,22 @@ export const producer = defineType({
       description: "Environ 100 à 150 mots.",
       of: [{ type: "block" }],
       validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "oneLinerEn",
+      title: "En une phrase — EN",
+      type: "text",
+      rows: 2,
+      group: "lpv",
+    }),
+
+    defineField({
+      name: "bioEn",
+      title: "Qui sont-ils? — EN",
+      type: "array",
+      group: "lpv",
+      of: [{ type: "block" }],
     }),
 
     defineField({
@@ -130,12 +227,49 @@ export const producer = defineType({
     }),
 
     defineField({
+      name: "approachEn",
+      title: "Leur approche — EN",
+      type: "array",
+      group: "approach",
+      of: [
+        {
+          type: "object",
+          name: "producerApproachItemEn",
+          title: "Élément d’approche — EN",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Titre",
+              type: "string",
+            }),
+            defineField({
+              name: "text",
+              title: "Texte",
+              type: "text",
+              rows: 3,
+            }),
+          ],
+        },
+      ],
+    }),
+
+    defineField({
       name: "signatureGrapes",
       title: "Ce qu’ils cultivent",
       type: "array",
       group: "approach",
       of: [{ type: "reference", to: [{ type: "grape" }] }],
       validation: (Rule) => Rule.required().min(1),
+    }),
+
+    defineField({
+      name: "lpvPartner",
+      title: "Partenaire Le Premier Verre",
+      type: "boolean",
+      group: "lpv",
+      initialValue: false,
+      description:
+        "Activer uniquement lorsqu’une collaboration ou un partenariat avec Le Premier Verre est confirmé. Les producteurs partenaires peuvent être mis en avant sur la page d’accueil.",
     }),
 
     defineField({
@@ -146,6 +280,14 @@ export const producer = defineType({
       group: "lpv",
       description: "2 à 3 phrases dans le ton Le Premier Verre.",
       validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "whyWeFollowEn",
+      title: "Pourquoi on les suit — EN",
+      type: "text",
+      rows: 4,
+      group: "lpv",
     }),
 
     defineField({
@@ -164,6 +306,15 @@ export const producer = defineType({
       group: "visit",
       description:
         "Ex. dégustations, boutique, visites guidées, horaires particuliers.",
+      hidden: ({ document }) => document?.openToVisitors !== true,
+    }),
+
+    defineField({
+      name: "visitDetailsEn",
+      title: "Informations de visite — EN",
+      type: "text",
+      rows: 3,
+      group: "visit",
       hidden: ({ document }) => document?.openToVisitors !== true,
     }),
 
@@ -238,6 +389,14 @@ export const producer = defineType({
       group: "advanced",
       description:
         "Champ conservé pour compatibilité. Utiliser désormais « En une phrase ».",
+    }),
+
+    defineField({
+      name: "shortBioEn",
+      title: "Ancien résumé court — EN",
+      type: "text",
+      rows: 4,
+      group: "advanced",
     }),
 
     defineField({

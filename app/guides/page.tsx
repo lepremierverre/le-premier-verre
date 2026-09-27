@@ -42,24 +42,24 @@ export default async function GuidesPage() {
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
       <section className="border-b border-[var(--lpv-line)]">
-        <div className="lpv-container grid gap-10 py-16 md:grid-cols-[0.68fr_0.32fr] md:items-end md:py-24">
+        <div className="lpv-container grid gap-6 py-10 md:grid-cols-[0.68fr_0.32fr] md:items-end md:gap-10 md:py-24">
           <div>
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               Comprendre
             </p>
 
-            <h1 className="lpv-display mt-7 max-w-5xl text-[clamp(4.8rem,10vw,10rem)] leading-[0.82]">
+            <h1 className="lpv-display mt-4 max-w-5xl text-[clamp(3.9rem,15vw,4.8rem)] leading-[0.84] md:mt-7 md:text-[clamp(4.8rem,10vw,10rem)] md:leading-[0.82]">
               Les guides.
             </h1>
           </div>
 
-          <div className="border-t border-[var(--lpv-line)] pt-6 md:border-t-0 md:pb-2">
-            <p className="max-w-md text-base leading-8 text-[var(--lpv-muted)]">
+          <div className="border-t border-[var(--lpv-line)] pt-4 md:border-t-0 md:pb-2 md:pt-6">
+            <p className="max-w-md text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
               Des repères simples pour mieux choisir, mieux goûter et mieux
               comprendre ce qu’il y a dans le verre.
             </p>
 
-            <p className="mt-7 text-xs uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+            <p className="mt-5 text-xs uppercase tracking-[0.18em] text-[var(--lpv-cocoa)] md:mt-7">
               {guides.length} guide{guides.length > 1 ? "s" : ""} publié
               {guides.length > 1 ? "s" : ""}
             </p>
@@ -67,14 +67,14 @@ export default async function GuidesPage() {
         </div>
       </section>
 
-      <section className="lpv-container py-16 md:py-24">
-        <div className="flex items-end justify-between border-b border-[var(--lpv-line)] pb-6">
+      <section className="lpv-container py-10 md:py-24">
+        <div className="flex items-end justify-between border-b border-[var(--lpv-line)] pb-5 md:pb-6">
           <div>
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               À lire
             </p>
 
-            <h2 className="lpv-display mt-5 text-5xl leading-none md:text-7xl">
+            <h2 className="lpv-display mt-3 text-[2.8rem] leading-[0.95] md:mt-5 md:text-7xl md:leading-none">
               Pour aller plus loin.
             </h2>
           </div>
@@ -94,7 +94,7 @@ export default async function GuidesPage() {
               return (
                 <article
                   key={guide._id}
-                  className={`group border-b border-[var(--lpv-line)] py-10 ${
+                  className={`group border-b border-[var(--lpv-line)] py-7 md:py-10 ${
                     index % 3 !== 2
                       ? "xl:border-r xl:pr-10"
                       : "xl:pl-10"
@@ -122,7 +122,7 @@ export default async function GuidesPage() {
                     </div>
                   </Link>
 
-                  <div className="pt-7">
+                  <div className="pt-5 md:pt-7">
                     <div className="flex items-start justify-between gap-6">
                       <p className="lpv-kicker text-[var(--lpv-cocoa)]">
                         {formatLabel(guide.guideType) || "Guide"}
@@ -134,12 +134,12 @@ export default async function GuidesPage() {
                     </div>
 
                     <Link href={`/guides/${guide.slug}`}>
-                      <h2 className="lpv-display mt-5 text-[clamp(3rem,4vw,4.8rem)] leading-[0.9] transition-opacity group-hover:opacity-60">
+                      <h2 className="lpv-display mt-3 text-[clamp(2.6rem,11vw,3.3rem)] leading-[0.92] transition-opacity group-hover:opacity-60 md:mt-5 md:text-[clamp(3rem,4vw,4.8rem)] md:leading-[0.9]">
                         {guide.title}
                       </h2>
                     </Link>
 
-                    <div className="mt-5 flex flex-wrap gap-3 text-xs uppercase tracking-[0.14em] text-[var(--lpv-muted)]">
+                    <div className="mt-3 flex flex-wrap gap-3 text-xs uppercase tracking-[0.14em] text-[var(--lpv-muted)] md:mt-5">
                       {guide.difficulty ? (
                         <span>{formatLabel(guide.difficulty)}</span>
                       ) : null}
@@ -150,14 +150,14 @@ export default async function GuidesPage() {
                     </div>
 
                     {guide.excerpt ? (
-                      <p className="mt-6 max-w-xl text-sm leading-7 text-[var(--lpv-muted)]">
+                      <p className="mt-4 max-w-xl text-sm leading-6 text-[var(--lpv-muted)] md:mt-6 md:leading-7">
                         {guide.excerpt}
                       </p>
                     ) : null}
 
                     <Link
                       href={`/guides/${guide.slug}`}
-                      className="lpv-text-link mt-8"
+                      className="lpv-text-link mt-5 md:mt-8"
                     >
                       Lire le guide <span>→</span>
                     </Link>
@@ -167,16 +167,16 @@ export default async function GuidesPage() {
             })}
           </div>
         ) : (
-          <div className="py-24 text-center">
+          <div className="py-14 text-center md:py-24">
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               Bientôt
             </p>
 
-            <h2 className="lpv-display mt-6 text-5xl md:text-7xl">
+            <h2 className="lpv-display mx-auto mt-4 max-w-2xl text-[2.8rem] leading-[0.95] md:mt-6 md:text-7xl md:leading-none">
               Les premiers guides arrivent.
             </h2>
 
-            <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-[var(--lpv-muted)]">
+            <p className="mx-auto mt-4 max-w-xl text-[0.9rem] leading-6 text-[var(--lpv-muted)] md:mt-6 md:text-base md:leading-8">
               Les régions, les cépages, les accords et les bases du vin seront
               ajoutés progressivement.
             </p>

@@ -1,4 +1,5 @@
 import { wineFavorite } from "./wineFavorite";
+import { atlasTerritory } from "./atlasTerritory";
 import { appellation } from "./appellation";
 import { article } from "./article";
 import { author } from "./author";
@@ -39,6 +40,9 @@ export const schemaTypes = [
   place,
   vineyard,
   producer,
+
+  // Atlas géographique
+  atlasTerritory,
 
   // Référentiels vin
   country,

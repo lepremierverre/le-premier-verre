@@ -4,6 +4,14 @@ import NewsletterForm from "@/components/newsletter/NewsletterForm";
 export const metadata = {
   title: "Infolettre | Le Premier Verre",
   description: "Recevoir les nouvelles du Premier Verre.",
+  alternates: {
+    canonical: "/newsletter",
+    languages: {
+      "fr-CA": "/newsletter",
+      "en-CA": "/en/newsletter",
+      "x-default": "/newsletter",
+    },
+  },
 };
 
 export default function NewsletterPage() {

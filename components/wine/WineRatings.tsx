@@ -2,6 +2,7 @@ type Props = {
   body?: number;
   sweetness?: number;
   roundness?: number;
+  locale?: "fr" | "en";
 };
 
 function ProfileLine({
@@ -38,7 +39,9 @@ export default function WineRatings({
   body,
   sweetness,
   roundness,
+  locale = "fr",
 }: Props) {
+  const isEnglish = locale === "en";
   if (
     typeof body !== "number" &&
     typeof sweetness !== "number" &&
@@ -52,18 +55,30 @@ export default function WineRatings({
       <div className="grid gap-10 md:grid-cols-[0.38fr_0.62fr]">
         <div>
           <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-            Profil
+            {isEnglish ? "Profile" : "Profil"}
           </p>
 
           <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-6xl">
-            En bouche.
+            {isEnglish ? "On the palate." : "En bouche."}
           </h2>
         </div>
 
         <div className="border-b border-[var(--lpv-line)]">
-          <ProfileLine left="Léger" right="Puissant" value={body} />
-          <ProfileLine left="Sec" right="Doux" value={sweetness} />
-          <ProfileLine left="Vif" right="Rond" value={roundness} />
+          <ProfileLine
+            left={isEnglish ? "Light" : "Léger"}
+            right={isEnglish ? "Full-bodied" : "Puissant"}
+            value={body}
+          />
+          <ProfileLine
+            left={isEnglish ? "Dry" : "Sec"}
+            right={isEnglish ? "Sweet" : "Doux"}
+            value={sweetness}
+          />
+          <ProfileLine
+            left={isEnglish ? "Crisp" : "Vif"}
+            right={isEnglish ? "Round" : "Rond"}
+            value={roundness}
+          />
         </div>
       </div>
     </section>

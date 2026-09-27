@@ -7,6 +7,8 @@ import type { SanityImageSource } from "@sanity/image-url";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { producerBySlugQuery } from "@/sanity/lib/queries";
+import BottleStage from "@/components/wine/BottleStage";
+import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
 
 export const revalidate = 60;
 
@@ -35,6 +37,16 @@ type Producer = {
   logo?: SanityImageSource;
   photo?: SanityImageSource;
   heroImage?: SanityImageSource;
+
+  mediaPermissionStatus?:
+    | "none"
+    | "provided_by_producer"
+    | "authorized_by_producer"
+    | "lpv_original"
+    | "licensed";
+  mediaCredit?: string;
+  mediaPermissionDate?: string;
+  mediaPermissionNote?: string;
 
   oneLiner?: string;
   shortBio?: string;
@@ -112,6 +124,20 @@ function formatColor(value?: string) {
   return labels[value] || value;
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return buildDynamicMetadata({
+    entity: "producer",
+    slug,
+    locale: "fr",
+  });
+}
+
 export default async function ProducerPage({
   params,
 }: {
@@ -126,13 +152,24 @@ export default async function ProducerPage({
 
   if (!producer) notFound();
 
-  const image =
-    producer.heroImage ||
-    producer.photo ||
-    producer.logo;
+  const authorizedMediaStatuses = new Set([
+    "provided_by_producer",
+    "authorized_by_producer",
+    "lpv_original",
+    "licensed",
+  ]);
 
-  const imageSrc = image
-    ? urlFor(image)
+  const hasAuthorizedMedia =
+    !!producer.mediaPermissionStatus &&
+    authorizedMediaStatuses.has(producer.mediaPermissionStatus);
+
+  const authorizedImage =
+    hasAuthorizedMedia
+      ? producer.heroImage || producer.photo || producer.logo
+      : null;
+
+  const authorizedImageSrc = authorizedImage
+    ? urlFor(authorizedImage)
         .width(1600)
         .fit("max")
         .url()
@@ -164,29 +201,129 @@ export default async function ProducerPage({
 
         {/* HERO */}
 
-        <section className="grid gap-12 border-b border-[var(--lpv-line)] pb-16 pt-10 md:pb-24 md:pt-16 lg:grid-cols-[0.82fr_1.18fr]">
+        <section className="border-b border-[var(--lpv-line)] pb-16 pt-16 md:pb-24 md:pt-24">
 
-          <div className="lg:sticky lg:top-24 lg:self-start">
-
+          <div className="flex items-start justify-between gap-8">
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              {location || "Producteur"}
+              Producteur
             </p>
 
-            <h1 className="lpv-display mt-7 text-[clamp(4.5rem,8vw,8.5rem)] leading-[0.84]">
-              {producer.name}
-            </h1>
-
-            {producer.oneLiner ? (
-              <p className="mt-10 max-w-xl text-[clamp(1.7rem,3vw,2.7rem)] font-medium leading-[1.08] tracking-[-0.03em]">
-                {producer.oneLiner}
-              </p>
-            ) : producer.shortBio ? (
-              <p className="mt-8 max-w-lg text-lg leading-8 text-[var(--lpv-muted)]">
-                {producer.shortBio}
+            {location ? (
+              <p className="max-w-md text-right text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+                {location}
               </p>
             ) : null}
+          </div>
 
-            <div className="mt-10 flex flex-wrap gap-5 border-t border-[var(--lpv-line)] pt-7">
+          <div className="mt-12 md:mt-16">
+            <h1
+              className={`lpv-display tracking-[-0.055em] ${
+                producer.name.length > 18
+                  ? "max-w-[15ch] text-[clamp(4.5rem,9.5vw,9.5rem)] leading-[0.86]"
+                  : "max-w-[12ch] text-[clamp(5rem,11vw,11rem)] leading-[0.78]"
+              }`}
+            >
+              {producer.name}
+            </h1>
+          </div>
+
+          {authorizedImageSrc ? (
+            <div className="mt-14 border-t border-[var(--lpv-line)] pt-8 md:mt-20 md:pt-10">
+              <div className="w-full">
+                <div className="aspect-[3/2] overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src={authorizedImageSrc}
+                    alt={producer.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <div className="mt-3 flex items-center justify-between gap-6">
+                  <p className="text-[0.6rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                    Visuel autorisé
+                  </p>
+
+                  {producer.mediaCredit ? (
+                    <p className="text-xs text-[var(--lpv-muted)]">
+                      © {producer.mediaCredit}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          <div className={`grid gap-12 border-t border-[var(--lpv-line)] pt-8 md:grid-cols-[0.34fr_0.66fr] md:pt-10 ${
+            authorizedImageSrc ? "mt-10 md:mt-14" : "mt-14 md:mt-20"
+          }`}>
+
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                En quelques mots
+              </p>
+            </div>
+
+            <div>
+              {producer.oneLiner ? (
+                <p className="max-w-4xl text-[clamp(1.8rem,3.5vw,3.4rem)] font-medium leading-[1.04] tracking-[-0.035em]">
+                  {producer.oneLiner}
+                </p>
+              ) : producer.shortBio ? (
+                <p className="max-w-3xl text-xl leading-9 text-[var(--lpv-muted)]">
+                  {producer.shortBio}
+                </p>
+              ) : (
+                <p className="text-lg text-[var(--lpv-muted)]">
+                  Un domaine à découvrir.
+                </p>
+              )}
+            </div>
+
+          </div>
+
+          <div className="mt-16 grid gap-8 border-t border-[var(--lpv-line)] pt-7 md:grid-cols-3 md:gap-12">
+
+            <div>
+              <p className="text-[0.65rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                Origine
+              </p>
+
+              <p className="mt-3 text-lg">
+                {[producer.region?.name, producer.country?.name]
+                  .filter(Boolean)
+                  .join(" · ") || "—"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[0.65rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                Appellation
+              </p>
+
+              <p className="mt-3 text-lg">
+                {producer.appellation?.name || "Plusieurs appellations"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[0.65rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                Cépages
+              </p>
+
+              <p className="mt-3 text-lg">
+                {producer.signatureGrapes?.length
+                  ? producer.signatureGrapes
+                      .map((grape) => grape.name)
+                      .filter(Boolean)
+                      .join(" · ")
+                  : "—"}
+              </p>
+            </div>
+
+          </div>
+
+          {producer.website || producer.instagram ? (
+            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4">
 
               {producer.website ? (
                 <a
@@ -211,23 +348,8 @@ export default async function ProducerPage({
               ) : null}
 
             </div>
-          </div>
+          ) : null}
 
-          <div className="flex min-h-[580px] items-center justify-center overflow-hidden bg-[var(--lpv-paper-light)] md:min-h-[760px]">
-
-            {imageSrc ? (
-              <img
-                src={imageSrc}
-                alt={producer.name}
-                className="h-full max-h-[820px] w-full object-cover"
-              />
-            ) : (
-              <p className="text-sm text-[var(--lpv-muted)]">
-                Photo à ajouter dans Sanity.
-              </p>
-            )}
-
-          </div>
         </section>
 
         {/* QUI SONT-ILS */}
@@ -379,47 +501,28 @@ export default async function ProducerPage({
 
             </div>
 
-            <div className="grid md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-x-8 md:grid-cols-2 xl:grid-cols-3 xl:gap-x-12">
 
               {producer.wines.map((wine, index) => {
-                const bottleSrc = wine.bottleImage
-                  ? urlFor(wine.bottleImage)
-                      .width(800)
-                      .fit("max")
-                      .url()
-                  : null;
-
-                const price = formatPrice(wine.approxPrice);
+const price = formatPrice(wine.approxPrice);
 
                 return (
                   <article
                     key={wine._id}
-                    className={`group border-b border-[var(--lpv-line)] py-10 ${
-                      index % 3 !== 2
-                        ? "xl:border-r xl:pr-10"
-                        : "xl:pl-10"
-                    } ${
-                      index % 3 === 1
-                        ? "xl:px-10"
-                        : ""
-                    }`}
+                    className="group flex min-w-0 flex-col border-b border-[var(--lpv-line)] py-10"
                   >
 
                     <Link
                       href={`/vins/${wine.slug}`}
-                      className="flex min-h-[420px] items-center justify-center bg-[var(--lpv-paper-light)] p-12"
+                      className="block w-full"
                     >
-                      {bottleSrc ? (
-                        <img
-                          src={bottleSrc}
-                          alt={wine.name}
-                          className="h-auto max-h-[300px] w-auto max-w-[65%] object-contain transition duration-700 group-hover:scale-[1.025]"
-                        />
-                      ) : (
-                        <p className="text-sm text-[var(--lpv-muted)]">
-                          Photo à venir
-                        </p>
-                      )}
+                      <BottleStage
+                        image={wine.bottleImage}
+                        alt={wine.name ?? "Bouteille de vin"}
+                        color={wine.color ?? undefined}
+                        variant="card"
+                        className="transition duration-700 group-hover:scale-[1.025]"
+                      />
                     </Link>
 
                     <div className="pt-7">

@@ -77,8 +77,8 @@ export default async function ConnexionPage() {
 
         <div className="flex min-h-[620px] items-center border-y border-[var(--lpv-line)] py-12 lg:border-y-0 lg:border-l lg:pl-16 xl:pl-24">
           <SignIn
-            fallbackRedirectUrl="/mon-carnet"
-            signUpFallbackRedirectUrl="/mon-carnet"
+            fallbackRedirectUrl="/apres-connexion"
+            signUpFallbackRedirectUrl="/apres-connexion"
             
           />
         </div>

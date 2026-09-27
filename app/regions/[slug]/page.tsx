@@ -4,10 +4,12 @@ import { PortableText } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageSource } from "@sanity/image-url";
 
-import { RegionMiniMap } from "@/components/knowledge/region-mini-map";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { regionBySlugQuery } from "@/sanity/lib/queries";
+
+import BottleStage from "@/components/wine/BottleStage";
+import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
 
 export const revalidate = 60;
 
@@ -26,20 +28,8 @@ type RegionDetail = {
     slug?: string;
   };
 
-  heroImage?: SanityImageSource;
-
   introduction?: PortableTextBlock[];
   locationText?: string;
-
-  latitude?: number;
-  longitude?: number;
-  mapZoom?: number;
-  mapPolygon?: {
-    _key?: string;
-    latitude: number;
-    longitude: number;
-  }[];
-
   climate?: string;
 
   signatureGrapes?: {
@@ -60,9 +50,6 @@ type RegionDetail = {
     slug: string;
     municipality?: string;
     oneLiner?: string;
-    logo?: SanityImageSource;
-    photo?: SanityImageSource;
-    heroImage?: SanityImageSource;
   }[];
 
   wines?: {
@@ -121,6 +108,20 @@ function formatColor(value?: string) {
   return labels[value] || value;
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return buildDynamicMetadata({
+    entity: "region",
+    slug,
+    locale: "fr",
+  });
+}
+
 export default async function RegionPage({
   params,
 }: {
@@ -135,13 +136,6 @@ export default async function RegionPage({
 
   if (!region) notFound();
 
-  const heroSrc = region.heroImage
-    ? urlFor(region.heroImage)
-        .width(1800)
-        .fit("max")
-        .url()
-    : null;
-
   const locationLabel = [
     region.parentRegion?.name,
     region.country?.name,
@@ -149,13 +143,11 @@ export default async function RegionPage({
     .filter(Boolean)
     .join(" · ");
 
-  const hasCoordinates =
-    typeof region.latitude === "number" &&
-    typeof region.longitude === "number";
-
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
       <article className="lpv-container pb-24">
+
+        {/* RETOUR */}
 
         <div className="pt-8 md:pt-10">
           <Link href="/regions" className="lpv-text-link">
@@ -165,124 +157,68 @@ export default async function RegionPage({
 
         {/* HERO */}
 
-        <section className="grid gap-12 border-b border-[var(--lpv-line)] pb-16 pt-10 md:pb-24 md:pt-16 lg:grid-cols-[0.82fr_1.18fr]">
+        <section className="pb-16 pt-14 md:pb-24 md:pt-20">
 
-          <div className="lg:sticky lg:top-24 lg:self-start">
+          <div className="max-w-5xl">
 
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               {locationLabel || "Région viticole"}
             </p>
 
-            <h1 className="lpv-display mt-7 text-[clamp(4.2rem,8vw,8.5rem)] leading-[0.84]">
+            <h1 className="lpv-display mt-6 text-[clamp(4.5rem,10vw,10rem)] leading-[0.82] tracking-[-0.055em]">
               {region.name}
             </h1>
 
             {region.introduction?.length ? (
-              <div className="lpv-prose mt-10 max-w-xl text-lg leading-8 text-[var(--lpv-muted)]">
+              <div className="lpv-prose mt-16 max-w-none text-lg leading-8 text-[var(--lpv-muted)] md:mt-20">
                 <PortableText value={region.introduction} />
               </div>
             ) : null}
 
-            <div className="mt-10 flex flex-wrap gap-5 border-t border-[var(--lpv-line)] pt-7">
-
-              {region.country?.slug ? (
-                <Link
-                  href={`/pays/${region.country.slug}`}
-                  className="lpv-text-link"
-                >
-                  {region.country.name} <span>→</span>
-                </Link>
-              ) : null}
-
-              {region.parentRegion?.slug ? (
-                <Link
-                  href={`/regions/${region.parentRegion.slug}`}
-                  className="lpv-text-link"
-                >
-                  {region.parentRegion.name} <span>→</span>
-                </Link>
-              ) : null}
-
-            </div>
           </div>
 
-          <div className="flex min-h-[520px] items-center justify-center overflow-hidden bg-[var(--lpv-paper-light)] md:min-h-[720px]">
-
-            {heroSrc ? (
-              <img
-                src={heroSrc}
-                alt={region.name}
-                className="h-full max-h-[820px] w-full object-cover"
-              />
-            ) : (
-              <div className="px-8 text-center">
-                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                  {region.name}
-                </p>
-                <p className="mt-5 text-sm text-[var(--lpv-muted)]">
-                  Photo de région à ajouter dans Sanity.
-                </p>
-              </div>
-            )}
-
-          </div>
         </section>
 
-        {/* LOCALISATION */}
+        {/* TERRITOIRE + CLIMAT */}
 
-        {(region.locationText || hasCoordinates) ? (
-          <section className="border-b border-[var(--lpv-line)] py-16 md:py-24">
+        {(region.locationText || region.climate) ? (
+          <section className="border-t border-[var(--lpv-line)] py-16 md:py-24">
 
-            <div className="grid gap-12 lg:grid-cols-[0.34fr_0.66fr]">
+            <div className="grid gap-16 md:grid-cols-2 md:gap-20 lg:gap-28">
 
-              <div>
-                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                  Le territoire
-                </p>
+              {region.locationText ? (
+                <div>
+                  <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                    Le territoire
+                  </p>
 
-                <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-7xl">
-                  Où sommes-nous?
-                </h2>
+                  <h2 className="lpv-display mt-5 text-[clamp(3rem,4.7vw,4.8rem)] leading-[0.9]">
+                    Où sommes-nous?
+                  </h2>
 
-                {region.locationText ? (
-                  <p className="mt-8 max-w-md text-base leading-8 text-[var(--lpv-muted)]">
+                  <p className="mt-8 max-w-xl text-[clamp(1.05rem,1.25vw,1.25rem)] leading-[1.65] text-[var(--lpv-muted)]">
                     {region.locationText}
                   </p>
-                ) : null}
-              </div>
+                </div>
+              ) : null}
 
-              {hasCoordinates ? (
-                <RegionMiniMap
-                  name={region.name}
-                  latitude={region.latitude!}
-                  longitude={region.longitude!}
-                  zoom={region.mapZoom || 8}
-                  polygon={region.mapPolygon}
-                />
+              {region.climate ? (
+                <div>
+                  <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                    Dans les vignes
+                  </p>
+
+                  <h2 className="lpv-display mt-5 text-[clamp(3rem,4.7vw,4.8rem)] leading-[0.9]">
+                    Le climat.
+                  </h2>
+
+                  <p className="mt-8 max-w-xl text-[clamp(1.05rem,1.25vw,1.25rem)] leading-[1.65] text-[var(--lpv-muted)]">
+                    {region.climate}
+                  </p>
+                </div>
               ) : null}
 
             </div>
-          </section>
-        ) : null}
-
-        {/* CLIMAT */}
-
-        {region.climate ? (
-          <section className="grid gap-12 border-b border-[var(--lpv-line)] py-16 md:grid-cols-[0.34fr_0.66fr] md:py-24">
-
-            <div>
-              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                Dans les vignes
-              </p>
-
-              <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-7xl">
-                Le climat.
-              </h2>
-            </div>
-
-            <p className="max-w-3xl text-[clamp(1.45rem,2.4vw,2.2rem)] leading-[1.3] tracking-[-0.025em]">
-              {region.climate}
-            </p>
 
           </section>
         ) : null}
@@ -290,90 +226,93 @@ export default async function RegionPage({
         {/* CÉPAGES */}
 
         {region.signatureGrapes?.length ? (
-          <section className="grid gap-12 border-b border-[var(--lpv-line)] py-16 md:grid-cols-[0.34fr_0.66fr] md:py-20">
+          <section className="border-t border-[var(--lpv-line)] py-16 md:py-24">
 
-            <div>
-              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                À reconnaître
-              </p>
+            <div className="grid gap-12 md:grid-cols-[0.34fr_0.66fr] md:gap-16">
 
-              <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-6xl">
-                Les cépages.
-              </h2>
-            </div>
+              <div>
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  À reconnaître
+                </p>
 
-            <div className="border-b border-[var(--lpv-line)]">
+                <h2 className="lpv-display mt-5 text-5xl leading-[0.9] md:text-6xl">
+                  Les cépages.
+                </h2>
+              </div>
 
-              {region.signatureGrapes.map((grape) => (
-                <div
-                  key={grape._id || grape.name}
-                  className="border-t border-[var(--lpv-line)] py-5"
-                >
-                  {grape.slug ? (
-                    <Link
-                      href={`/cepages/${grape.slug}`}
-                      className="group flex items-center justify-between gap-6"
-                    >
-                      <span className="text-xl">
+              <div>
+
+                {region.signatureGrapes.map((grape, index) => (
+                  <div
+                    key={grape._id || grape.name}
+                    className={index === 0 ? "" : "border-t border-[var(--lpv-line)]"}
+                  >
+                    {grape.slug ? (
+                      <Link
+                        href={`/cepages/${grape.slug}`}
+                        className="group flex items-center justify-between gap-8 py-5 md:py-6"
+                      >
+                        <span className="text-xl md:text-2xl">
+                          {grape.name}
+                        </span>
+
+                        <span className="lpv-text-link opacity-60 transition-opacity group-hover:opacity-100">
+                          Voir <span>→</span>
+                        </span>
+                      </Link>
+                    ) : (
+                      <div className="py-5 text-xl md:py-6 md:text-2xl">
                         {grape.name}
-                      </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
 
-                      <span className="lpv-text-link opacity-60 transition group-hover:opacity-100">
-                        Voir <span>→</span>
-                      </span>
-                    </Link>
-                  ) : (
-                    <span className="text-xl">
-                      {grape.name}
-                    </span>
-                  )}
-                </div>
-              ))}
+              </div>
 
             </div>
+
           </section>
         ) : null}
 
         {/* CARACTÉRISTIQUES */}
 
         {region.characteristics?.length ? (
-          <section className="border-b border-[var(--lpv-line)] py-16 md:py-24">
+          <section className="border-t border-[var(--lpv-line)] py-16 md:py-24">
 
-            <div className="border-b border-[var(--lpv-line)] pb-7">
-
+            <div>
               <p className="lpv-kicker text-[var(--lpv-cocoa)]">
                 En bref
               </p>
 
-              <h2 className="lpv-display mt-5 text-5xl leading-none md:text-7xl">
+              <h2 className="lpv-display mt-5 text-5xl leading-[0.9] md:text-7xl">
                 Ce qu’il faut savoir.
               </h2>
-
             </div>
 
-            <div className="grid md:grid-cols-2">
+            <div className="mt-10 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
 
-              {region.characteristics.map((item, index) => (
+              {region.characteristics.slice(0, 3).map((item, index) => (
                 <div
                   key={item._key || `${item.title}-${index}`}
-                  className={`border-b border-[var(--lpv-line)] py-10 md:py-14 ${
-                    index % 2 === 0
-                      ? "md:border-r md:pr-10"
-                      : "md:pl-10"
+                  className={`py-10 md:min-h-[285px] md:px-10 md:py-12 ${
+                    index > 0
+                      ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
+                      : ""
                   }`}
                 >
-                  <span className="text-[0.65rem] tracking-[0.18em] text-[var(--lpv-muted)]">
+                  <span className="text-[0.62rem] tracking-[0.18em] text-[var(--lpv-muted)]">
                     {String(index + 1).padStart(2, "0")}
                   </span>
 
                   {item.title ? (
-                    <h3 className="mt-7 text-xl font-medium">
+                    <h3 className="mt-7 text-lg font-medium leading-snug md:text-xl">
                       {item.title}
                     </h3>
                   ) : null}
 
                   {item.text ? (
-                    <p className="mt-5 max-w-xl text-sm leading-7 text-[var(--lpv-muted)]">
+                    <p className="mt-6 max-w-md text-sm leading-7 text-[var(--lpv-muted)]">
                       {item.text}
                     </p>
                   ) : null}
@@ -381,15 +320,16 @@ export default async function RegionPage({
               ))}
 
             </div>
+
           </section>
         ) : null}
 
         {/* PRODUCTEURS */}
 
         {region.producers?.length ? (
-          <section className="border-b border-[var(--lpv-line)] py-16 md:py-24">
+          <section className="border-t border-[var(--lpv-line)] py-16 md:py-24">
 
-            <div className="flex items-end justify-between border-b border-[var(--lpv-line)] pb-7">
+            <div className="flex flex-wrap items-end justify-between gap-8">
 
               <div>
                 <p className="lpv-kicker text-[var(--lpv-cocoa)]">
@@ -410,78 +350,55 @@ export default async function RegionPage({
 
             </div>
 
-            <div className="grid md:grid-cols-2">
+            <div className="mt-12">
 
-              {region.producers.map((producer, index) => {
-                const producerImage =
-                  producer.heroImage ||
-                  producer.photo ||
-                  producer.logo;
+              {region.producers.map((producer, index) => (
+                <Link
+                  key={producer._id}
+                  href={`/producteurs/${producer.slug}`}
+                  className="group grid gap-4 py-6 transition-opacity hover:opacity-55 md:grid-cols-[56px_1fr_auto] md:items-center"
+                >
+                  <span className="text-[0.62rem] tracking-[0.18em] text-[var(--lpv-muted)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
 
-                const producerImageSrc = producerImage
-                  ? urlFor(producerImage)
-                      .width(1000)
-                      .fit("max")
-                      .url()
-                  : null;
-
-                return (
-                  <Link
-                    key={producer._id}
-                    href={`/producteurs/${producer.slug}`}
-                    className={`group border-b border-[var(--lpv-line)] py-10 ${
-                      index % 2 === 0
-                        ? "md:border-r md:pr-10"
-                        : "md:pl-10"
-                    }`}
-                  >
-                    <div className="flex min-h-[340px] items-center justify-center overflow-hidden bg-[var(--lpv-paper-light)]">
-                      {producerImageSrc ? (
-                        <img
-                          src={producerImageSrc}
-                          alt={producer.name}
-                          className="h-[340px] w-full object-cover transition duration-700 group-hover:scale-[1.02]"
-                        />
-                      ) : (
-                        <p className="text-sm text-[var(--lpv-muted)]">
-                          Photo à venir
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="pt-7">
-                      <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                        {producer.municipality || region.name}
-                      </p>
-
-                      <h3 className="lpv-display mt-5 text-4xl leading-[0.92] md:text-5xl">
+                  <div>
+                    <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                      <h3 className="lpv-display text-3xl leading-none md:text-4xl">
                         {producer.name}
                       </h3>
 
-                      {producer.oneLiner ? (
-                        <p className="mt-5 max-w-xl text-sm leading-7 text-[var(--lpv-muted)]">
-                          {producer.oneLiner}
-                        </p>
+                      {producer.municipality ? (
+                        <span className="lpv-kicker text-[var(--lpv-cocoa)]">
+                          {producer.municipality}
+                        </span>
                       ) : null}
-
-                      <span className="lpv-text-link mt-7">
-                        Découvrir <span>→</span>
-                      </span>
                     </div>
-                  </Link>
-                );
-              })}
+
+                    {producer.oneLiner ? (
+                      <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--lpv-muted)]">
+                        {producer.oneLiner}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <span className="lpv-text-link justify-self-start md:justify-self-end">
+                    Découvrir <span>→</span>
+                  </span>
+                </Link>
+              ))}
 
             </div>
+
           </section>
         ) : null}
 
         {/* VINS */}
 
         {region.wines?.length ? (
-          <section className="border-b border-[var(--lpv-line)] py-16 md:py-24">
+          <section className="border-t border-[var(--lpv-line)] py-16 md:py-24">
 
-            <div className="flex items-end justify-between border-b border-[var(--lpv-line)] pb-7">
+            <div className="flex flex-wrap items-end justify-between gap-8">
 
               <div>
                 <p className="lpv-kicker text-[var(--lpv-cocoa)]">
@@ -502,50 +419,31 @@ export default async function RegionPage({
 
             </div>
 
-            <div className="grid md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-10 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
-              {region.wines.map((wine, index) => {
-                const bottleSrc = wine.bottleImage
-                  ? urlFor(wine.bottleImage)
-                      .width(800)
-                      .fit("max")
-                      .url()
-                  : null;
-
+              {region.wines.map((wine) => {
                 const price = formatPrice(wine.approxPrice);
 
                 return (
                   <article
                     key={wine._id}
-                    className={`group border-b border-[var(--lpv-line)] py-10 ${
-                      index % 3 !== 2
-                        ? "xl:border-r xl:pr-10"
-                        : "xl:pl-10"
-                    } ${
-                      index % 3 === 1
-                        ? "xl:px-10"
-                        : ""
-                    }`}
+                    className="group flex min-w-0 h-full flex-col"
                   >
 
                     <Link
                       href={`/vins/${wine.slug}`}
-                      className="flex min-h-[420px] items-center justify-center bg-[var(--lpv-paper-light)] p-12"
+                      className="block"
                     >
-                      {bottleSrc ? (
-                        <img
-                          src={bottleSrc}
-                          alt={wine.name}
-                          className="h-auto max-h-[300px] w-auto max-w-[65%] object-contain transition duration-700 group-hover:scale-[1.025]"
-                        />
-                      ) : (
-                        <p className="text-sm text-[var(--lpv-muted)]">
-                          Photo à venir
-                        </p>
-                      )}
+                      <BottleStage
+                        image={wine.bottleImage}
+                        alt={wine.name}
+                        color={wine.color}
+                        variant="card"
+                        className="!h-[230px] md:!h-[250px] transition duration-700 group-hover:scale-[1.025]"
+                      />
                     </Link>
 
-                    <div className="pt-7">
+                    <div className="pt-5">
 
                       <p className="lpv-kicker text-[var(--lpv-cocoa)]">
                         {[formatColor(wine.color), wine.vintage]
@@ -554,18 +452,18 @@ export default async function RegionPage({
                       </p>
 
                       <Link href={`/vins/${wine.slug}`}>
-                        <h3 className="lpv-display mt-5 text-4xl leading-[0.92] transition-opacity group-hover:opacity-60 md:text-5xl">
+                        <h3 className="lpv-display mt-3 min-h-[3.55rem] text-[1.85rem] leading-[0.96] transition-opacity group-hover:opacity-60">
                           {wine.name}
                         </h3>
                       </Link>
 
                       {wine.producer?.name ? (
-                        <p className="mt-4 text-sm text-[var(--lpv-muted)]">
+                        <p className="mt-3 text-sm text-[var(--lpv-muted)]">
                           {wine.producer.name}
                         </p>
                       ) : null}
 
-                      <div className="mt-7 flex items-end justify-between gap-6 border-t border-[var(--lpv-line)] pt-5">
+                      <div className="mt-auto flex items-center justify-between gap-5 pt-4">
 
                         {price ? (
                           <p className="text-sm">
@@ -583,6 +481,7 @@ export default async function RegionPage({
                         </Link>
 
                       </div>
+
                     </div>
 
                   </article>
@@ -590,16 +489,16 @@ export default async function RegionPage({
               })}
 
             </div>
+
           </section>
         ) : null}
 
         {/* GUIDES */}
 
         {region.guides?.length ? (
-          <section className="border-b border-[var(--lpv-line)] py-16 md:py-24">
+          <section className="border-t border-[var(--lpv-line)] py-16 md:py-24">
 
-            <div className="border-b border-[var(--lpv-line)] pb-7">
-
+            <div>
               <p className="lpv-kicker text-[var(--lpv-cocoa)]">
                 Pour aller plus loin
               </p>
@@ -607,12 +506,11 @@ export default async function RegionPage({
               <h2 className="lpv-display mt-5 text-5xl leading-none md:text-7xl">
                 Les guides.
               </h2>
-
             </div>
 
-            <div className="grid md:grid-cols-2">
+            <div className="mt-12 grid gap-12 md:grid-cols-2">
 
-              {region.guides.map((guide, index) => {
+              {region.guides.map((guide) => {
                 const guideImageSrc = guide.coverImage
                   ? urlFor(guide.coverImage)
                       .width(1000)
@@ -624,11 +522,7 @@ export default async function RegionPage({
                   <Link
                     key={guide._id}
                     href={`/guides/${guide.slug}`}
-                    className={`group border-b border-[var(--lpv-line)] py-10 ${
-                      index % 2 === 0
-                        ? "md:border-r md:pr-10"
-                        : "md:pl-10"
-                    }`}
+                    className="group"
                   >
                     {guideImageSrc ? (
                       <div className="mb-7 overflow-hidden bg-[var(--lpv-paper-light)]">
@@ -644,7 +538,7 @@ export default async function RegionPage({
                       Guide
                     </p>
 
-                    <h3 className="lpv-display mt-5 text-4xl leading-[0.92] md:text-5xl">
+                    <h3 className="lpv-display mt-4 text-4xl leading-[0.92] md:text-5xl">
                       {guide.title}
                     </h3>
 
@@ -654,7 +548,7 @@ export default async function RegionPage({
                       </p>
                     ) : null}
 
-                    <span className="lpv-text-link mt-7">
+                    <span className="lpv-text-link mt-6">
                       Lire <span>→</span>
                     </span>
                   </Link>
@@ -662,39 +556,9 @@ export default async function RegionPage({
               })}
 
             </div>
+
           </section>
         ) : null}
-
-        {/* EXPLORER */}
-
-        <section className="py-16 md:py-24">
-
-          <div className="grid gap-10 border-y border-[var(--lpv-line)] py-12 md:grid-cols-[1fr_auto] md:items-end md:py-16">
-
-            <div>
-              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                Continuer
-              </p>
-
-              <h2 className="lpv-display mt-5 max-w-4xl text-5xl leading-[0.9] md:text-7xl">
-                Explorer la région.
-              </h2>
-
-              <p className="mt-7 max-w-2xl text-base leading-8 text-[var(--lpv-muted)]">
-                Retrouvez les producteurs, les vins et les lieux qui donnent
-                vie à {region.name}.
-              </p>
-            </div>
-
-            <Link
-              href={`/carte?region=${encodeURIComponent(region.slug)}`}
-              className="lpv-text-link w-fit text-base"
-            >
-              Explorer la région <span>→</span>
-            </Link>
-
-          </div>
-        </section>
 
       </article>
     </main>

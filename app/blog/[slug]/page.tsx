@@ -7,6 +7,8 @@ import type { PortableTextBlock } from "@portabletext/types";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { articleBySlugQuery } from "@/sanity/lib/queries";
+import BottleStage from "@/components/wine/BottleStage";
+import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
 
 export const revalidate = 60;
 
@@ -26,10 +28,57 @@ type WinePreview = {
   };
 };
 
+type ArticleWineCard = {
+  _key: string;
+  _type: "articleWineCard";
+  wine?: WinePreview;
+};
+
+type ProducerPreview = {
+  _id: string;
+  name: string;
+  slug: string;
+  municipality?: string;
+  heroImage?: SanityImageSource;
+  oneLiner?: string;
+  openToVisitors?: boolean;
+};
+
+type ArticleProducerCard = {
+  _key: string;
+  _type: "articleProducerCard";
+  producer?: ProducerPreview;
+};
+
+type PlacePreview = {
+  _id: string;
+  name: string;
+  slug: string;
+  type?: string;
+  city?: string;
+  region?: string;
+  address?: string;
+  website?: string;
+  coverImage?: SanityImageSource;
+  published?: boolean;
+};
+
+type ArticlePlaceCard = {
+  _key: string;
+  _type: "articlePlaceCard";
+  place?: PlacePreview;
+};
+
+type ArticleContentBlock =
+  | PortableTextBlock
+  | ArticleWineCard
+  | ArticleProducerCard
+  | ArticlePlaceCard;
+
 type Article = {
   title: string;
   excerpt?: string;
-  content?: PortableTextBlock[] | string;
+  content?: ArticleContentBlock[] | string;
   category?: string;
   author?: string;
   coverImage?: SanityImageSource;
@@ -50,7 +99,8 @@ function formatDate(value?: string) {
   }).format(new Date(value));
 }
 
-function getBlockText(block: PortableTextBlock) {
+function getBlockText(block: ArticleContentBlock) {
+  if (block._type !== "block") return "";
   if (!("children" in block) || !Array.isArray(block.children)) return "";
 
   return block.children
@@ -59,6 +109,235 @@ function getBlockText(block: PortableTextBlock) {
     )
     .join("")
     .trim();
+}
+
+function ArticleProducerCardView({
+  value,
+}: {
+  value: ArticleProducerCard;
+}) {
+  const producer = value.producer;
+
+  if (!producer?.slug) return null;
+
+  const imageSrc = producer.heroImage
+    ? urlFor(producer.heroImage)
+        .ignoreImageParams()
+        .width(700)
+        .height(520)
+        .fit("crop")
+        .url()
+    : null;
+
+  return (
+    <Link
+      href={`/producteurs/${producer.slug}`}
+      className="group my-10 grid max-w-[46rem] border-y border-[var(--lpv-line)] py-5 md:grid-cols-[150px_1fr] md:gap-7"
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--lpv-paper-light)]">
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={producer.name}
+            className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+          />
+        ) : null}
+      </div>
+
+      <div className="flex flex-col justify-center pt-5 md:pt-0">
+        <p className="text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+          {[producer.municipality, "Producteur"].filter(Boolean).join(" · ")}
+        </p>
+
+        <h3 className="lpv-display mt-2 text-[1.8rem] leading-[1] text-[var(--lpv-ink)]">
+          {producer.name}
+        </h3>
+
+        {producer.oneLiner ? (
+          <p className="mt-2 max-w-lg text-sm leading-6 text-[var(--lpv-muted)]">
+            {producer.oneLiner}
+          </p>
+        ) : null}
+
+        <span className="mt-4 inline-flex w-fit items-center gap-2 border-b border-[var(--lpv-ink)] pb-1 text-sm">
+          Voir le producteur
+          <span className="transition-transform group-hover:translate-x-1">
+            →
+          </span>
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function ArticlePlaceCardView({
+  value,
+}: {
+  value: ArticlePlaceCard;
+}) {
+  const place = value.place;
+
+  if (!place) return null;
+
+  const imageSrc = place.coverImage
+    ? urlFor(place.coverImage)
+        .ignoreImageParams()
+        .width(700)
+        .height(520)
+        .fit("crop")
+        .url()
+    : null;
+
+  const typeLabel =
+    place.type === "restaurant"
+      ? "Restaurant"
+      : place.type === "wine-bar"
+        ? "Bar à vin"
+        : place.type === "caviste"
+          ? "Caviste"
+          : place.type === "shop"
+            ? "Boutique"
+            : "Hébergement";
+
+  const inner = (
+    <>
+      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--lpv-paper-light)]">
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={place.name}
+            className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+          />
+        ) : null}
+      </div>
+
+      <div className="flex flex-col justify-center pt-5 md:pt-0">
+        <p className="text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+          {[place.city, typeLabel].filter(Boolean).join(" · ")}
+        </p>
+
+        <h3 className="lpv-display mt-2 text-[1.8rem] leading-[1] text-[var(--lpv-ink)]">
+          {place.name}
+        </h3>
+
+        {place.address ? (
+          <p className="mt-2 max-w-lg text-sm leading-6 text-[var(--lpv-muted)]">
+            {place.address}
+          </p>
+        ) : null}
+
+        {place.published ? (
+          <span className="mt-4 inline-flex w-fit items-center gap-2 border-b border-[var(--lpv-ink)] pb-1 text-sm">
+            Voir l’adresse
+            <span className="transition-transform group-hover:translate-x-1">
+              →
+            </span>
+          </span>
+        ) : (
+          <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+            <span className="inline-flex items-center gap-2 border-b border-[var(--lpv-ink)] pb-1">
+              Voir le site ↗
+            </span>
+
+            <span className="inline-flex items-center gap-2 border-b border-[var(--lpv-ink)] pb-1">
+              Réserver ↗
+            </span>
+          </div>
+        )}
+      </div>
+    </>
+  );
+
+  const className =
+    "group my-10 grid max-w-[46rem] border-y border-[var(--lpv-line)] py-5 md:grid-cols-[150px_1fr] md:gap-7";
+
+  if (place.published && place.slug) {
+    return (
+      <Link href={`/bonnes-adresses/${place.slug}`} className={className}>
+        {inner}
+      </Link>
+    );
+  }
+
+  if (place.website) {
+    return (
+      <a
+        href={place.website}
+        target="_blank"
+        rel="noreferrer"
+        className={className}
+      >
+        {inner}
+      </a>
+    );
+  }
+
+  return <div className={className}>{inner}</div>;
+}
+
+function ArticleWineCardView({
+  value,
+}: {
+  value: ArticleWineCard;
+}) {
+  const wine = value.wine;
+
+  if (!wine?.slug) return null;
+
+  return (
+    <Link
+      href={`/vins/${wine.slug}`}
+      className="group my-12 block max-w-[46rem] border-y border-[var(--lpv-line)] py-6 md:my-16 md:py-8"
+    >
+      <div className="grid gap-7 sm:grid-cols-[180px_1fr] sm:items-center md:grid-cols-[210px_1fr] md:gap-10">
+        <div className="relative">
+          <BottleStage
+            image={wine.bottleImage}
+            alt={wine.name ?? "Bouteille de vin"}
+            color={wine.color ?? undefined}
+            variant="card"
+            className="!h-[360px] transition duration-700 group-hover:scale-[1.02] sm:!h-[400px]"
+          />
+
+
+        </div>
+
+        <div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              {wine.producer?.name || "Le Premier Verre"}
+            </p>
+
+            {typeof wine.approxPrice === "number" ? (
+              <span className="text-xs text-[var(--lpv-muted)]">
+                · {wine.approxPrice.toFixed(2).replace(".", ",")} $
+              </span>
+            ) : null}
+          </div>
+
+          <h3 className="lpv-display mt-3 text-[clamp(2.4rem,4vw,4rem)] leading-[0.9]">
+            {wine.name}
+          </h3>
+
+          {wine.oneLiner ? (
+            <p className="mt-5 max-w-lg text-sm leading-7 text-[var(--lpv-muted)] md:text-base">
+              {wine.oneLiner}
+            </p>
+          ) : null}
+
+          <span className="mt-7 inline-flex items-center gap-3 border-b border-[var(--lpv-ink)] pb-1 text-sm font-medium">
+            Voir la fiche
+            <span
+              aria-hidden="true"
+              className="transition-transform group-hover:translate-x-1"
+            >
+              →
+            </span>
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
 }
 
 function parseTags(article: Article) {
@@ -75,6 +354,20 @@ function parseTags(article: Article) {
   } catch {
     return [];
   }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return buildDynamicMetadata({
+    entity: "article",
+    slug,
+    locale: "fr",
+  });
 }
 
 export default async function ArticlePage({
@@ -109,9 +402,36 @@ export default async function ArticlePage({
           .filter(Boolean)
       : [];
 
-  const portableContent = Array.isArray(article.content)
+  const portableContentRaw = Array.isArray(article.content)
     ? article.content
     : [];
+
+  // Les CTA de fin sont gérés globalement par le template.
+  // On retire donc du contenu Sanity :
+  // - les lignes commençant par →
+  // - le titre "Pour continuer"
+  const portableContent = portableContentRaw.filter((item) => {
+    if (item?._type !== "block") return true;
+
+    const block = item as PortableTextBlock;
+
+    const text = block.children
+      ?.map((child) => (child._type === "span" ? child.text : ""))
+      .join("")
+      .trim();
+
+    if (!text) return true;
+
+    if (text.startsWith("→")) {
+      return false;
+    }
+
+    if (text.toLowerCase() === "pour continuer") {
+      return false;
+    }
+
+    return true;
+  });
 
   const wineSectionStart = portableContent.findIndex(
     (block) =>
@@ -153,7 +473,7 @@ export default async function ArticlePage({
               {article.category || "Article"}
             </p>
 
-            <h1 className="lpv-display mt-7 text-[clamp(4.4rem,8vw,8.5rem)] leading-[0.84]">
+            <h1 className="lpv-display mt-7 text-[clamp(3.8rem,6.5vw,7rem)] leading-[0.88]">
               {article.title}
             </h1>
 
@@ -174,12 +494,12 @@ export default async function ArticlePage({
             </div>
           </div>
 
-          <div className="overflow-hidden bg-[var(--lpv-paper-light)]">
+          <div className="relative min-h-[620px] overflow-hidden bg-[var(--lpv-paper-light)] md:min-h-[780px]">
             {imageSrc ? (
               <img
                 src={imageSrc}
                 alt={article.title}
-                className="min-h-[620px] w-full object-cover md:min-h-[780px]"
+                className="absolute inset-0 h-full w-full object-cover"
               />
             ) : (
               <div className="flex min-h-[620px] items-center justify-center">
@@ -207,6 +527,23 @@ export default async function ArticlePage({
               <PortableText
                 value={contentBeforeWines}
                 components={{
+                  types: {
+                    articleWineCard: ({ value }) => (
+                      <ArticleWineCardView
+                        value={value as ArticleWineCard}
+                      />
+                    ),
+                    articleProducerCard: ({ value }) => (
+                      <ArticleProducerCardView
+                        value={value as ArticleProducerCard}
+                      />
+                    ),
+                    articlePlaceCard: ({ value }) => (
+                      <ArticlePlaceCardView
+                        value={value as ArticlePlaceCard}
+                      />
+                    ),
+                  },
                   block: {
                     normal: ({ children, value }) => {
                       const rawText = value.children
@@ -249,8 +586,46 @@ export default async function ArticlePage({
                       }
 
                       if (isCTA) {
+                        const lowerText = rawText?.toLowerCase() || "";
+
+                        const href =
+                          lowerText.includes("explorer les vins")
+                            ? "/vins"
+                            : lowerText.includes("explorer les cépages")
+                              ? "/cepages"
+                              : lowerText.includes("découvrir les producteurs")
+                                ? "/producteurs"
+                                : lowerText.includes("ce soir")
+                                  ? "/ce-soir"
+                                  : lowerText.includes("infolettre")
+                                    ? "/newsletter"
+                                    : value.markDefs?.find(
+                                        (mark: any) => mark._type === "link"
+                                      )?.href;
+
+                        if (href) {
+                          return (
+                            <div className="my-3 max-w-[46rem]">
+                              <Link
+                                href={href}
+                                className="inline-flex w-fit max-w-full items-center gap-4 bg-[var(--lpv-ink)] px-5 py-4 text-base font-medium text-[var(--lpv-paper)] transition-opacity hover:opacity-85"
+                              >
+                                <span className="text-[var(--lpv-paper)]">
+                                  {rawText?.replace(/^→\s*/, "")}
+                                </span>
+                                <span
+                                  aria-hidden="true"
+                                  className="text-lg text-[var(--lpv-paper)]/75"
+                                >
+                                  →
+                                </span>
+                              </Link>
+                            </div>
+                          );
+                        }
+
                         return (
-                          <div className="my-8 max-w-[46rem]">
+                          <div className="my-3 max-w-[46rem]">
                             <div className="inline-flex items-center gap-3 border-b border-[var(--lpv-ink)] pb-2 text-lg font-medium md:text-xl">
                               {children}
                             </div>
@@ -278,6 +653,31 @@ export default async function ArticlePage({
                         {children}
                       </h3>
                     ),
+
+                    takeaway: ({ children, value }) => {
+                      const rawText = value.children
+                        ?.map((child) =>
+                          child._type === "span" ? child.text : ""
+                        )
+                        .join("")
+                        .trim();
+
+                      const takeawayText = rawText
+                        ?.replace(/^À RETENIR\s*:\s*/i, "")
+                        .trim();
+
+                      return (
+                        <div className="my-10 max-w-[46rem] border-y border-[var(--lpv-line)] py-5">
+                          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                            À retenir
+                          </p>
+
+                          <p className="mt-2 text-base leading-7 text-[var(--lpv-ink)] md:text-[1.05rem]">
+                            {takeawayText || children}
+                          </p>
+                        </div>
+                      );
+                    },
 
                     blockquote: ({ children, value }) => {
                       const rawText = value.children
@@ -375,13 +775,6 @@ export default async function ArticlePage({
                   {wines.length > 0 ? (
                     <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
                       {wines.map((wine) => {
-                        const bottleSrc = wine.bottleImage
-                          ? urlFor(wine.bottleImage)
-                              .width(700)
-                              .height(900)
-                              .fit("max")
-                              .url()
-                          : null;
 
                         return (
                           <Link
@@ -389,23 +782,17 @@ export default async function ArticlePage({
                             key={wine._id}
                             className="group block"
                           >
-                            <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-[var(--lpv-paper-light)] p-8">
-                              {bottleSrc ? (
-                                <img
-                                  src={bottleSrc}
-                                  alt={wine.name}
-                                  className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]"
-                                />
-                              ) : (
-                                <div className="flex h-full w-full items-center justify-center border border-dashed border-[var(--lpv-line)]">
-                                  <span className="text-sm text-[var(--lpv-muted)]">
-                                    Photo à venir
-                                  </span>
-                                </div>
-                              )}
+                            <div className="relative">
+                              <BottleStage
+                                image={wine.bottleImage}
+                                alt={wine.name ?? "Bouteille de vin"}
+                                color={wine.color ?? undefined}
+                                variant="card"
+                                className="transition duration-700 group-hover:scale-[1.025]"
+                              />
 
-                              {wine.approxPrice ? (
-                                <div className="absolute right-3 top-3 rounded-full bg-[var(--lpv-paper)] px-3 py-2 text-xs">
+                              {typeof wine.approxPrice === "number" ? (
+                                <div className="absolute right-0 top-0 bg-[var(--lpv-paper)] px-3 py-2 text-xs">
                                   {wine.approxPrice.toFixed(2).replace(".", ",")} $
                                 </div>
                               ) : null}
@@ -448,6 +835,23 @@ export default async function ArticlePage({
                 <PortableText
                   value={contentAfterWines}
                   components={{
+                  types: {
+                    articleWineCard: ({ value }) => (
+                      <ArticleWineCardView
+                        value={value as ArticleWineCard}
+                      />
+                    ),
+                    articleProducerCard: ({ value }) => (
+                      <ArticleProducerCardView
+                        value={value as ArticleProducerCard}
+                      />
+                    ),
+                    articlePlaceCard: ({ value }) => (
+                      <ArticlePlaceCardView
+                        value={value as ArticlePlaceCard}
+                      />
+                    ),
+                  },
                     block: {
                       normal: ({ children, value }) => {
                         const rawText = value.children
@@ -459,6 +863,12 @@ export default async function ArticlePage({
 
                         const isCTA = rawText?.startsWith("→");
                         const lowerText = rawText?.toLowerCase() || "";
+
+                        // Les CTA de fin d'article sont désormais remplacés
+                        // par le bloc Infolettre global du template.
+                        if (isCTA) {
+                          return null;
+                        }
 
                         const isNewsletter =
                           lowerText.includes("s’inscrire à l’infolettre") ||
@@ -558,8 +968,36 @@ export default async function ArticlePage({
                         }
 
                         if (isCTA) {
+                          const href =
+                            lowerText.includes("explorer les vins")
+                              ? "/vins"
+                              : lowerText.includes("explorer les cépages")
+                                ? "/cepages"
+                                : lowerText.includes("découvrir les producteurs")
+                                  ? "/producteurs"
+                                  : lowerText.includes("ce soir")
+                                    ? "/ce-soir"
+                                    : lowerText.includes("infolettre")
+                                      ? "/newsletter"
+                                      : value.markDefs?.find(
+                                          (mark: any) => mark._type === "link"
+                                        )?.href;
+
+                          if (href) {
+                            return (
+                              <div className="my-3 max-w-[46rem]">
+                                <Link
+                                  href={href}
+                                  className="inline-flex w-fit max-w-full items-center gap-4 bg-[var(--lpv-ink)] px-5 py-4 text-base font-medium text-[var(--lpv-paper)] transition-opacity hover:opacity-85"
+                                >
+                                  {children}
+                                </Link>
+                              </div>
+                            );
+                          }
+
                           return (
-                            <div className="my-8 max-w-[46rem]">
+                            <div className="my-3 max-w-[46rem]">
                               <div className="inline-flex items-center gap-3 border-b border-[var(--lpv-ink)] pb-2 text-lg font-medium">
                                 {children}
                               </div>
@@ -582,7 +1020,32 @@ export default async function ArticlePage({
                         </div>
                       ),
 
-                      blockquote: ({ children, value }) => {
+                      takeaway: ({ children, value }) => {
+                      const rawText = value.children
+                        ?.map((child) =>
+                          child._type === "span" ? child.text : ""
+                        )
+                        .join("")
+                        .trim();
+
+                      const takeawayText = rawText
+                        ?.replace(/^À RETENIR\s*:\s*/i, "")
+                        .trim();
+
+                      return (
+                        <div className="my-10 max-w-[46rem] border-y border-[var(--lpv-line)] py-5">
+                          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                            À retenir
+                          </p>
+
+                          <p className="mt-2 text-base leading-7 text-[var(--lpv-ink)] md:text-[1.05rem]">
+                            {takeawayText || children}
+                          </p>
+                        </div>
+                      );
+                    },
+
+                    blockquote: ({ children, value }) => {
                         const rawText = value.children
                           ?.map((child) =>
                             child._type === "span" ? child.text : ""
@@ -657,6 +1120,41 @@ export default async function ArticlePage({
               Le contenu détaillé de cet article est en préparation.
             </p>
           )}
+        </section>
+
+        <section className="lpv-container py-10 md:py-14">
+          <div className="bg-[var(--lpv-paper-light)] px-7 py-10 md:px-10 md:py-12">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              L’infolettre
+            </p>
+
+            <div className="mt-5 grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+              <div>
+                <p className="lpv-display max-w-2xl text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.9]">
+                  On se reparle autour d’un verre?
+                </p>
+
+                <p className="mt-5 max-w-xl text-base leading-7 text-[var(--lpv-muted)]">
+                  Des bouteilles qu’on a aimées, des producteurs à connaître et
+                  quelques bonnes adresses. Pas tous les jours. Juste quand on a
+                  quelque chose de bon à partager.
+                </p>
+              </div>
+
+              <Link
+                href="/newsletter"
+                className="group inline-flex w-fit items-center gap-3 border-b border-[var(--lpv-ink)] pb-2 text-base font-medium text-[var(--lpv-ink)] transition-opacity hover:opacity-60"
+              >
+                <span>S’inscrire à l’infolettre</span>
+                <span
+                  aria-hidden="true"
+                  className="transition-transform group-hover:translate-x-1"
+                >
+                  →
+                </span>
+              </Link>
+            </div>
+          </div>
         </section>
 
         {tags.length > 0 ? (

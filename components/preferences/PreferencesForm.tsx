@@ -8,6 +8,7 @@ type Preferences = {
   bodyPreference: number;
   stylePreference: string;
   mainOccasion: string;
+  communicationLanguage: "fr" | "en";
 };
 
 const initialPreferences: Preferences = {
@@ -16,37 +17,72 @@ const initialPreferences: Preferences = {
   bodyPreference: 3,
   stylePreference: "",
   mainOccasion: "",
+  communicationLanguage: "fr",
 };
 
-const wineTypes = [
-  { label: "Blanc", value: "white" },
-  { label: "Rouge", value: "red" },
-  { label: "Bulles", value: "sparkling" },
-  { label: "Rosé", value: "rose" },
-  { label: "Orange", value: "orange" },
-  { label: "Je touche à tout", value: "everything" },
-];
+const wineTypes = {
+  fr: [
+    { label: "Blanc", value: "white" },
+    { label: "Rouge", value: "red" },
+    { label: "Bulles", value: "sparkling" },
+    { label: "Rosé", value: "rose" },
+    { label: "Orange", value: "orange" },
+    { label: "Je touche à tout", value: "everything" },
+  ],
+  en: [
+    { label: "White", value: "white" },
+    { label: "Red", value: "red" },
+    { label: "Sparkling", value: "sparkling" },
+    { label: "Rosé", value: "rose" },
+    { label: "Orange", value: "orange" },
+    { label: "A bit of everything", value: "everything" },
+  ],
+};
 
-const budgets = [
-  { label: "Moins de 20 $", value: "under-20" },
-  { label: "20 à 30 $", value: "20-30" },
-  { label: "30 à 50 $", value: "30-50" },
-  { label: "50 $ et plus", value: "50-plus" },
-];
+const budgets = {
+  fr: [
+    { label: "Moins de 20 $", value: "under-20" },
+    { label: "20 à 30 $", value: "20-30" },
+    { label: "30 à 50 $", value: "30-50" },
+    { label: "50 $ et plus", value: "50-plus" },
+  ],
+  en: [
+    { label: "Under $20", value: "under-20" },
+    { label: "$20 to $30", value: "20-30" },
+    { label: "$30 to $50", value: "30-50" },
+    { label: "$50 and up", value: "50-plus" },
+  ],
+};
 
-const styles = [
-  { label: "Classique", value: "classic" },
-  { label: "Aventureux", value: "adventurous" },
-  { label: "Les deux", value: "both" },
-];
+const styles = {
+  fr: [
+    { label: "Classique", value: "classic" },
+    { label: "Aventureux", value: "adventurous" },
+    { label: "Les deux", value: "both" },
+  ],
+  en: [
+    { label: "Classic", value: "classic" },
+    { label: "Adventurous", value: "adventurous" },
+    { label: "Both", value: "both" },
+  ],
+};
 
-const occasions = [
-  { label: "Souper de semaine", value: "weeknight" },
-  { label: "Recevoir", value: "hosting" },
-  { label: "Découvrir", value: "discovering" },
-  { label: "Offrir", value: "gifting" },
-  { label: "Occasions spéciales", value: "special-occasions" },
-];
+const occasions = {
+  fr: [
+    { label: "Souper de semaine", value: "weeknight" },
+    { label: "Recevoir", value: "hosting" },
+    { label: "Découvrir", value: "discovering" },
+    { label: "Offrir", value: "gifting" },
+    { label: "Occasions spéciales", value: "special-occasions" },
+  ],
+  en: [
+    { label: "Weeknight dinner", value: "weeknight" },
+    { label: "Hosting", value: "hosting" },
+    { label: "Discovering", value: "discovering" },
+    { label: "Giving a bottle", value: "gifting" },
+    { label: "Special occasions", value: "special-occasions" },
+  ],
+};
 
 function ChoiceButtons({
   options,
@@ -58,7 +94,7 @@ function ChoiceButtons({
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex flex-wrap gap-2 md:gap-3">
       {options.map((option) => {
         const selected = value === option.value;
 
@@ -68,7 +104,7 @@ function ChoiceButtons({
             type="button"
             onClick={() => onChange(option.value)}
             className={[
-              "border px-5 py-3 text-sm transition-colors",
+              "border px-4 py-2.5 text-sm transition-colors md:px-5 md:py-3",
               selected
                 ? "border-[var(--lpv-ink)] bg-[var(--lpv-ink)] text-[var(--lpv-paper-light)]"
                 : "border-[var(--lpv-line)] bg-transparent hover:border-[var(--lpv-ink)]",
@@ -82,9 +118,17 @@ function ChoiceButtons({
   );
 }
 
-export default function PreferencesForm() {
+export default function PreferencesForm({
+  locale = "fr",
+}: {
+  locale?: "fr" | "en";
+}) {
+  const isEn = locale === "en";
   const [preferences, setPreferences] =
-    useState<Preferences>(initialPreferences);
+    useState<Preferences>({
+      ...initialPreferences,
+      communicationLanguage: locale,
+    });
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -96,7 +140,11 @@ export default function PreferencesForm() {
         const response = await fetch("/api/preferences");
 
         if (!response.ok) {
-          throw new Error("Impossible de charger les préférences.");
+          throw new Error(
+            isEn
+              ? "Unable to load preferences."
+              : "Impossible de charger les préférences."
+          );
         }
 
         const data = await response.json();
@@ -108,11 +156,21 @@ export default function PreferencesForm() {
             bodyPreference: data.preferences.bodyPreference || 3,
             stylePreference: data.preferences.stylePreference || "",
             mainOccasion: data.preferences.mainOccasion || "",
+            communicationLanguage:
+              data.preferences.communicationLanguage === "en"
+                ? "en"
+                : data.preferences.communicationLanguage === "fr"
+                  ? "fr"
+                  : locale,
           });
         }
       } catch (error) {
         console.error(error);
-        setMessage("Impossible de charger tes préférences.");
+        setMessage(
+          isEn
+            ? "Unable to load your preferences."
+            : "Impossible de charger tes préférences."
+        );
       } finally {
         setLoading(false);
       }
@@ -140,7 +198,11 @@ export default function PreferencesForm() {
       !preferences.stylePreference ||
       !preferences.mainOccasion
     ) {
-      setMessage("Réponds aux cinq questions avant d’enregistrer.");
+      setMessage(
+        isEn
+          ? "Answer the five wine questions before saving."
+          : "Réponds aux cinq questions sur le vin avant d’enregistrer."
+      );
       return;
     }
 
@@ -159,13 +221,24 @@ export default function PreferencesForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Impossible d’enregistrer.");
+        throw new Error(
+          data.error ||
+            (isEn ? "Unable to save." : "Impossible d’enregistrer.")
+        );
       }
 
-      setMessage("Tes préférences sont enregistrées.");
+      setMessage(
+        isEn
+          ? "Your preferences have been saved."
+          : "Tes préférences sont enregistrées."
+      );
     } catch (error) {
       console.error(error);
-      setMessage("Une erreur est survenue pendant l’enregistrement.");
+      setMessage(
+        isEn
+          ? "An error occurred while saving."
+          : "Une erreur est survenue pendant l’enregistrement."
+      );
     } finally {
       setSaving(false);
     }
@@ -173,9 +246,9 @@ export default function PreferencesForm() {
 
   if (loading) {
     return (
-      <section className="lpv-container py-16 md:py-24">
+      <section className="lpv-container py-10 md:py-24">
         <p className="text-sm text-[var(--lpv-muted)]">
-          Chargement de tes préférences…
+          {isEn ? "Loading your preferences…" : "Chargement de tes préférences…"}
         </p>
       </section>
     );
@@ -184,10 +257,10 @@ export default function PreferencesForm() {
   const questions = [
     {
       number: "01",
-      title: "Je bois surtout",
+      title: isEn ? "I mostly drink" : "Je bois surtout",
       content: (
         <ChoiceButtons
-          options={wineTypes}
+          options={wineTypes[locale]}
           value={preferences.mainWineType}
           onChange={(value) => updatePreference("mainWineType", value)}
         />
@@ -195,10 +268,10 @@ export default function PreferencesForm() {
     },
     {
       number: "02",
-      title: "Mon budget habituel",
+      title: isEn ? "My usual budget" : "Mon budget habituel",
       content: (
         <ChoiceButtons
-          options={budgets}
+          options={budgets[locale]}
           value={preferences.budget}
           onChange={(value) => updatePreference("budget", value)}
         />
@@ -206,12 +279,12 @@ export default function PreferencesForm() {
     },
     {
       number: "03",
-      title: "Je préfère généralement",
+      title: isEn ? "I generally prefer" : "Je préfère généralement",
       content: (
         <div className="max-w-2xl">
-          <div className="mb-4 flex justify-between text-sm text-[var(--lpv-muted)]">
-            <span>Léger</span>
-            <span>Généreux</span>
+          <div className="mb-3 flex justify-between text-sm text-[var(--lpv-muted)] md:mb-4">
+            <span>{isEn ? "Light" : "Léger"}</span>
+            <span>{isEn ? "Full-bodied" : "Généreux"}</span>
           </div>
 
           <input
@@ -229,7 +302,7 @@ export default function PreferencesForm() {
             className="w-full accent-[var(--lpv-ink)]"
           />
 
-          <div className="mt-3 flex justify-between text-xs text-[var(--lpv-muted)]">
+          <div className="mt-2 flex justify-between text-xs text-[var(--lpv-muted)] md:mt-3">
             <span>1</span>
             <span>2</span>
             <span>3</span>
@@ -241,10 +314,10 @@ export default function PreferencesForm() {
     },
     {
       number: "04",
-      title: "J’aime",
+      title: isEn ? "I like" : "J’aime",
       content: (
         <ChoiceButtons
-          options={styles}
+          options={styles[locale]}
           value={preferences.stylePreference}
           onChange={(value) =>
             updatePreference("stylePreference", value)
@@ -254,15 +327,45 @@ export default function PreferencesForm() {
     },
     {
       number: "05",
-      title: "Je cherche surtout du vin pour",
+      title: isEn
+        ? "I mostly look for wine for"
+        : "Je cherche surtout du vin pour",
       content: (
         <ChoiceButtons
-          options={occasions}
+          options={occasions[locale]}
           value={preferences.mainOccasion}
           onChange={(value) =>
             updatePreference("mainOccasion", value)
           }
         />
+      ),
+    },
+    {
+      number: "06",
+      title: isEn
+        ? "Communication language"
+        : "Langue des communications",
+      content: (
+        <div>
+          <ChoiceButtons
+            options={[
+              { label: "Français", value: "fr" },
+              { label: "English", value: "en" },
+            ]}
+            value={preferences.communicationLanguage}
+            onChange={(value) =>
+              updatePreference(
+                "communicationLanguage",
+                value as "fr" | "en"
+              )
+            }
+          />
+          <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--lpv-muted)] md:mt-4">
+            {isEn
+              ? "This language will be used for newsletters and other communications from Le Premier Verre."
+              : "Cette langue sera utilisée pour l’infolettre et les autres communications du Premier Verre."}
+          </p>
+        </div>
       ),
     },
   ];
@@ -273,13 +376,13 @@ export default function PreferencesForm() {
         {questions.map((question) => (
           <div
             key={question.number}
-            className="grid gap-6 border-b border-[var(--lpv-line)] py-10 md:grid-cols-[70px_0.7fr_1.3fr] md:py-12"
+            className="grid gap-4 border-b border-[var(--lpv-line)] py-7 md:grid-cols-[70px_0.7fr_1.3fr] md:gap-6 md:py-12"
           >
             <span className="text-[0.62rem] tracking-[0.18em] text-[var(--lpv-muted)]">
               {question.number}
             </span>
 
-            <h2 className="lpv-display text-3xl leading-[0.95] md:text-4xl">
+            <h2 className="lpv-display text-[1.8rem] leading-[0.95] md:text-4xl">
               {question.title}
             </h2>
 
@@ -288,14 +391,20 @@ export default function PreferencesForm() {
         ))}
       </div>
 
-      <div className="flex flex-col gap-4 pt-10 md:flex-row md:items-center">
+      <div className="flex flex-col gap-4 pt-7 md:flex-row md:items-center md:pt-10">
         <button
           type="button"
           onClick={savePreferences}
           disabled={saving}
           className="lpv-button lpv-button-dark"
         >
-          {saving ? "Enregistrement…" : "Enregistrer mes préférences"}
+          {saving
+            ? isEn
+              ? "Saving…"
+              : "Enregistrement…"
+            : isEn
+              ? "Save my preferences"
+              : "Enregistrer mes préférences"}
         </button>
 
         {message ? (

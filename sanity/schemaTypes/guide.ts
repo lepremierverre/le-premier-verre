@@ -5,11 +5,25 @@ export const guide = defineType({
   title: "Guides",
   type: "document",
   fields: [
+    {
+      name: "translationSourceHash",
+      title: "Translation source hash",
+      type: "string",
+      hidden: true,
+      readOnly: true,
+    },
+
     defineField({
       name: "title",
       title: "Titre",
       type: "string",
       validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "titleEn",
+      title: "Titre (EN)",
+      type: "string",
     }),
     defineField({
       name: "slug",
@@ -21,6 +35,13 @@ export const guide = defineType({
     defineField({
       name: "excerpt",
       title: "Résumé",
+      type: "text",
+      rows: 4,
+    }),
+
+    defineField({
+      name: "excerptEn",
+      title: "Résumé (EN)",
       type: "text",
       rows: 4,
     }),
@@ -63,6 +84,13 @@ export const guide = defineType({
       title: "Temps de lecture estimé",
       type: "string",
       description: "Exemple : 8 minutes.",
+    }),
+
+    defineField({
+      name: "estimatedReadingTimeEn",
+      title: "Temps de lecture estimé (EN)",
+      type: "string",
+      description: "Example: 8 minutes.",
     }),
 
     defineField({
@@ -133,13 +161,33 @@ export const guide = defineType({
     }),
 
     defineField({
+      name: "contentEn",
+      title: "Contenu (EN)",
+      type: "array",
+      of: [{ type: "block" }],
+    }),
+
+    defineField({
       name: "seoTitle",
       title: "Titre SEO",
+      type: "string",
+    }),
+
+    defineField({
+      name: "seoTitleEn",
+      title: "Titre SEO (EN)",
       type: "string",
     }),
     defineField({
       name: "seoDescription",
       title: "Description SEO",
+      type: "text",
+      rows: 3,
+    }),
+
+    defineField({
+      name: "seoDescriptionEn",
+      title: "Description SEO (EN)",
       type: "text",
       rows: 3,
     }),

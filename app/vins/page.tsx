@@ -206,26 +206,26 @@ export default async function VinsPage({
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
       {/* INTRO */}
       <section className="border-b border-[var(--lpv-line)]">
-        <div className="lpv-container grid gap-10 py-16 md:grid-cols-[0.68fr_0.32fr] md:items-end md:py-24">
+        <div className="lpv-container grid gap-7 py-10 md:grid-cols-[0.68fr_0.32fr] md:items-end md:gap-10 md:py-24">
           <div>
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               Répertoire
             </p>
 
-            <h1 className="lpv-display mt-7 max-w-5xl text-[clamp(4.8rem,10vw,10rem)] leading-[0.82]">
+            <h1 className="lpv-display mt-5 max-w-5xl text-[clamp(3.5rem,14vw,4.5rem)] leading-[0.86] md:mt-7 md:text-[clamp(4.8rem,10vw,10rem)] md:leading-[0.82]">
               Les bouteilles
               <br />
               de la bibliothèque.
             </h1>
           </div>
 
-          <div className="border-t border-[var(--lpv-line)] pt-6 md:border-t-0 md:pb-2">
-            <p className="max-w-md text-base leading-8 text-[var(--lpv-muted)]">
+          <div className="border-t border-[var(--lpv-line)] pt-5 md:border-t-0 md:pb-2 md:pt-6">
+            <p className="max-w-md text-base leading-7 text-[var(--lpv-muted)] md:leading-8">
               Une sélection de bouteilles à découvrir, à garder sous la main
               et à ouvrir au bon moment.
             </p>
 
-            <p className="mt-7 text-xs uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+            <p className="mt-5 text-xs uppercase tracking-[0.18em] text-[var(--lpv-cocoa)] md:mt-7">
               {wines.length} bouteille{wines.length > 1 ? "s" : ""} dans la collection
             </p>
           </div>
@@ -234,7 +234,7 @@ export default async function VinsPage({
 
       {/* TYPES DE BOUTEILLES */}
       <section className="border-b border-[var(--lpv-line)]">
-        <div className="lpv-container flex flex-wrap gap-x-8 gap-y-3 py-6">
+        <div className="lpv-container flex flex-wrap gap-x-5 gap-y-3 py-5 md:gap-x-8 md:py-6">
           {[
             { label: "Tout", value: "" },
             { label: "Vins", value: "wine" },
@@ -248,7 +248,7 @@ export default async function VinsPage({
               <Link
                 key={item.label}
                 href={href}
-                className={`text-sm uppercase tracking-[0.16em] transition-opacity hover:opacity-50 ${
+                className={`text-[0.72rem] uppercase tracking-[0.14em] transition-opacity hover:opacity-50 md:text-sm md:tracking-[0.16em] ${
                   active
                     ? "text-[var(--lpv-ink)] underline underline-offset-8"
                     : "text-[var(--lpv-muted)]"
@@ -265,15 +265,15 @@ export default async function VinsPage({
       <section className="border-b border-[var(--lpv-line)]">
         <form
           method="GET"
-          className="lpv-container py-8 md:py-10"
+          className="lpv-container py-5 md:py-10"
         >
           {selectedType ? (
             <input type="hidden" name="type" value={selectedType} />
           ) : null}
 
           <div className="grid gap-px bg-[var(--lpv-line)] md:grid-cols-2 xl:grid-cols-6">
-            <label className="bg-[var(--lpv-paper)] p-4 md:col-span-2 xl:col-span-2">
-              <span className="mb-3 block text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+            <label className="bg-[var(--lpv-paper)] px-3 py-3 md:col-span-2 md:p-4 xl:col-span-2">
+              <span className="mb-2 block text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)] md:mb-3 md:text-[0.62rem]">
                 Rechercher
               </span>
 
@@ -282,19 +282,19 @@ export default async function VinsPage({
                 name="q"
                 defaultValue={params.q ?? ""}
                 placeholder="Bouteille, producteur, région…"
-                className="w-full border-0 bg-transparent py-1 text-base outline-none placeholder:text-[var(--lpv-muted)]/55"
+                className="w-full border-0 bg-transparent py-0.5 text-sm outline-none placeholder:text-[var(--lpv-muted)]/55 md:py-1 md:text-base"
               />
             </label>
 
-            <label className="bg-[var(--lpv-paper)] p-4">
-              <span className="mb-3 block text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+            <label className="bg-[var(--lpv-paper)] px-3 py-3 md:p-4">
+              <span className="mb-2 block text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)] md:mb-3 md:text-[0.62rem]">
                 Couleur
               </span>
 
               <select
                 name="color"
                 defaultValue={selectedColor}
-                className="w-full appearance-none border-0 bg-transparent py-1 text-base outline-none"
+                className="w-full appearance-none border-0 bg-transparent py-0.5 text-sm outline-none md:py-1 md:text-base"
               >
                 <option value="">Toutes</option>
 
@@ -306,15 +306,15 @@ export default async function VinsPage({
               </select>
             </label>
 
-            <label className="bg-[var(--lpv-paper)] p-4">
-              <span className="mb-3 block text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+            <label className="bg-[var(--lpv-paper)] px-3 py-3 md:p-4">
+              <span className="mb-2 block text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)] md:mb-3 md:text-[0.62rem]">
                 Pays
               </span>
 
               <select
                 name="country"
                 defaultValue={selectedCountry}
-                className="w-full appearance-none border-0 bg-transparent py-1 text-base outline-none"
+                className="w-full appearance-none border-0 bg-transparent py-0.5 text-sm outline-none md:py-1 md:text-base"
               >
                 <option value="">Tous</option>
 
@@ -326,15 +326,15 @@ export default async function VinsPage({
               </select>
             </label>
 
-            <label className="bg-[var(--lpv-paper)] p-4">
-              <span className="mb-3 block text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+            <label className="bg-[var(--lpv-paper)] px-3 py-3 md:p-4">
+              <span className="mb-2 block text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)] md:mb-3 md:text-[0.62rem]">
                 Région
               </span>
 
               <select
                 name="region"
                 defaultValue={selectedRegion}
-                className="w-full appearance-none border-0 bg-transparent py-1 text-base outline-none"
+                className="w-full appearance-none border-0 bg-transparent py-0.5 text-sm outline-none md:py-1 md:text-base"
               >
                 <option value="">Toutes</option>
 
@@ -346,15 +346,15 @@ export default async function VinsPage({
               </select>
             </label>
 
-            <label className="bg-[var(--lpv-paper)] p-4">
-              <span className="mb-3 block text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+            <label className="bg-[var(--lpv-paper)] px-3 py-3 md:p-4">
+              <span className="mb-2 block text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)] md:mb-3 md:text-[0.62rem]">
                 Prix
               </span>
 
               <select
                 name="price"
                 defaultValue={selectedPrice}
-                className="w-full appearance-none border-0 bg-transparent py-1 text-base outline-none"
+                className="w-full appearance-none border-0 bg-transparent py-0.5 text-sm outline-none md:py-1 md:text-base"
               >
                 <option value="">Tous les prix</option>
                 <option value="under-20">Moins de 20 $</option>
@@ -366,7 +366,7 @@ export default async function VinsPage({
             </label>
           </div>
 
-          <div className="mt-5 flex flex-wrap items-center gap-5">
+          <div className="mt-4 flex flex-wrap items-center gap-4 md:mt-5 md:gap-5">
             <button type="submit" className="lpv-button lpv-button-dark">
               Appliquer les filtres
             </button>
@@ -381,14 +381,14 @@ export default async function VinsPage({
       </section>
 
       {/* CATALOGUE */}
-      <section className="lpv-container py-16 md:py-24">
-        <div className="flex flex-col gap-5 border-b border-[var(--lpv-line)] pb-6 sm:flex-row sm:items-end sm:justify-between">
+      <section className="lpv-container py-10 md:py-24">
+        <div className="flex flex-col gap-3 border-b border-[var(--lpv-line)] pb-5 sm:flex-row sm:items-end sm:justify-between md:gap-5 md:pb-6">
           <div>
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               Catalogue
             </p>
 
-            <h2 className="lpv-display mt-5 text-5xl leading-none md:text-7xl">
+            <h2 className="lpv-display mt-3 text-[2.8rem] leading-none md:mt-5 md:text-7xl">
               À ouvrir.
             </h2>
           </div>
@@ -401,7 +401,7 @@ export default async function VinsPage({
 
         {filteredWines.length > 0 ? (
           <>
-            <div className="grid gap-x-8 md:grid-cols-2 xl:grid-cols-3 xl:gap-x-12">
+            <div className="grid grid-cols-2 gap-x-4 md:grid-cols-2 md:gap-x-8 xl:grid-cols-3 xl:gap-x-12">
               {paginatedWines.map((wine, index) => {
                 const location = [
                   wine.region?.name,
@@ -413,7 +413,7 @@ export default async function VinsPage({
                 return (
                   <article
                     key={wine._id}
-                    className="group flex min-w-0 flex-col border-b border-[var(--lpv-line)] py-10"
+                    className="group flex min-w-0 flex-col border-b border-[var(--lpv-line)] py-6 md:py-10"
                   >
                     <div className="relative">
                       <Link
@@ -425,7 +425,7 @@ export default async function VinsPage({
                           alt={wine.name}
                           color={wine.color}
                           variant="card"
-                          className="transition duration-700 group-hover:scale-[1.025]"
+                          className="!h-[220px] [&>div]:!h-[190px] [&_img]:!max-w-[70%] transition duration-700 group-hover:scale-[1.025] sm:!h-[250px] sm:[&>div]:!h-[220px] md:!h-[360px] md:[&>div]:!h-[300px] md:[&_img]:!max-w-[58%]"
                         />
                       </Link>
 
@@ -437,9 +437,9 @@ export default async function VinsPage({
                       </div>
                     </div>
 
-                    <div className="flex flex-1 flex-col pt-7">
-                      <div className="flex min-h-[18px] items-start justify-between gap-6">
-                        <p className="lpv-kicker min-w-0 text-[var(--lpv-cocoa)]">
+                    <div className="flex flex-1 flex-col pt-4 md:pt-7">
+                      <div className="flex min-h-[16px] items-start justify-between gap-2 md:min-h-[18px] md:gap-6">
+                        <p className="lpv-kicker min-w-0 text-[0.55rem] leading-4 tracking-[0.16em] text-[var(--lpv-cocoa)] md:text-[0.62rem] md:leading-normal md:tracking-[0.18em]">
                           {[
                             wine.beverageType === "cider"
                               ? "Cidre"
@@ -451,47 +451,47 @@ export default async function VinsPage({
                             .join(" · ")}
                         </p>
 
-                        <span className="shrink-0 text-[0.6rem] tracking-[0.16em] text-[var(--lpv-muted)]">
+                        <span className="shrink-0 text-[0.52rem] tracking-[0.12em] text-[var(--lpv-muted)] md:text-[0.6rem] md:tracking-[0.16em]">
                           {String(startIndex + index + 1).padStart(2, "0")}
                         </span>
                       </div>
 
                       <Link
                         href={`/vins/${wine.slug}`}
-                        className="mt-5 block"
+                        className="mt-3 block md:mt-5"
                       >
-                        <h3 className="lpv-display min-h-[5.6rem] text-4xl leading-[0.92] transition-opacity group-hover:opacity-60 md:text-5xl xl:min-h-[6.6rem]">
+                        <h3 className="lpv-display min-h-[3.6rem] text-[1.45rem] leading-[0.94] transition-opacity group-hover:opacity-60 md:min-h-[5.6rem] md:text-5xl md:leading-[0.92] xl:min-h-[6.6rem]">
                           {wine.name}
                         </h3>
                       </Link>
 
-                      <div className="min-h-[3.75rem] pt-5">
+                      <div className="min-h-[2.8rem] pt-3 md:min-h-[3.75rem] md:pt-5">
                         {wine.producer?.name ? (
                           wine.producer.slug ? (
                             <Link
                               href={`/producteurs/${wine.producer.slug}`}
-                              className="block w-fit text-sm text-[var(--lpv-muted)] transition-opacity hover:opacity-50"
+                              className="block w-fit text-xs leading-5 text-[var(--lpv-muted)] transition-opacity hover:opacity-50 md:text-sm"
                             >
                               {wine.producer.name}
                             </Link>
                           ) : (
-                            <p className="text-sm text-[var(--lpv-muted)]">
+                            <p className="text-xs leading-5 text-[var(--lpv-muted)] md:text-sm">
                               {wine.producer.name}
                             </p>
                           )
                         ) : null}
                       </div>
 
-                      <div className="mt-auto flex min-h-[5.25rem] items-end justify-between gap-6 border-t border-[var(--lpv-line)] pt-5">
+                      <div className="mt-auto flex min-h-[4.5rem] flex-col items-start justify-between gap-2 border-t border-[var(--lpv-line)] pt-3 md:min-h-[5.25rem] md:flex-row md:items-end md:gap-6 md:pt-5">
                         <div className="min-w-0">
                           {location ? (
-                            <p className="text-xs leading-6 text-[var(--lpv-muted)]">
+                            <p className="text-[0.68rem] leading-5 text-[var(--lpv-muted)] md:text-xs md:leading-6">
                               {location}
                             </p>
                           ) : null}
 
                           {wine.appellation?.name ? (
-                            <p className="text-xs leading-6 text-[var(--lpv-muted)]">
+                            <p className="text-[0.68rem] leading-5 text-[var(--lpv-muted)] md:text-xs md:leading-6">
                               {wine.appellation.name}
                             </p>
                           ) : null}
@@ -499,7 +499,7 @@ export default async function VinsPage({
 
                         <Link
                           href={`/vins/${wine.slug}`}
-                          className="lpv-text-link shrink-0"
+                          className="lpv-text-link shrink-0 text-[0.68rem] md:text-sm"
                         >
                           Voir <span>→</span>
                         </Link>

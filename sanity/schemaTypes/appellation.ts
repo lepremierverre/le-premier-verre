@@ -49,11 +49,25 @@ export const appellation = defineType({
       of: [{ type: "block" }],
     }),
     defineField({
+      name: "descriptionEn",
+      title: "Description — anglais",
+      type: "array",
+      of: [{ type: "block" }],
+    }),
+
+    defineField({
       name: "climate",
       title: "Climat",
       type: "text",
       rows: 4,
     }),
+    defineField({
+      name: "climateEn",
+      title: "Climat — anglais",
+      type: "text",
+      rows: 4,
+    }),
+
     defineField({
       name: "soilTypes",
       title: "Types de sols",
@@ -61,6 +75,14 @@ export const appellation = defineType({
       of: [{ type: "string" }],
       options: { layout: "tags" },
     }),
+    defineField({
+      name: "soilTypesEn",
+      title: "Types de sols — anglais",
+      type: "array",
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
+    }),
+
     defineField({
       name: "grapes",
       title: "Cépages associés",
@@ -75,17 +97,39 @@ export const appellation = defineType({
       options: { layout: "tags" },
     }),
     defineField({
+      name: "authorizedWineStylesEn",
+      title: "Styles autorisés ou typiques — anglais",
+      type: "array",
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
+    }),
+
+    defineField({
       name: "productionRules",
       title: "Règles de production",
       type: "array",
       of: [{ type: "block" }],
     }),
     defineField({
+      name: "productionRulesEn",
+      title: "Règles de production — anglais",
+      type: "array",
+      of: [{ type: "block" }],
+    }),
+
+    defineField({
       name: "foodPairingNotes",
       title: "Notes d'accords mets-vins",
       type: "text",
       rows: 4,
     }),
+    defineField({
+      name: "foodPairingNotesEn",
+      title: "Notes d'accords mets-vins — anglais",
+      type: "text",
+      rows: 4,
+    }),
+
     defineField({
       name: "latitude",
       title: "Latitude",
@@ -104,6 +148,18 @@ export const appellation = defineType({
     defineField({
       name: "seoDescription",
       title: "Description SEO",
+      type: "text",
+      rows: 3,
+    }),
+    defineField({
+      name: "seoTitleEn",
+      title: "Titre SEO — anglais",
+      type: "string",
+    }),
+
+    defineField({
+      name: "seoDescriptionEn",
+      title: "Description SEO — anglais",
       type: "text",
       rows: 3,
     }),

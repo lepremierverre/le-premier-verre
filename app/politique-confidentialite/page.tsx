@@ -3,6 +3,14 @@ import Link from "next/link";
 export const metadata = {
   title: "Politique de confidentialité | Le Premier Verre",
   description: "Politique de confidentialité du Premier Verre.",
+  alternates: {
+    canonical: "/politique-confidentialite",
+    languages: {
+      "fr-CA": "/politique-confidentialite",
+      "en-CA": "/en/privacy-policy",
+      "x-default": "/politique-confidentialite",
+    },
+  },
 };
 
 export default function PolitiqueConfidentialitePage() {

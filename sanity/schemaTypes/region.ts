@@ -16,12 +16,27 @@ export const region = defineType({
   ],
 
   fields: [
+    {
+      name: "translationSourceHash",
+      title: "Translation source hash",
+      type: "string",
+      hidden: true,
+      readOnly: true,
+    },
+
     defineField({
       name: "name",
       title: "Nom de la région",
       type: "string",
       group: "identity",
       validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "nameEn",
+      title: "Nom de la région — anglais",
+      type: "string",
+      group: "identity",
     }),
 
     defineField({
@@ -75,6 +90,43 @@ export const region = defineType({
     }),
 
     defineField({
+      name: "introductionEn",
+      title: "Introduction — anglais",
+      type: "array",
+      group: "lpv",
+      of: [{ type: "block" }],
+    }),
+
+    defineField({
+      name: "atlasTerritory",
+      title: "Territoire dans l’Atlas",
+      type: "reference",
+      to: [{ type: "atlasTerritory" }],
+      group: "map",
+      description:
+        "Territoire cartographique dans lequel cette région doit apparaître. Ex. Québec, France, Canada.",
+    }),
+
+    defineField({
+      name: "showInAtlas",
+      title: "Afficher comme région dans l’Atlas",
+      type: "boolean",
+      group: "map",
+      description:
+        "Active le point et la fiche de cette région dans son territoire Atlas.",
+      initialValue: true,
+    }),
+
+    defineField({
+      name: "geocodingQuery",
+      title: "Recherche géographique",
+      type: "string",
+      group: "map",
+      description:
+        "Nom précis utilisé pour trouver automatiquement la région sur la carte. Ex. « Bordeaux wine region, France ».",
+    }),
+
+    defineField({
       name: "locationText",
       title: "Localisation",
       type: "text",
@@ -83,6 +135,14 @@ export const region = defineType({
       description:
         "Explication simple de l’emplacement de la région : où elle se trouve et ses principaux repères géographiques.",
       validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "locationTextEn",
+      title: "Localisation — anglais",
+      type: "text",
+      rows: 3,
+      group: "map",
     }),
 
     defineField({
@@ -174,6 +234,14 @@ export const region = defineType({
     }),
 
     defineField({
+      name: "climateEn",
+      title: "Climat — anglais",
+      type: "text",
+      rows: 4,
+      group: "wine",
+    }),
+
+    defineField({
       name: "signatureGrapes",
       title: "Principaux cépages",
       type: "array",
@@ -224,6 +292,33 @@ export const region = defineType({
     }),
 
     defineField({
+      name: "characteristicsEn",
+      title: "Caractéristiques — anglais",
+      type: "array",
+      group: "lpv",
+      of: [
+        {
+          type: "object",
+          name: "regionCharacteristicEn",
+          title: "Caractéristique — anglais",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Titre",
+              type: "string",
+            }),
+            defineField({
+              name: "text",
+              title: "Explication",
+              type: "text",
+              rows: 3,
+            }),
+          ],
+        },
+      ],
+    }),
+
+    defineField({
       name: "guides",
       title: "Guides liés",
       type: "array",
@@ -250,6 +345,14 @@ export const region = defineType({
     }),
 
     defineField({
+      name: "descriptionEn",
+      title: "Ancienne description courte — anglais",
+      type: "text",
+      rows: 4,
+      group: "advanced",
+    }),
+
+    defineField({
       name: "overview",
       title: "Ancienne présentation détaillée",
       type: "array",
@@ -260,8 +363,25 @@ export const region = defineType({
     }),
 
     defineField({
+      name: "overviewEn",
+      title: "Ancienne présentation détaillée — anglais",
+      type: "array",
+      group: "advanced",
+      of: [{ type: "block" }],
+    }),
+
+    defineField({
       name: "soilTypes",
       title: "Types de sols",
+      type: "array",
+      group: "advanced",
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
+    }),
+
+    defineField({
+      name: "soilTypesEn",
+      title: "Types de sols — anglais",
       type: "array",
       group: "advanced",
       of: [{ type: "string" }],
@@ -278,6 +398,15 @@ export const region = defineType({
     }),
 
     defineField({
+      name: "mainWineStylesEn",
+      title: "Styles de vins principaux — anglais",
+      type: "array",
+      group: "advanced",
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
+    }),
+
+    defineField({
       name: "seoTitle",
       title: "Titre SEO",
       type: "string",
@@ -287,6 +416,21 @@ export const region = defineType({
     defineField({
       name: "seoDescription",
       title: "Description SEO",
+      type: "text",
+      rows: 3,
+      group: "publication",
+    }),
+
+    defineField({
+      name: "seoTitleEn",
+      title: "Titre SEO — anglais",
+      type: "string",
+      group: "publication",
+    }),
+
+    defineField({
+      name: "seoDescriptionEn",
+      title: "Description SEO — anglais",
       type: "text",
       rows: 3,
       group: "publication",
