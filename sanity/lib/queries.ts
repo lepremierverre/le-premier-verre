@@ -189,6 +189,17 @@ export const guideBySlugQuery = `*[_type == "guide" && slug.current == $slug && 
   relatedRegions[]->{_id, name, "slug": slug.current},
   relatedAppellations[]->{_id, name, "slug": slug.current},
   relatedGrapes[]->{_id, name, "slug": slug.current},
+  relatedArticles[]->{
+    _id,
+    title,
+    titleEn,
+    "slug": slug.current,
+    excerpt,
+    excerptEn,
+    category,
+    categoryEn,
+    coverImage
+  },
   relatedWines[]->{_id, name, "slug": slug.current, vintage, color, bottleImage},
   relatedProducers[]->{_id, name, "slug": slug.current, logo, photo},
   relatedPlaces[]->{_id, name, "slug": slug.current, type, city, coverImage}

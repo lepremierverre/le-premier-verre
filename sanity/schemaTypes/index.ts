@@ -9,6 +9,8 @@ import { editorialAsset } from "./editorialAsset";
 import { food } from "./food";
 import { grape } from "./grape";
 import { guide } from "./guide";
+import { guideTable } from "./guideTable";
+import { guideChecklist } from "./guideChecklist";
 import { page } from "./page";
 import { pageSection } from "./pageSection";
 import { place } from "./place";
@@ -33,6 +35,8 @@ export const schemaTypes = [
   // Contenu éditorial
   article,
   guide,
+  guideTable,
+  guideChecklist,
   category,
   author,
 

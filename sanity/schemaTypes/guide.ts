@@ -59,6 +59,7 @@ export const guide = defineType({
         list: [
           { title: "Guide débutant", value: "beginner" },
           { title: "Guide d'achat", value: "buying" },
+          { title: "Guide pratique", value: "practical" },
           { title: "Guide régional", value: "region" },
           { title: "Guide cépage", value: "grape" },
           { title: "Guide accords", value: "pairing" },
@@ -118,6 +119,12 @@ export const guide = defineType({
       of: [{ type: "reference", to: [{ type: "grape" }] }],
     }),
     defineField({
+      name: "relatedArticles",
+      title: "Articles liés",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "article" }] }],
+    }),
+    defineField({
       name: "relatedWines",
       title: "Vins liés",
       type: "array",
@@ -157,14 +164,14 @@ export const guide = defineType({
       name: "content",
       title: "Contenu",
       type: "array",
-      of: [{ type: "block" }],
+      of: [{ type: "block" }, { type: "guideTable" }, { type: "guideChecklist" }],
     }),
 
     defineField({
       name: "contentEn",
       title: "Contenu (EN)",
       type: "array",
-      of: [{ type: "block" }],
+      of: [{ type: "block" }, { type: "guideTable" }, { type: "guideChecklist" }],
     }),
 
     defineField({

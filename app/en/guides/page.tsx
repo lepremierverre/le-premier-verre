@@ -26,6 +26,7 @@ function formatLabel(value?: string) {
 
   const labels: Record<string, string> = {
     beginner: "Beginner",
+    practical: "Practical guide",
     buying: "Buying guide",
     region: "Regional",
     grape: "Grape",
@@ -88,8 +89,8 @@ export default async function GuidesPage() {
             {guides.map((guide, index) => {
               const imageSrc = guide.coverImage
                 ? urlFor(guide.coverImage)
-                    .width(1000)
-                    .height(1200)
+                    .width(1200)
+                    .height(800)
                     .fit("crop")
                     .url()
                 : null;
@@ -113,10 +114,10 @@ export default async function GuidesPage() {
                         <img
                           src={imageSrc}
                           alt={guide.titleEn || guide.title}
-                          className="aspect-[4/5] h-full w-full object-cover transition duration-700 group-hover:scale-[1.015]"
+                          className="aspect-[3/2] w-full object-cover object-center transition duration-700 group-hover:scale-[1.015]"
                         />
                       ) : (
-                        <div className="flex aspect-[4/5] items-center justify-center">
+                        <div className="flex aspect-[4/3] items-center justify-center">
                           <p className="text-sm text-[var(--lpv-muted)]">
                             Image coming soon
                           </p>

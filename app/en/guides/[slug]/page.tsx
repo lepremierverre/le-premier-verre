@@ -8,6 +8,10 @@ import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { guideBySlugQuery } from "@/sanity/lib/queries";
 import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
+import GuideTable, { type GuideTableValue } from "@/components/guides/GuideTable";
+import GuideChecklist, { type GuideChecklistValue } from "@/components/guides/GuideChecklist";
+import GuideRelatedArticles, { type GuideRelatedArticle } from "@/components/guides/GuideRelatedArticles";
+import GuideActions from "@/components/guides/GuideActions";
 
 export const revalidate = 60;
 
@@ -23,8 +27,8 @@ type Guide = {
   titleEn?: string;
   excerpt?: string;
   excerptEn?: string;
-  content?: PortableTextBlock[];
-  contentEn?: PortableTextBlock[];
+  content?: Array<PortableTextBlock | GuideTableValue | GuideChecklistValue>;
+  contentEn?: Array<PortableTextBlock | GuideTableValue | GuideChecklistValue>;
   coverImage?: SanityImageSource;
   guideType?: string;
   difficulty?: string;
@@ -35,6 +39,7 @@ type Guide = {
   relatedRegions?: RelatedItem[];
   relatedAppellations?: RelatedItem[];
   relatedGrapes?: RelatedItem[];
+  relatedArticles?: GuideRelatedArticle[];
   relatedWines?: RelatedItem[];
   relatedProducers?: RelatedItem[];
   relatedPlaces?: RelatedItem[];
@@ -46,6 +51,7 @@ function formatLabel(value?: string) {
   const labels: Record<string, string> = {
     beginner: "Beginner",
     buying: "Buying guide",
+    practical: "Practical guide",
     region: "Regional guide",
     grape: "Grape guide",
     pairing: "Pairing guide",
@@ -88,11 +94,16 @@ export default async function GuidePage({
 
   const imageSrc = guide.coverImage
     ? urlFor(guide.coverImage)
-        .width(1800)
-        .height(1400)
+        .width(1200)
+        .height(800)
         .fit("crop")
         .url()
     : null;
+
+  const printChecklist = (guide.contentEn || guide.content || []).find(
+    (block): block is GuideChecklistValue =>
+      "_type" in block && block._type === "guideChecklist"
+  );
 
   const relatedGroups = [
     ["Countries", guide.relatedCountries],
@@ -107,48 +118,38 @@ export default async function GuidePage({
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
       <article className="lpv-container pb-24">
-        <div className="pt-8 md:pt-10">
+        <div className="guide-screen-only pt-8 md:pt-10">
           <Link href="/en/guides" className="lpv-text-link">
             <span>←</span> Back to guides
           </Link>
         </div>
 
-        <section className="grid gap-12 border-b border-[var(--lpv-line)] pb-16 pt-10 md:pb-24 md:pt-16 lg:grid-cols-[0.82fr_1.18fr]">
+        <section className="guide-print-hero grid gap-12 border-b border-[var(--lpv-line)] pb-16 pt-10 md:pb-24 md:pt-16 lg:grid-cols-[0.82fr_1.18fr]">
           <div className="lg:sticky lg:top-24 lg:self-start">
             <p className="lpv-kicker text-[var(--lpv-cocoa)]">
               {formatLabel(guide.guideType) || "Guide"}
             </p>
 
-            <h1 className="lpv-display mt-7 text-[clamp(4.5rem,8vw,8.5rem)] leading-[0.84]">
+            <h1 className="lpv-display mt-5 text-[clamp(4.5rem,8vw,8.5rem)] leading-[0.84] lg:mt-5 lg:text-[clamp(4.5rem,6.2vw,7rem)]">
               {guide.titleEn || guide.title}
             </h1>
 
             {guide.excerpt ? (
-              <p className="mt-8 max-w-lg text-lg leading-8 text-[var(--lpv-muted)]">
+              <p className="mt-6 max-w-lg text-lg leading-8 text-[var(--lpv-muted)] lg:mt-5">
                 {guide.excerptEn || guide.excerpt}
               </p>
             ) : null}
-
-            <div className="mt-10 flex flex-wrap gap-4 border-t border-[var(--lpv-line)] pt-7 text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
-              {guide.difficulty ? (
-                <span>{formatLabel(guide.difficulty)}</span>
-              ) : null}
-
-              {guide.estimatedReadingTime ? (
-                <span>· {guide.estimatedReadingTimeEn || guide.estimatedReadingTime}</span>
-              ) : null}
-            </div>
           </div>
 
-          <div className="overflow-hidden bg-[var(--lpv-paper-light)]">
+          <div className="guide-print-cover-image self-start overflow-hidden bg-[var(--lpv-paper-light)]">
             {imageSrc ? (
               <img
                 src={imageSrc}
                 alt={guide.titleEn || guide.title}
-                className="min-h-[620px] w-full object-cover md:min-h-[780px]"
+                className="aspect-[3/2] w-full object-cover"
               />
             ) : (
-              <div className="flex min-h-[620px] items-center justify-center">
+              <div className="flex aspect-[3/2] items-center justify-center">
                 <p className="text-sm text-[var(--lpv-muted)]">
                   Image to add in Sanity.
                 </p>
@@ -158,7 +159,7 @@ export default async function GuidePage({
         </section>
 
         {(guide.contentEn || guide.content)?.length ? (
-          <section className="grid gap-10 border-b border-[var(--lpv-line)] py-16 md:grid-cols-[0.3fr_0.7fr] md:py-24">
+          <section className="guide-print-content grid gap-10 py-16 md:grid-cols-[0.3fr_0.7fr] md:py-24">
             <div>
               <p className="lpv-kicker text-[var(--lpv-cocoa)]">
                 The guide
@@ -170,7 +171,64 @@ export default async function GuidePage({
             </div>
 
             <div className="lpv-prose max-w-3xl">
-              <PortableText value={guide.contentEn || guide.content || []} />
+              <PortableText
+                value={guide.contentEn || guide.content || []}
+                components={{
+                  block: {
+                    h3: ({ children }) => {
+                      const text = String(children);
+                      const match = text.match(/^(?:Scénario|Scenario)\s+([A-C])\s+—\s+(.+)$/);
+
+                      return match ? (
+                        <h3 className="mb-7 mt-12 text-[clamp(1.35rem,1.65vw,1.6rem)] font-normal leading-[1.1] tracking-[-0.025em] text-[var(--lpv-ink)] md:mb-8 md:mt-14">
+                          <span className="mr-2 text-[0.72em] font-medium uppercase tracking-[0.12em] text-[var(--lpv-cocoa)]">
+                            {match[1]} —
+                          </span>
+                          {match[2]}
+                        </h3>
+                      ) : (
+                        <h3 className="mb-7 mt-12 text-[clamp(1.35rem,1.65vw,1.6rem)] font-normal leading-[1.1] tracking-[-0.025em] text-[var(--lpv-ink)] md:mb-8 md:mt-14">
+                          {children}
+                        </h3>
+                      );
+                    },
+                    h2: ({ children }) => {
+                      const text = String(children);
+                      const match = text.match(/^(\d+)\.\s*(.+)$/);
+
+                      return match ? (
+                        <div className="mb-8 mt-14 md:mb-10 md:mt-20">
+                          <p className="lpv-kicker mb-3 text-[var(--lpv-cocoa)]">
+                            {match[1].padStart(2, "0")}
+                          </p>
+                          <h2 className="lpv-display max-w-2xl text-[clamp(2.15rem,2.7vw,3rem)] leading-[0.96]">
+                            {match[2]}
+                          </h2>
+                        </div>
+                      ) : (
+                        <h2 className="lpv-display mb-8 mt-14 max-w-2xl text-[clamp(2.15rem,2.7vw,3rem)] leading-[0.96] md:mb-10 md:mt-20">
+                          {children}
+                        </h2>
+                      );
+                    },
+                  },
+                  types: {
+                    guideTable: ({ value }) => (
+                      <GuideTable
+                        value={value as GuideTableValue}
+                        locale="en"
+                      />
+                    ),
+                    guideChecklist: ({ value }) => (
+                      <GuideChecklist
+                        value={value as GuideChecklistValue}
+                        locale="en"
+                        mode="screen"
+                      />
+                    ),
+                  },
+                }}
+              />
             </div>
           </section>
         ) : (
@@ -184,6 +242,19 @@ export default async function GuidePage({
             </h2>
           </section>
         )}
+
+        {printChecklist ? (
+          <GuideChecklist
+            value={printChecklist}
+            locale="en"
+            mode="print"
+          />
+        ) : null}
+
+        <GuideRelatedArticles
+          articles={guide.relatedArticles}
+          locale="en"
+        />
 
         {relatedGroups.length > 0 ? (
           <section className="grid gap-10 border-b border-[var(--lpv-line)] py-16 md:grid-cols-[0.3fr_0.7fr] md:py-20">
@@ -219,6 +290,10 @@ export default async function GuidePage({
             </div>
           </section>
         ) : null}
+        <GuideActions
+          locale="en"
+          title={guide.titleEn || guide.title}
+        />
       </article>
     </main>
   );
