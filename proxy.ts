@@ -15,13 +15,21 @@ const isAdminRoute = createRouteMatcher([
   "/admin(.*)",
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req) || isAdminRoute(req)) {
-    await auth.protect();
-  }
+export default clerkMiddleware(
+  async (auth, req) => {
+    if (isProtectedRoute(req) || isAdminRoute(req)) {
+      await auth.protect();
+    }
 
-  return NextResponse.next();
-});
+    return NextResponse.next();
+  },
+  {
+    frontendApiProxy: {
+      enabled: true,
+      path: "/__clerk",
+    },
+  }
+);
 
 export const config = {
   matcher: [
