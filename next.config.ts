@@ -7,14 +7,6 @@ const nextConfig: NextConfig = {
         source: "/__clerk/:path*",
         destination: "https://frontend-api.clerk.dev/__clerk/:path*",
       },
-      {
-        source: "/npm/@clerk/:path*",
-        destination: "https://frontend-api.clerk.dev/npm/@clerk/:path*",
-      },
-      {
-        source: "/v1/:path*",
-        destination: "https://frontend-api.clerk.dev/v1/:path*",
-      },
     ];
   },
 };
