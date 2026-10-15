@@ -1,51 +1,90 @@
-import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
+import { SignUp } from "@clerk/nextjs";
 
-const clerkAppearance = {
-  elements: {
-    rootBox: "w-full max-w-md mx-auto",
-    card: "shadow-none border-0 bg-transparent p-0 w-full",
-    headerTitle: "hidden",
-    headerSubtitle: "hidden",
-    socialButtonsBlockButton: "w-full bg-transparent border border-[#E5DFD5] text-[#1C1A17] hover:bg-[#EAE4D9] rounded-none py-3 text-xs tracking-widest font-medium uppercase transition-colors mb-4",
-    socialButtonsBlockButtonText: "font-medium tracking-widest uppercase text-xs text-[#1C1A17]",
-    dividerLine: "bg-[#E5DFD5]",
-    dividerText: "text-[#8C8273] text-xs uppercase tracking-widest bg-[#F7F4EE] px-3",
-    formFieldLabel: "text-xs font-semibold uppercase tracking-widest text-[#1C1A17] mb-2",
-    formFieldInput: "w-full bg-white border border-[#E5DFD5] rounded-none px-4 py-3 text-sm text-[#1C1A17] focus:outline-none focus:border-[#1C1A17]",
-    formButtonPrimary: "w-full bg-[#2B2725] hover:bg-black text-white rounded-none py-3 text-xs tracking-widest font-semibold uppercase transition-colors mt-2",
-    footerActionLink: "text-xs font-semibold text-[#1C1A17] underline hover:no-underline",
-    footerActionText: "text-xs text-[#5C5549]",
-  },
-};
+export default async function InscriptionPage() {
+  const { userId } = await auth();
 
-export default function InscriptionPage() {
+  if (userId) {
+    return (
+      <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+        <section className="lpv-container flex min-h-[calc(100vh-78px)] items-center py-16">
+          <div className="w-full border-y border-[var(--lpv-line)] py-16 md:py-24">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Compte actif
+            </p>
+
+            <h1 className="lpv-display mt-7 max-w-5xl text-[clamp(4.5rem,9vw,9rem)] leading-[0.84]">
+              Ton compte
+              <br />
+              existe déjà.
+            </h1>
+
+            <p className="mt-8 max-w-xl text-lg leading-8 text-[var(--lpv-muted)]">
+              Tu peux maintenant retrouver ton carnet et continuer à construire
+              ta bibliothèque personnelle.
+            </p>
+
+            <div className="mt-10 flex flex-wrap gap-5">
+              <Link
+                href="/mon-carnet"
+                className="lpv-button lpv-button-dark"
+              >
+                Ouvrir mon carnet
+              </Link>
+
+              <Link href="/vins" className="lpv-text-link">
+                Découvrir les vins <span>→</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-[#F7F4EE]">
-      <div className="p-8 md:p-16 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#E5DFD5]">
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+      <section className="lpv-container grid min-h-[calc(100vh-78px)] gap-12 py-12 lg:grid-cols-[0.48fr_0.52fr] lg:items-center lg:py-20">
         <div>
-          <Link href="/" className="inline-block text-xs uppercase tracking-widest text-[#5C5549] hover:text-black mb-12">
-            ← RETOUR À L'ACCUEIL
+          <Link href="/" className="lpv-text-link">
+            <span>←</span> Retour à l’accueil
           </Link>
-          <span className="block text-xs uppercase tracking-widest text-[#8C8273] mb-4">REJOINDRE LE PREMIER VERRE</span>
-          <h1 className="text-5xl md:text-6xl font-serif text-[#1C1A17] mb-6">
-            Garde une trace de ce que tu bois.
-          </h1>
-          <p className="text-lg text-[#5C5549] max-w-md font-light leading-relaxed">
-            Crée ton carnet personnel, conserve tes favoris et retrouve les bouteilles qui valent la peine d'être rouvertes.
-          </p>
-        </div>
-        <div className="pt-12 border-t border-[#E5DFD5]">
-          <p className="text-xs text-[#8C8273] uppercase tracking-widest mb-2">Tu as déjà un compte ?</p>
-          <Link href="/connexion" className="inline-block text-xs font-semibold uppercase tracking-widest text-[#1C1A17] hover:underline">
-            SE CONNECTER →
-          </Link>
-        </div>
-      </div>
 
-      <div className="p-8 md:p-16 flex items-center justify-center">
-        <SignUp appearance={clerkAppearance} />
-      </div>
-    </div>
+          <p className="lpv-kicker mt-16 text-[var(--lpv-cocoa)]">
+            Rejoindre Le Premier Verre
+          </p>
+
+          <h1 className="lpv-display mt-7 max-w-3xl text-[clamp(4.5rem,8vw,8.5rem)] leading-[0.84]">
+            Garde une trace
+            <br />
+            de ce que tu bois.
+          </h1>
+
+          <p className="mt-8 max-w-lg text-lg leading-8 text-[var(--lpv-muted)]">
+            Crée ton carnet personnel, conserve tes favoris et retrouve les
+            bouteilles qui valent la peine d’être rouvertes.
+          </p>
+
+          <div className="mt-10 border-t border-[var(--lpv-line)] pt-7">
+            <p className="text-sm leading-7 text-[var(--lpv-muted)]">
+              Tu as déjà un compte?
+            </p>
+
+            <Link href="/connexion" className="lpv-text-link mt-4">
+              Se connecter <span>→</span>
+            </Link>
+          </div>
+        </div>
+
+        <div className="flex min-h-[620px] items-center border-y border-[var(--lpv-line)] py-12 lg:border-y-0 lg:border-l lg:pl-16 xl:pl-24">
+          <SignUp
+            fallbackRedirectUrl="/mon-carnet"
+            signInFallbackRedirectUrl="/mon-carnet"
+            
+          />
+        </div>
+      </section>
+    </main>
   );
 }
