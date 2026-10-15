@@ -96,14 +96,11 @@ export function SiteHeader() {
   const pathname = usePathname();
   const locale = pathname?.startsWith("/en") ? "en" : "fr";
   const isEnglish = locale === "en";
-  const navItems = isEnglish ? navItemsEn : navItemsFr;
   const frenchPath = getLocalizedPath(pathname ?? "/", "fr");
   const englishPath = getLocalizedPath(pathname ?? "/", "en");
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
-  const [isLocal, setIsLocal] = useState(false);
-  const [environmentChecked, setEnvironmentChecked] = useState(false);
 
   const accountRef = useRef<HTMLDivElement>(null);
   const { isLoaded, isSignedIn, user } = useUser();
@@ -151,24 +148,9 @@ export function SiteHeader() {
   const prelaunchPages = [
     "/disponible-bientot",
     "/en/disponible-bientot",
-    "/a-propos",
-    "/contact",
-    "/newsletter",
-    "/politique-confidentialite",
   ];
 
-  useEffect(() => {
-    setIsLocal(
-      window.location.hostname === "localhost" ||
-        window.location.hostname === "127.0.0.1"
-    );
-    setEnvironmentChecked(true);
-  }, []);
-
-  if (
-    prelaunchPages.includes(pathname ?? "") ||
-    (pathname === "/" && (!environmentChecked || !isLocal))
-  ) {
+  if (prelaunchPages.includes(pathname ?? "")) {
     return null;
   }
 
