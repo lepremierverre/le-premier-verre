@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { client } from "@/sanity/lib/client";
+import { searchSanity } from "@/lib/search/server-search";
+import AnalyticsEvent from "@/components/analytics/AnalyticsEvent";
 import type { SearchResult } from "@/types/search";
 import {
   buildSearchHref,
@@ -34,40 +35,7 @@ const typeLabels: Record<SearchResult["_type"], string> = {
 };
 
 async function getResults(q: string): Promise<SearchResult[]> {
-  if (q.trim().length < 2) return [];
-
-  return client.fetch<SearchResult[]>(
-    `
-      *[
-        !(_id in path("drafts.**")) &&
-        (
-          _type == "wine" ||
-          _type == "producer" ||
-          _type == "country" ||
-          _type == "region" ||
-          (_type == "grape" && slug.current != "assemblage-cepages-hybrides") ||
-          _type == "article" ||
-          _type == "guide"
-        ) &&
-        (
-          name match $search + "*" ||
-          title match $search + "*" ||
-          nameEn match $search + "*" ||
-          titleEn match $search + "*"
-        ) &&
-        (
-          !defined(published) ||
-          published == true
-        )
-      ][0...50] {
-        _id,
-        _type,
-        "title": coalesce(titleEn, nameEn, title, name),
-        "slug": slug.current
-      }
-    `,
-    { search: q.trim() }
-  );
+  return searchSanity(q, "en", 50);
 }
 
 export default async function SearchPage({
@@ -87,6 +55,15 @@ export default async function SearchPage({
 
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+      {query.length >= 2 ? (
+        <AnalyticsEvent
+          eventName="search_performed"
+          data={{
+            searchQuery: query,
+            sourceType: "global_search_en",
+          }}
+        />
+      ) : null}
       <section className="border-b border-[var(--lpv-line)]">
         <div className="lpv-container grid gap-10 py-16 md:grid-cols-[0.68fr_0.32fr] md:items-end md:py-24">
           <div>

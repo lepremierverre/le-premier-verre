@@ -13,7 +13,8 @@ export async function POST(request: NextRequest) {
   const user = await requireUser();
   const body = await request.json();
 
-  const wineId = String(body?.wineId || "");
+  const contentId = String(body?.contentId || body?.wineId || "");
+  const contentType = String(body?.contentType || "wine");
   const quantity = Number(body?.quantity || 1);
 
   const purchasePrice =
@@ -36,15 +37,16 @@ export async function POST(request: NextRequest) {
       ? Number(body.rating)
       : null;
 
-  if (!wineId) {
+  if (!contentId) {
     return NextResponse.json(
-      { success: false, error: "wineId manquant" },
+      { success: false, error: "contentId manquant" },
       { status: 400 }
     );
   }
 
   const created = await createCellarBottle(user.id, {
-    wineId,
+    contentId,
+    contentType,
     quantity,
     purchasePrice,
     purchaseDate,

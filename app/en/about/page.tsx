@@ -1,56 +1,72 @@
 import Link from "next/link";
 
-export const metadata = {
-  title: "About | Le Premier Verre",
-  description:
-    "About Le Premier Verre, a Quebec editorial platform dedicated to wine.",
-  alternates: {
-    canonical: "/en/about",
-    languages: {
-      "fr-CA": "/a-propos",
-      "en-CA": "/en/about",
-      "x-default": "/a-propos",
-    },
-  },
-};
-
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-[#f3efe6] px-6 py-16 text-[#211d19] sm:px-10 md:py-24">
-      <article className="mx-auto max-w-[820px]">
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+      <article className="mx-auto max-w-[820px] px-5 pb-24 pt-8 sm:px-8 md:pb-32 md:pt-10">
         <Link
           href="/en"
-          className="text-[0.68rem] font-medium uppercase tracking-[0.16em] text-[#776e65] transition-opacity hover:opacity-50"
+          className="text-[0.65rem] uppercase tracking-[0.22em] transition-opacity hover:opacity-50"
         >
           ← Le Premier Verre
         </Link>
 
-        <div className="mt-20 md:mt-28">
-          <p className="text-[0.68rem] font-medium uppercase tracking-[0.18em] text-[#85786d]">
-            About
-          </p>
-
-          <h1 className="mt-7 max-w-[760px] text-[clamp(2.8rem,7vw,5.8rem)] font-medium leading-[0.96] tracking-[-0.055em]">
+        <header className="mt-28 md:mt-36">
+          <h1 className="lpv-display max-w-[800px] text-[clamp(3.4rem,7vw,6.2rem)] leading-[0.88] tracking-[-0.045em]">
             Wine without making it more complicated than it needs to be.
           </h1>
+        </header>
 
-          <div className="mt-14 max-w-[620px] space-y-7 text-[0.98rem] leading-8 text-[#625a52]">
-            <p>
-              Le Premier Verre is a Quebec editorial platform dedicated to
-              bottles, producers, places and stories that make you want to
-              discover wine differently.
-            </p>
+        <div className="mt-16 max-w-[690px] space-y-8 text-[1rem] leading-8 md:mt-20 md:text-[1.05rem] md:leading-8">
+          <p>
+            Le Premier Verre is a Quebec-based editorial platform dedicated
+            to wine, the people who make it and the places where we like to
+            drink it. It started with a simple observation. Once you become
+            interested in wine, you quickly encounter an enormous amount of
+            information, vocabulary and unwritten rules. Grapes,
+            appellations, vintages, winemaking methods, regions, producers.
+            All of it can be fascinating, but you shouldn’t have to know
+            everything to choose a good bottle or feel like discovering
+            something new.
+          </p>
 
-            <p>
-              You don&apos;t need to master the vocabulary or know every
-              appellation. We&apos;re here to help you choose, understand,
-              taste and feel like exploring a little further.
-            </p>
+          <p>
+            Le Premier Verre was created to make that world easier to explore,
+            without simplifying it to the point of taking away what makes it
+            interesting.
+          </p>
 
-            <p>
-              Le Premier Verre officially launches on October 15, 2026.
-            </p>
-          </div>
+          <p>
+            Here you’ll find bottles worth discovering, producers from Quebec
+            and beyond, regions, grape varieties, appellations and places
+            worth knowing. We also talk about what we drink, how we choose it,
+            what we eat with it and the people behind the bottles. The
+            directory is there to search and explore, the guides offer useful
+            reference points when you’re not quite sure where to start, and
+            the articles give you room to go a little further. Our selections
+            are built around the questions people actually ask in front of a
+            shelf or a wine list: what to bring to a friend’s place, what to
+            open tonight or what to try when you feel like stepping outside
+            your usual choices.
+          </p>
+
+          <p>
+            Quebec wine also has an important place here. The province is
+            home to producers, vineyards and cider makers that deserve to be
+            better known, visited and talked about. Le Premier Verre wants to
+            help people discover them while keeping the door wide open to
+            what is being made elsewhere.
+          </p>
+
+          <p>
+            Most importantly, there isn’t just one right way to be interested
+            in wine. You might want to understand what an appellation means,
+            find a bottle under $25, discover a vineyard for the weekend or
+            simply figure out what to drink with dinner. You can know a lot,
+            a little or almost nothing. Le Premier Verre is here to offer a
+            few useful reference points, spark curiosity and make the next
+            glass a little easier to choose.
+          </p>
         </div>
       </article>
     </main>

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const ADMIN_ACCESS_CODE = process.env.ADMIN_ACCESS_CODE;
-const COOKIE_NAME = process.env.ADMIN_COOKIE_NAME || "lexvinum_admin";
+const COOKIE_NAME = process.env.ADMIN_COOKIE_NAME || "lepremierverre_admin";
 
 export async function POST(request: Request) {
   try {

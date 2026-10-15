@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const COOKIE_NAME = process.env.ADMIN_COOKIE_NAME || "lexvinum_admin";
+const COOKIE_NAME = process.env.ADMIN_COOKIE_NAME || "lepremierverre_admin";
 
 export async function POST() {
   const response = NextResponse.json({ ok: true });

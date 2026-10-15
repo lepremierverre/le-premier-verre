@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { client } from "@/sanity/lib/client";
 
 type MapMode = "quebec" | "world";
 
@@ -263,32 +263,30 @@ export async function GET(request: NextRequest) {
     const mode = getMode(request.nextUrl.searchParams);
 
     if (mode === "quebec") {
-      const vineyards = await prisma.vineyard.findMany({
-        where: {
-          latitude: { not: null },
-          longitude: { not: null },
-          isQuebec: true,
-        },
-        orderBy: [{ name: "asc" }],
-        take: 2000,
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          country: true,
-          region: true,
-          province: true,
-          city: true,
-          latitude: true,
-          longitude: true,
-          image: true,
-          website: true,
-          isQuebec: true,
-          tastingOffered: true,
-          lodgingOffered: true,
-          restaurantOnSite: true,
-        },
-      });
+      const vineyards = await client.fetch<VineyardRow[]>(`
+        *[
+          _type == "producer" &&
+          defined(latitude) &&
+          defined(longitude)
+        ]
+        | order(name asc)[0...2000]{
+          "id": _id,
+          "slug": slug.current,
+          name,
+          "country": coalesce(country->name, "Canada"),
+          "region": region->name,
+          "province": "Québec",
+          "city": municipality,
+          latitude,
+          longitude,
+          "image": null,
+          website,
+          "isQuebec": true,
+          "tastingOffered": coalesce(openToVisitors, false),
+          "lodgingOffered": false,
+          "restaurantOnSite": false
+        }
+      `);
 
       const points: MapPoint[] = (vineyards as VineyardRow[])
         .filter(hasCoordinates)
@@ -324,26 +322,28 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const wines = await prisma.wine.findMany({
-      where: {
-        OR: [{ dataSource: "SAQ" }, { saqUrl: { not: null } }],
-      },
-      orderBy: [{ name: "asc" }],
-      take: 10000,
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        producer: true,
-        country: true,
-        region: true,
-        latitude: true,
-        longitude: true,
-        image: true,
-        isQuebec: true,
-        dataSource: true,
-      },
-    });
+    const wines = await client.fetch<WineRow[]>(`
+      *[
+        _type == "wine" &&
+        defined(slug.current)
+      ]
+      | order(name asc)[0...10000]{
+        "id": _id,
+        "slug": slug.current,
+        name,
+        "producer": producer->name,
+        "country": country->name,
+        "region": region->name,
+        "latitude": coalesce(region->latitude, country->latitude),
+        "longitude": coalesce(region->longitude, country->longitude),
+        "image": null,
+        "isQuebec": coalesce(
+          country->name == "Canada" && region->name match "Québec*",
+          false
+        ),
+        "dataSource": null
+      }
+    `);
 
     const points: MapPoint[] = (wines as WineRow[])
       .filter((w) => isNonQuebecWine(w.country, w.region, w.isQuebec))

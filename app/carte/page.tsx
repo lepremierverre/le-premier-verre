@@ -105,7 +105,7 @@ declare global {
   }
 }
 
-const MAP_ID = "lex-vinum-premium-map";
+const MAP_ID = "le-premier-verre-map";
 const DEFAULT_CENTER_QUEBEC = { lat: 45.3151, lng: -72.9046 };
 const DEFAULT_CENTER_WORLD = { lat: 20, lng: 0 };
 const STYLE_OPTIONS = [

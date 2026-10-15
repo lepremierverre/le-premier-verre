@@ -22,7 +22,8 @@ model User {
 
 model CellarBottle {
   id             String    @id @default(cuid())
-  wineId         String
+  contentId      String
+  contentType    String    @default("wine")
   userId         String?
   quantity       Int       @default(1)
   purchasePrice  Float?
@@ -33,126 +34,15 @@ model CellarBottle {
   rating         Int?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  wine           Wine      @relation(fields: [wineId], references: [id], onDelete: Cascade)
   user           User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([wineId])
+  @@index([contentId])
+  @@index([contentType])
   @@index([userId])
 }
 
-model Wine {
-  id          String  @id @default(cuid())
-  slug        String  @unique
-  name        String
-  producer    String?
-  country     String?
-  region      String?
-  grape       String?
-  color       String?
-  style       String?
-  price       Float?
-  vintage     String?
-  image       String?
-  aromasJson  String?
-  tagsJson    String?
-  description String?
-  isQuebec    Boolean @default(false)
-  featured    Boolean @default(false)
-  body        String?
-  acidity     String?
-  tannin      String?
-  minerality  String?
-  pairingJson String?
-  serving     String?
-  temperature String?
-  cellar      String?
 
-  vineyardId String?
-  vineyard   Vineyard? @relation(fields: [vineyardId], references: [id], onDelete: SetNull)
 
-  originLabel String?
-  latitude    Float?
-  longitude   Float?
-  placeId     String?
-
-  saqCode                String? @unique
-  saqUrl                 String?
-  appellationOrigine     String?
-  designationReglementee String?
-  alcohol                String?
-  tauxSucre              String?
-  natureType             String?
-  bioType                String?
-  formatMl               Int?
-  sourceFile             String?
-  dataSource             String? @default("manual")
-
-  sugar  String?
-  palate String?
-  oak    String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  cellarBottles CellarBottle[]
-
-  @@index([country])
-  @@index([region])
-  @@index([color])
-  @@index([isQuebec])
-  @@index([featured])
-  @@index([dataSource])
-  @@index([saqCode])
-}
-
-model Vineyard {
-  id               String   @id @default(cuid())
-  slug             String   @unique
-  name             String
-  description      String?
-  country          String?
-  region           String?
-  province         String?
-  city             String?
-  address          String?
-  postalCode       String?
-  latitude         Float?
-  longitude        Float?
-  placeId          String?
-  website          String?
-  phone            String?
-  email            String?
-  image            String?
-  isQuebec         Boolean  @default(false)
-  isActiveVisit    Boolean  @default(true)
-  tastingOffered   Boolean  @default(false)
-  lodgingOffered   Boolean  @default(false)
-  restaurantOnSite Boolean  @default(false)
-  routesJson       String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  wines Wine[]
-}
-
-model BlogPost {
-  id             String    @id @default(cuid())
-  slug           String    @unique
-  title          String
-  excerpt        String?
-  content        String    @db.Text
-  coverImage     String?
-  category       String?
-  tagsJson       String?
-  author         String?
-  published      Boolean   @default(false)
-  publishedAt    DateTime?
-  featured       Boolean   @default(false)
-  seoTitle       String?
-  seoDescription String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-}
 
 model ShopProduct {
   id          String   @id @default(cuid())
@@ -169,43 +59,9 @@ model ShopProduct {
   inventory   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  orderItems ShopOrderItem[]
 }
 
-model ShopOrder {
-  id                    String   @id @default(cuid())
-  email                 String
-  status                String   @default("pending")
-  currency              String   @default("cad")
-  subtotalCents         Int
-  totalCents            Int
-  stripePaymentIntentId String?  @unique
-  shippingName          String?
-  shippingAddressLine1  String?
-  shippingAddressLine2  String?
-  shippingCity          String?
-  shippingState         String?
-  shippingPostalCode    String?
-  shippingCountry       String?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
 
-  items ShopOrderItem[]
-}
-
-model ShopOrderItem {
-  id             String @id @default(cuid())
-  orderId        String
-  productId      String
-  quantity       Int
-  unitPriceCents Int
-
-  order   ShopOrder   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product ShopProduct @relation(fields: [productId], references: [id])
-
-  createdAt DateTime @default(now())
-}
 
 model UsageEvent {
   id        String   @id @default(cuid())
@@ -219,24 +75,85 @@ model UsageEvent {
   @@index([userId, feature, createdAt])
 }
 
-model WineJournal {
-  id        String    @id @default(uuid()) @db.Uuid
-  userId    String    @map("user_id")
-  wineId    String    @map("wine_id")
-  favorite  Boolean   @default(false)
-  tasted    Boolean   @default(false)
-  buyAgain  Boolean   @default(false) @map("buy_again")
-  gift      Boolean   @default(false)
-  avoid     Boolean   @default(false)
-  rating    Int?
-  note      String?
-  tastedAt  DateTime? @map("tasted_at") @db.Timestamptz(6)
-  location  String?
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  @@unique([userId, wineId])
-  @@index([userId])
-  @@index([wineId])
-  @@map("wine_journal")
+model AnalyticsEvent {
+  id            String   @id @default(cuid())
+  clientEventId String?  @unique
+  eventName     String
+  eventVersion  Int      @default(1)
+  occurredAt    DateTime @default(now())
+  receivedAt    DateTime @default(now())
+  environment   String   @default("development")
+
+  // Qualité et auditabilité
+  isReportable  Boolean  @default(true)
+  qualityReason String?
+  duplicateOfId String?
+
+  // Visiteur — aucun renseignement personnel requis pour un visiteur anonyme
+  clerkUserId    String?
+  sessionId      String?
+  isAuthenticated Boolean @default(false)
+
+  // Page et acquisition
+  pagePath    String?
+  referrer    String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+
+  // Contenu principal — ID canonique Sanity
+  contentId   String?
+  contentType String?
+  contentSlug String?
+
+  // Producteur
+  producerId   String?
+  producerSlug String?
+
+  // Contexte du produit
+  beverageType  String?
+  isAlcoholFree Boolean?
+  country       String?
+  province     String?
+  region       String?
+  isQuebec     Boolean?
+  price        Float?
+  priceBand    String?
+
+  // Origine de l'interaction
+  sourceType String?
+  sourceId   String?
+  sourceSlug String?
+
+  // Recommandations et parcours de découverte
+  recommendationId     String?
+  recommendationReason String?
+
+  // Destination d'un clic
+  destinationType String?
+  destinationId   String?
+  destinationUrl  String?
+
+  // Recherche et filtres
+  searchQuery String?
+  resultCount Int?
+  filterName  String?
+  filterValue String?
+
+  // Données additionnelles non sensibles
+  metadata Json?
+
+  @@index([eventName, occurredAt])
+  @@index([environment, occurredAt])
+  @@index([isReportable, eventName, occurredAt])
+  @@index([contentId, occurredAt])
+  @@index([producerId, occurredAt])
+  @@index([clerkUserId, occurredAt])
+  @@index([sessionId, occurredAt])
+  @@index([isQuebec, occurredAt])
+  @@index([beverageType, occurredAt])
+  @@index([sourceType, occurredAt])
+  @@index([recommendationId, occurredAt])
+  @@index([utmCampaign, occurredAt])
 }

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import { trackAnalyticsEvent } from "@/components/analytics/trackAnalyticsEvent";
+
 type WineList = {
   _id: string;
   name: string;
@@ -13,9 +15,36 @@ type WineList = {
 
 export default function AddToListButton({
   wineId,
+  variant = "default",
+  locale = "fr",
 }: {
   wineId: string;
+  variant?: "default" | "detail";
+  locale?: "fr" | "en";
 }) {
+  const labels =
+    locale === "en"
+      ? {
+          button: "List",
+          addTitle: "Add to a list",
+          loading: "Loading…",
+          loadError: "Unable to load your lists.",
+          modifyError: "Unable to update this list.",
+          empty: "You don't have any lists yet.",
+          create: "Create a list →",
+          manage: "Manage my lists →",
+        }
+      : {
+          button: "Liste",
+          addTitle: "{labels.addTitle}",
+          loading: "{labels.loading}",
+          loadError: "Impossible de charger tes listes.",
+          modifyError: "Impossible de modifier cette liste.",
+          empty: "{labels.empty}",
+          create: "{labels.create}",
+          manage: "{labels.manage}",
+        };
+
   const [open, setOpen] = useState(false);
   const [lists, setLists] = useState<WineList[]>([]);
   const [loading, setLoading] = useState(false);
@@ -63,7 +92,7 @@ export default function AddToListButton({
       const data = await response.json();
       setLists(Array.isArray(data.lists) ? data.lists : []);
     } catch {
-      setError("Impossible de charger tes listes.");
+      setError(labels.loadError);
     } finally {
       setLoading(false);
     }
@@ -103,26 +132,63 @@ export default function AddToListButton({
         throw new Error();
       }
 
+      const data = (await response.json()) as {
+        ok?: boolean;
+        action?: "add" | "remove";
+        changed?: boolean;
+        wineId?: string;
+        listId?: string;
+      };
+
+      if (
+        data.ok === true &&
+        data.action === "add" &&
+        data.changed === true &&
+        data.wineId === wineId &&
+        data.listId === list._id
+      ) {
+        trackAnalyticsEvent("list_item_added", {
+          contentId: wineId,
+          contentType: "product",
+          sourceType: "user_wine_list",
+          sourceId: list._id,
+        });
+      }
+
       setLists((current) =>
         current.map((item) => {
           if (item._id !== list._id) return item;
 
           const wines = item.wines ?? [];
+          const hasWine = wines.some((wine) => wine._id === wineId);
 
-          return {
-            ...item,
-            wines: containsWine
-              ? wines.filter((wine) => wine._id !== wineId)
-              : [...wines, { _id: wineId }],
-          };
+          if (data.action === "add") {
+            return {
+              ...item,
+              wines: hasWine ? wines : [...wines, { _id: wineId }],
+            };
+          }
+
+          if (data.action === "remove") {
+            return {
+              ...item,
+              wines: wines.filter((wine) => wine._id !== wineId),
+            };
+          }
+
+          return item;
         })
       );
     } catch {
-      setError("Impossible de modifier cette liste.");
+      setError(labels.modifyError);
     } finally {
       setPendingId(null);
     }
   }
+
+  const isInAnyList = lists.some((list) =>
+    (list.wines ?? []).some((wine) => wine._id === wineId)
+  );
 
   return (
     <div ref={containerRef} className="relative">
@@ -130,34 +196,44 @@ export default function AddToListButton({
         type="button"
         onClick={openMenu}
         aria-expanded={open}
-        className="text-xs uppercase tracking-[0.18em] text-[var(--lpv-muted)] transition hover:text-[var(--lpv-ink)]"
+        className={
+          variant === "detail"
+            ? "inline-flex h-5 items-center whitespace-nowrap text-[11px] font-normal leading-none text-[var(--lpv-ink)] transition-opacity hover:opacity-50"
+            : "text-xs uppercase tracking-[0.18em] text-[var(--lpv-muted)] transition hover:text-[var(--lpv-ink)]"
+        }
       >
-        + Liste
+        {variant === "detail" ? (
+          <span>
+            {isInAnyList ? "−" : "+"} {labels.button}
+          </span>
+        ) : (
+          `+ ${labels.button}`
+        )}
       </button>
 
       {open ? (
         <div className="absolute right-0 top-full z-50 mt-4 w-[280px] border border-[var(--lpv-line)] bg-[var(--lpv-paper)] p-5 shadow-xl">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
-            Ajouter à une liste
+            {labels.addTitle}
           </p>
 
           {loading ? (
             <p className="py-5 text-sm text-[var(--lpv-muted)]">
-              Chargement…
+              {labels.loading}
             </p>
           ) : error ? (
             <p className="py-5 text-sm">{error}</p>
           ) : lists.length === 0 ? (
             <div className="pt-5">
               <p className="text-sm text-[var(--lpv-muted)]">
-                Tu n’as encore aucune liste.
+                {labels.empty}
               </p>
 
               <Link
                 href="/mes-listes"
                 className="mt-4 inline-flex border-b border-[var(--lpv-ink)] pb-1 text-xs uppercase tracking-[0.18em]"
               >
-                Créer une liste →
+                {labels.create}
               </Link>
             </div>
           ) : (
@@ -187,7 +263,7 @@ export default function AddToListButton({
                 href="/mes-listes"
                 className="mt-5 inline-flex text-xs uppercase tracking-[0.18em] text-[var(--lpv-muted)]"
               >
-                Gérer mes listes →
+                {labels.manage}
               </Link>
             </div>
           )}

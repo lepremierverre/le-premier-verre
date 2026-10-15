@@ -15,8 +15,69 @@ function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function WineJournalButton({ wineId }: { wineId: string }) {
+export function WineJournalButton({
+  wineId,
+  variant = "default",
+  locale = "fr",
+}: {
+  wineId: string;
+  variant?: "default" | "detail";
+  locale?: "fr" | "en";
+}) {
   const { isSignedIn } = useUser();
+
+  const labels =
+    locale === "en"
+      ? {
+          button: "Notebook",
+          active: "In my notebook",
+          add: "Add to notebook",
+          title: "My notebook",
+          intro: "Keep track of the bottles you've actually tasted.",
+          close: "Close",
+          loading: "Loading…",
+          date: "Date",
+          appreciation: "Rating",
+          liked: "Liked",
+          average: "Average",
+          disliked: "Didn't like",
+          note: "Note",
+          placeholder: "Ex. Great with mushroom pasta.",
+          buyAgain: "Buy again",
+          yes: "Yes",
+          no: "No",
+          remove: "Remove",
+          saving: "Saving…",
+          save: "Save",
+          removeConfirm: "Remove this wine from your notebook?",
+          saveError: "Unable to save this entry.",
+          removeError: "Unable to remove this entry.",
+        }
+      : {
+          button: "Carnet",
+          active: "Dans mon carnet",
+          add: "Ajouter au carnet",
+          title: "{labels.title}",
+          intro: "{labels.intro}",
+          close: "Fermer",
+          loading: "{labels.loading}",
+          date: "Date",
+          appreciation: "{labels.appreciation}",
+          liked: "Aimé",
+          average: "Moyen",
+          disliked: "Pas aimé",
+          note: "Note",
+          placeholder: "Ex. Super avec les pâtes aux champignons.",
+          buyAgain: "{labels.buyAgain}",
+          yes: "Oui",
+          no: "Non",
+          remove: "Retirer",
+          saving: "Enregistrement…",
+          save: "Enregistrer",
+          removeConfirm: "Retirer ce vin de ton carnet?",
+          saveError: "Impossible d’enregistrer cette entrée.",
+          removeError: "Impossible de retirer cette entrée.",
+        };
 
   const [entry, setEntry] = useState<Entry | null>(null);
   const [open, setOpen] = useState(false);
@@ -82,14 +143,14 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data?.error || "Impossible d’enregistrer cette entrée.");
+        setError(data?.error || labels.saveError);
         return;
       }
 
       setEntry(data.entry);
       setOpen(false);
     } catch {
-      setError("Impossible d’enregistrer cette entrée.");
+      setError(labels.saveError);
     } finally {
       setSaving(false);
     }
@@ -99,7 +160,7 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
     if (!entry) return;
 
     const confirmed = window.confirm(
-      "Retirer ce vin de ton carnet?"
+      labels.removeConfirm
     );
 
     if (!confirmed) return;
@@ -113,7 +174,7 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
       });
 
       if (!res.ok) {
-        setError("Impossible de retirer cette entrée.");
+        setError(labels.removeError);
         return;
       }
 
@@ -124,7 +185,7 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
       setBuyAgain(true);
       setOpen(false);
     } catch {
-      setError("Impossible de retirer cette entrée.");
+      setError(labels.removeError);
     } finally {
       setSaving(false);
     }
@@ -144,9 +205,19 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
       <button
         type="button"
         onClick={toggleOpen}
-        className="border-b border-[var(--lpv-ink)] pb-1 text-xs uppercase tracking-[0.2em] text-[var(--lpv-ink)] transition hover:opacity-55"
+        className={
+          variant === "detail"
+            ? "inline-flex h-5 items-center whitespace-nowrap text-[11px] font-normal leading-none text-[var(--lpv-ink)] transition-opacity hover:opacity-50"
+            : "border-b border-[var(--lpv-ink)] pb-1 text-xs uppercase tracking-[0.2em] text-[var(--lpv-ink)] transition hover:opacity-55"
+        }
       >
-        {entry ? "Dans mon carnet" : "Ajouter au carnet"} →
+        {variant === "detail" ? (
+          <span>{labels.button}</span>
+        ) : (
+          <>
+            {entry ? labels.active : labels.add} →
+          </>
+        )}
       </button>
 
       {open ? (
@@ -154,11 +225,11 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
           <div className="flex items-start justify-between gap-6">
             <div>
               <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                Mon carnet
+                {labels.title}
               </p>
 
               <p className="mt-3 text-sm leading-6 text-[var(--lpv-muted)]">
-                Garde une trace de ce que tu as réellement bu.
+                {labels.intro}
               </p>
             </div>
 
@@ -166,7 +237,7 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
               type="button"
               onClick={() => setOpen(false)}
               className="text-lg text-[var(--lpv-muted)] transition hover:text-[var(--lpv-ink)]"
-              aria-label="Fermer"
+              aria-label={labels.close}
             >
               ×
             </button>
@@ -174,7 +245,7 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
 
           {loading ? (
             <p className="mt-8 text-sm text-[var(--lpv-muted)]">
-              Chargement…
+              {labels.loading}
             </p>
           ) : (
             <div className="mt-8 space-y-7">
@@ -193,7 +264,7 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
 
               <div>
                 <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                  Appréciation
+                  {labels.appreciation}
                 </p>
 
                 <div className="mt-3 grid grid-cols-3 border border-[var(--lpv-line)]">
@@ -239,14 +310,14 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
                   value={note}
                   onChange={(event) => setNote(event.target.value)}
                   rows={4}
-                  placeholder="Ex. Super avec les pâtes aux champignons."
+                  placeholder={labels.placeholder}
                   className="mt-3 w-full resize-none border border-[var(--lpv-line)] bg-transparent px-4 py-3 text-sm leading-6 outline-none transition placeholder:text-[var(--lpv-muted)] focus:border-[var(--lpv-ink)]"
                 />
               </div>
 
               <div>
                 <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                  Rachèterais
+                  {labels.buyAgain}
                 </p>
 
                 <div className="mt-3 grid grid-cols-2 border border-[var(--lpv-line)]">
@@ -265,7 +336,7 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
                           : "text-[var(--lpv-muted)] hover:text-[var(--lpv-ink)]"
                       }`}
                     >
-                      {value ? "Oui" : "Non"}
+                      {value ? labels.yes : labels.no}
                     </button>
                   ))}
                 </div>
@@ -298,10 +369,10 @@ export function WineJournalButton({ wineId }: { wineId: string }) {
                   className="lpv-button lpv-button-dark"
                 >
                   {saving
-                    ? "Enregistrement…"
+                    ? labels.saving
                     : entry
-                      ? "Enregistrer"
-                      : "Ajouter au carnet"}
+                      ? labels.save
+                      : labels.add}
                 </button>
               </div>
             </div>

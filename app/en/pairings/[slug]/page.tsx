@@ -6,12 +6,13 @@ import type { SanityImageSource } from "@sanity/image-url";
 
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import { buildTasteDna } from "@/lib/taste-dna";
 import BottleStage from "@/components/wine/BottleStage";
+import RecommendationLink from "@/components/analytics/RecommendationLink";
+import RecommendationImpression from "@/components/analytics/RecommendationImpression";
 import {
-  buildRecommendationPool,
-  type RecommendationWine,
-} from "@/lib/recommendation-engine";
+  getPairingRecommendations,
+  type PairingRecommendationWine,
+} from "@/lib/recommendations/pairing-recommendations";
 import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
 
 export const revalidate = 60;
@@ -78,40 +79,6 @@ type FoodPage = {
   seoDescriptionEn?: string;
 };
 
-type Wine = RecommendationWine & {
-  slug: string;
-
-  vintage?: number;
-  beverageType?: "wine" | "cider";
-  alcoholFree?: boolean;
-  bottleImage?: SanityImageSource;
-
-  producer?: {
-    name?: string;
-    slug?: string;
-  };
-
-  country?: {
-    name?: string;
-    slug?: string;
-  };
-
-  region?: {
-    name?: string;
-    slug?: string;
-  };
-
-  appellation?: {
-    name?: string;
-    slug?: string;
-  };
-
-  grapes?: Array<{
-    _id?: string;
-    name?: string;
-    slug?: string;
-  }>;
-};
 
 const foodQuery = `
   *[
@@ -182,65 +149,6 @@ const foodQuery = `
   }
 `;
 
-const recommendationWinesQuery = `
-  *[
-    _type == "wine" &&
-    published == true &&
-    !(_id in path("drafts.**"))
-  ] {
-    _id,
-    name,
-    "slug": slug.current,
-
-    vintage,
-    beverageType,
-    alcoholFree,
-    color,
-    style,
-    saqPrice,
-    bottleImage,
-
-    producer->{
-      name,
-      "slug": slug.current
-    },
-
-    country->{
-      name,
-      "slug": slug.current
-    },
-
-    region->{
-      name,
-      "slug": slug.current
-    },
-
-    appellation->{
-      name,
-      "slug": slug.current
-    },
-
-    body,
-    sweetness,
-    roundness,
-    acidity,
-    tannins,
-    fruitIntensity,
-    minerality,
-    intensity,
-    complexity,
-    oakInfluence,
-    savory,
-
-    dnaMetadata,
-
-    grapes[]->{
-      _id,
-      name,
-      "slug": slug.current
-    }
-  }
-`;
 
 function categoryLabel(category?: string) {
   const labels: Record<string, string> = {
@@ -297,44 +205,17 @@ export default async function AccordPage({
   const query = await searchParams;
   const alcoholChoice = query.alcohol === "without" ? "without" : "with";
 
-  const [food, wines] = await Promise.all([
+  const [food, recommendationData] = await Promise.all([
     client.fetch<FoodPage | null>(foodQuery, { slug }),
-    client.fetch<Wine[]>(recommendationWinesQuery),
+    getPairingRecommendations(slug, alcoholChoice),
   ]);
 
   if (!food) {
     notFound();
   }
 
-  /*
-   * Profil anonyme.
-   *
-   * À ce stade, aucune préférence personnelle n'est injectée.
-   * Le classement repose donc essentiellement sur Food DNA,
-   * avec les couches éditoriales prévues par le moteur.
-   *
-   * Plus tard, le Taste DNA réel de l'utilisateur connecté
-   * pourra remplacer ce profil sans modifier cette page.
-   */
-  const anonymousTaste = buildTasteDna({
-    preferences: {},
-    favorites: [],
-    journal: [],
-  });
-
-  const eligibleWines = wines.filter((wine) =>
-    alcoholChoice === "without"
-      ? wine.alcoholFree === true
-      : wine.alcoholFree !== true
-  );
-
-  const recommendationPool = buildRecommendationPool(
-    eligibleWines,
-    food,
-    anonymousTaste
-  );
-
-  const recommendations = recommendationPool.candidates.slice(0, 4);
+  const recommendations =
+    recommendationData.candidates.slice(0, 4);
 
   const imageSrc = food.image
     ? urlFor(food.image)
@@ -557,10 +438,23 @@ export default async function AccordPage({
                     key={wine._id}
                     className="group py-9 md:px-5 xl:px-7 xl:first:pl-0 xl:last:pr-0"
                   >
-                    <Link href={`/en/wines/${wine.slug}`}>
+                    <RecommendationImpression
+                      recommendationId={wine._id}
+                      pairingSlug={slug}
+                      alcoholChoice={alcoholChoice}
+                      locale="en"
+                    />
+
+                    <RecommendationLink
+                      href={`/en/wines/${wine.slug}`}
+                      recommendationId={wine._id}
+                      pairingSlug={slug}
+                      alcoholChoice={alcoholChoice}
+                      locale="en"
+                    >
                       <div className="relative">
                         <BottleStage
-                          image={wine.bottleImage}
+                          image={wine.bottleImage as SanityImageSource | undefined}
                           alt={wine.name ?? "Bottle"}
                           color={
                             wine.beverageType === "cider"
@@ -611,7 +505,7 @@ export default async function AccordPage({
                           </span>
                         </div>
                       </div>
-                    </Link>
+                    </RecommendationLink>
                   </article>
                 );
               })}

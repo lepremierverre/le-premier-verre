@@ -47,7 +47,7 @@ export default function AdminAccessPage() {
         </p>
 
         <h1 className="mt-3 font-[var(--font-display)] text-4xl leading-tight text-[#f6efe6]">
-          Lex Vinum Premium
+          Le Premier Verre
         </h1>
 
         <p className="mt-4 text-sm leading-7 text-[#bcae9b]">

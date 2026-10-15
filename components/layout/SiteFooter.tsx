@@ -24,47 +24,56 @@ export function SiteFooter() {
 
   return (
     <footer className="bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)]">
-      <div className="lpv-container py-16 md:py-24">
-        <div className="grid gap-16 lg:grid-cols-[1.6fr_0.4fr]">
+      <div className="lpv-container py-14 md:py-18">
+        <div className="grid gap-12 lg:grid-cols-[1.45fr_0.55fr]">
           <div>
             <p className="lpv-kicker text-white/55">
               Le Premier Verre
             </p>
 
-            <h2 className="lpv-display mt-8 max-w-4xl text-[clamp(3.8rem,8vw,8.5rem)] leading-[0.86]">
+            <h2 className="lpv-display mt-6 max-w-4xl text-[clamp(3.6rem,7vw,7rem)] leading-[0.86]">
               {isEnglish ? "Wine made simpler." : "Boire moins compliqué."}
             </h2>
 
-            <p className="mt-8 max-w-lg text-sm leading-7 text-white/62">
+            <p className="mt-6 max-w-lg text-sm leading-7 text-white/62">
               {isEnglish
                 ? "Bottles, people and places worth taking the time to discover."
                 : "Des bouteilles, des personnes et des endroits qui méritent qu’on s’y attarde."}
             </p>
           </div>
 
-          <div>
+          <div className="lg:flex lg:flex-col lg:translate-y-[10px]">
             <p className="lpv-kicker text-white/40">
               {isEnglish ? "The project" : "Le projet"}
             </p>
 
             <nav
-              className="mt-7 flex flex-col gap-3"
+              className="mt-7 flex flex-col gap-2.5"
               aria-label={isEnglish ? "Project information" : "Informations sur le projet"}
             >
               {information.map(([label, href]) => (
                 <Link
                   key={href}
                   href={href}
-                  className="w-fit text-sm text-white/68 transition-opacity hover:opacity-50"
+                  className="lpv-display w-fit text-[clamp(1.4rem,1.7vw,1.65rem)] leading-[1.08] tracking-[-0.025em] text-white/82 transition-opacity hover:opacity-50"
                 >
                   {label}
                 </Link>
               ))}
+
+              <a
+                href="https://www.instagram.com/lepremierverre/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="lpv-display w-fit text-[clamp(1.4rem,1.7vw,1.65rem)] leading-[1.08] tracking-[-0.025em] text-white/82 transition-opacity hover:opacity-50"
+              >
+                Instagram
+              </a>
             </nav>
           </div>
         </div>
 
-        <div className="mt-20 flex flex-col gap-5 border-t border-white/20 pt-6 text-[0.62rem] uppercase tracking-[0.17em] text-white/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-5 border-t border-white/20 pt-5 text-[0.62rem] uppercase tracking-[0.17em] text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Le Premier Verre</p>
 
           <p>

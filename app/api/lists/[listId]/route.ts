@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { ClientError } from "@sanity/client";
 
 import { writeClient } from "@/sanity/lib/write-client";
 
@@ -13,6 +14,7 @@ async function getOwnedList(listId: string, userId: string) {
   return writeClient.fetch(
     `*[_type == "wineList" && _id == $listId && userId == $userId][0]{
       _id,
+      _rev,
       userId,
       name,
       wines
@@ -79,40 +81,92 @@ export async function PATCH(
   }
 
   const now = new Date().toISOString();
+  let changed = false;
 
-  if (action === "add") {
-    const alreadyExists = await writeClient.fetch(
-      `count(*[
-        _type == "wineList" &&
-        _id == $listId &&
-        references($wineId)
-      ]) > 0`,
-      { listId, wineId }
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const currentList = await getOwnedList(listId, userId);
+
+    if (!currentList) {
+      return NextResponse.json(
+        { error: "Liste introuvable." },
+        { status: 404 }
+      );
+    }
+
+    const wines = Array.isArray(currentList.wines)
+      ? currentList.wines
+      : [];
+
+    const alreadyExists = wines.some(
+      (wine: { _ref?: string }) => wine?._ref === wineId
     );
 
-    if (!alreadyExists) {
-      await writeClient
-        .patch(listId)
-        .setIfMissing({ wines: [] })
-        .append("wines", [
+    if (action === "add" && alreadyExists) {
+      changed = false;
+      break;
+    }
+
+    if (action === "remove" && !alreadyExists) {
+      changed = false;
+      break;
+    }
+
+    try {
+      if (action === "add") {
+        await writeClient
+          .patch(listId)
+          .ifRevisionId(currentList._rev)
+          .setIfMissing({ wines: [] })
+          .append("wines", [
+            {
+              _type: "reference",
+              _ref: wineId,
+              _key: crypto.randomUUID(),
+            },
+          ])
+          .set({ updatedAt: now })
+          .commit();
+      } else {
+        await writeClient
+          .patch(listId)
+          .ifRevisionId(currentList._rev)
+          .unset([`wines[_ref=="${wineId}"]`])
+          .set({ updatedAt: now })
+          .commit();
+      }
+
+      changed = true;
+      break;
+    } catch (error) {
+      const isRevisionConflict =
+        error instanceof ClientError &&
+        error.statusCode === 409;
+
+      if (!isRevisionConflict) {
+        throw error;
+      }
+
+      if (attempt === 4) {
+        return NextResponse.json(
           {
-            _type: "reference",
-            _ref: wineId,
-            _key: crypto.randomUUID(),
+            error:
+              "La liste a été modifiée simultanément. Veuillez réessayer.",
           },
-        ])
-        .set({ updatedAt: now })
-        .commit();
+          { status: 409 }
+        );
+      }
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, 25 * (attempt + 1))
+      );
     }
   }
 
-  if (action === "remove") {
-    await writeClient
-      .patch(listId)
-      .unset([`wines[_ref=="${wineId}"]`])
-      .set({ updatedAt: now })
-      .commit();
-  }
-
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({
+    ok: true,
+    action,
+    changed,
+    wineId,
+    listId,
+  });
 }

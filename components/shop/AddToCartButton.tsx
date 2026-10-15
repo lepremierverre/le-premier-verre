@@ -23,7 +23,7 @@ export default function AddToCartButton({ product }: { product: CartProduct }) {
   function handleAdd() {
     setIsAdding(true);
 
-    const raw = localStorage.getItem("lexvinum_cart");
+    const raw = localStorage.getItem("lepremierverre_cart");
     const cart: CartItem[] = raw ? JSON.parse(raw) : [];
 
     const existing = cart.find((item) => item.id === product.id);
@@ -34,7 +34,7 @@ export default function AddToCartButton({ product }: { product: CartProduct }) {
       cart.push({ ...product, quantity: 1 });
     }
 
-    localStorage.setItem("lexvinum_cart", JSON.stringify(cart));
+    localStorage.setItem("lepremierverre_cart", JSON.stringify(cart));
 
     // petit délai pour feedback visuel premium
     setTimeout(() => {

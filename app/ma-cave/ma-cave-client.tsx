@@ -22,7 +22,7 @@ type Wine = {
 
 type CellarItem = {
   id: string;
-  wineId: string;
+  contentId: string;
   quantity: number;
   purchasePrice: number | null;
   purchaseDate: string | Date | null;
@@ -54,7 +54,7 @@ export default function MaCaveClient({
 }) {
   const [items, setItems] = useState<CellarItem[]>(initialItems);
   const [form, setForm] = useState({
-    wineId: "",
+    contentId: "",
     quantity: "1",
     purchasePrice: "",
     purchaseDate: "",
@@ -71,7 +71,7 @@ export default function MaCaveClient({
   }, [items]);
 
   async function addBottle() {
-    if (!form.wineId) return;
+    if (!form.contentId) return;
 
     setSaving(true);
 
@@ -80,7 +80,7 @@ export default function MaCaveClient({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          wineId: form.wineId,
+          contentId: form.contentId,
           quantity: Number(form.quantity || 1),
           purchasePrice: form.purchasePrice,
           purchaseDate: form.purchaseDate,
@@ -99,7 +99,7 @@ export default function MaCaveClient({
 
       setItems((prev) => [data.item, ...prev]);
       setForm({
-        wineId: "",
+        contentId: "",
         quantity: "1",
         purchasePrice: "",
         purchaseDate: "",
@@ -161,8 +161,8 @@ export default function MaCaveClient({
             <label className="block">
               <span className="mb-2 block text-sm text-[var(--text-soft)]">Vin</span>
               <select
-                value={form.wineId}
-                onChange={(e) => setForm((prev) => ({ ...prev, wineId: e.target.value }))}
+                value={form.contentId}
+                onChange={(e) => setForm((prev) => ({ ...prev, contentId: e.target.value }))}
                 className="w-full rounded-[18px] border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-white outline-none"
               >
                 <option value="">—</option>
@@ -230,7 +230,7 @@ export default function MaCaveClient({
             <button
               type="button"
               onClick={addBottle}
-              disabled={saving || !form.wineId}
+              disabled={saving || !form.contentId}
               className="w-full rounded-full border border-[var(--border-strong)] bg-white px-5 py-3 text-sm font-medium text-black transition hover:opacity-90 disabled:opacity-50"
             >
               {saving ? "Ajout..." : "Ajouter à ma cave"}

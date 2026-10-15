@@ -94,7 +94,7 @@ function ChoiceButtons({
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-2 md:gap-3">
+    <div className="flex flex-wrap gap-x-5 gap-y-3 md:gap-x-7">
       {options.map((option) => {
         const selected = value === option.value;
 
@@ -104,10 +104,10 @@ function ChoiceButtons({
             type="button"
             onClick={() => onChange(option.value)}
             className={[
-              "border px-4 py-2.5 text-sm transition-colors md:px-5 md:py-3",
+              "border-b px-0 py-1.5 text-sm transition-opacity md:py-2",
               selected
-                ? "border-[var(--lpv-ink)] bg-[var(--lpv-ink)] text-[var(--lpv-paper-light)]"
-                : "border-[var(--lpv-line)] bg-transparent hover:border-[var(--lpv-ink)]",
+                ? "border-[var(--lpv-ink)] font-medium text-[var(--lpv-ink)]"
+                : "border-transparent text-[var(--lpv-muted)] hover:border-[var(--lpv-line)] hover:text-[var(--lpv-ink)]",
             ].join(" ")}
           >
             {option.label}
@@ -371,32 +371,30 @@ export default function PreferencesForm({
   ];
 
   return (
-    <section className="lpv-container py-16 md:py-24">
-      <div className="border-t border-[var(--lpv-line)]">
+    <section className="lpv-container py-8 md:py-14">
+      <div>
         {questions.map((question) => (
           <div
             key={question.number}
-            className="grid gap-4 border-b border-[var(--lpv-line)] py-7 md:grid-cols-[70px_0.7fr_1.3fr] md:gap-6 md:py-12"
+            className="border-b border-[var(--lpv-line)] py-7 md:py-8"
           >
-            <span className="text-[0.62rem] tracking-[0.18em] text-[var(--lpv-muted)]">
-              {question.number}
-            </span>
-
-            <h2 className="lpv-display text-[1.8rem] leading-[0.95] md:text-4xl">
+            <p className="mb-6 text-[1.2rem] font-medium leading-tight text-[var(--lpv-ink)] md:mb-7 md:text-[1.35rem]">
               {question.title}
-            </h2>
+            </p>
 
-            <div>{question.content}</div>
+            <div className="max-w-4xl">
+              {question.content}
+            </div>
           </div>
         ))}
       </div>
 
-      <div className="flex flex-col gap-4 pt-7 md:flex-row md:items-center md:pt-10">
+      <div className="flex flex-col gap-4 py-7 md:flex-row md:items-center md:justify-between md:py-9">
         <button
           type="button"
           onClick={savePreferences}
           disabled={saving}
-          className="lpv-button lpv-button-dark"
+          className="inline-flex w-fit items-center border-b border-[var(--lpv-ink)] pb-1 text-[13px] font-medium transition-opacity hover:opacity-50 disabled:opacity-35"
         >
           {saving
             ? isEn
@@ -408,7 +406,7 @@ export default function PreferencesForm({
         </button>
 
         {message ? (
-          <p className="text-sm text-[var(--lpv-muted)]">
+          <p className="text-[13px] text-[var(--lpv-muted)]">
             {message}
           </p>
         ) : null}

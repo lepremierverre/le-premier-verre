@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { client } from "@/sanity/lib/client";
 
-const FAVORITES_COOKIE = "lexvinum_favorites";
+const FAVORITES_COOKIE = "lepremierverre_favorites";
 
 function normalizeStringArray(input: unknown): string[] {
   if (!Array.isArray(input)) return [];

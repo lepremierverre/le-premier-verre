@@ -65,9 +65,9 @@ export default function GuideChecklist({
   return (
     <>
       {mode !== "print" ? (
-      <div className="guide-checklist-screen not-prose mb-14 mt-8 overflow-hidden border border-[var(--lpv-line)] bg-white/25 px-6 py-7 md:mb-18 md:mt-10 md:px-9 md:py-9">
+      <div className="guide-checklist-screen not-prose mb-14 mt-8 overflow-hidden border border-[var(--lpv-cocoa)]/25 bg-[var(--lpv-cocoa)]/[0.06] px-6 py-7 md:mb-18 md:mt-10 md:px-9 md:py-9">
         {title ? (
-          <div className="border-b border-[var(--lpv-line)] pb-4">
+          <div className="border-b border-[var(--lpv-cocoa)]/20 pb-4">
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
               {title}
             </p>

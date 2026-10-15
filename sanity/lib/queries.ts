@@ -1,6 +1,14 @@
-const wineVisibilityFilter = process.env.NODE_ENV === "development" ? "" : "&& published == true";
+const wineVisibilityFilter = "&& published == true";
 
-export const articlesQuery = `*[_type == "article" && !(_id in path("drafts.**"))] | order(publishedAt desc, _createdAt desc) {
+export const articlesQuery = `*[
+  _type == "article" &&
+  !(_id in path("drafts.**")) &&
+  !(slug.current in [
+    "recevoir-sans-se-compliquer-la-vie",
+    "une-journee-cantons-de-l-est",
+    "comment-choisir-une-bouteille-quand-on-ne-connait-rien-au-vin"
+  ])
+] | order(publishedAt desc, _createdAt desc) {
   _id,
   title,
   titleEn,
@@ -142,6 +150,13 @@ export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug
     vintage,
     color,
     bottleImage,
+    editorialImage{
+      asset,
+      hotspot,
+      crop,
+      alt,
+      credit
+    },
     approxPrice,
     oneLiner,
     oneLinerEn,
@@ -266,6 +281,8 @@ export const producersQuery = `*[_type == "producer" && published == true] | ord
   heroImage,
   mediaPermissionStatus,
   mediaCredit,
+  lpvPartner,
+  producerType,
   oneLiner,
   oneLinerEn,
   shortBio,
@@ -278,6 +295,8 @@ export const producerBySlugQuery = `*[_type == "producer" && slug.current == $sl
   _id,
   name,
   "slug": slug.current,
+  lpvPartner,
+  producerType,
 
   municipality,
   country->{name, "slug": slug.current},
@@ -287,6 +306,8 @@ export const producerBySlugQuery = `*[_type == "producer" && slug.current == $sl
   logo,
   photo,
   heroImage,
+  secondaryImage,
+  secondaryImageCredit,
 
   mediaPermissionStatus,
   mediaCredit,
@@ -350,8 +371,17 @@ export const producerBySlugQuery = `*[_type == "producer" && slug.current == $sl
     name,
     "slug": slug.current,
     vintage,
+    beverageType,
+    alcoholFree,
     color,
     bottleImage,
+    editorialImage{
+      asset,
+      hotspot,
+      crop,
+      alt,
+      credit
+    },
     approxPrice
   },
 
@@ -369,7 +399,15 @@ export const winesQuery = `*[_type == "wine" ${wineVisibilityFilter}] | order(na
   color,
   style,
   appleVarieties,
+  saqPrice,
   bottleImage,
+  editorialImage{
+    asset,
+    hotspot,
+    crop,
+    alt,
+    credit
+  },
   producer->{name, "slug": slug.current},
   vineyard->{name, "slug": slug.current},
   country->{name, "slug": slug.current},
@@ -388,11 +426,19 @@ export const wineBySlugQuery = `*[_type == "wine" && slug.current == $slug ${win
   style,
   appleVarieties,
   bottleImage,
+  editorialImage{
+    asset,
+    hotspot,
+    crop,
+    alt,
+    credit
+  },
   labelImage,
   producer->{_id, name, "slug": slug.current, logo},
   vineyard->{_id, name, "slug": slug.current, coverImage},
   country->{name, "slug": slug.current},
   region->{name, "slug": slug.current},
+  "isQuebec": coalesce(country->name == "Canada" && region->name match "Québec*", false),
   appellation->{name, "slug": slug.current},
   grapes[]->{name, "slug": slug.current},
   saqPrice,
@@ -463,7 +509,10 @@ export const placesQuery = `*[_type == "place" && published == true] | order(nam
   region,
   highlights,
   highlightsEn,
-  coverImage
+  coverImage,
+  lpvPartner,
+  mediaPermissionStatus,
+  mediaCredit
 }`;
 
 export const placeBySlugQuery = `*[_type == "place" && slug.current == $slug && published == true][0] {
@@ -482,6 +531,11 @@ export const placeBySlugQuery = `*[_type == "place" && slug.current == $slug && 
   description,
   descriptionEn,
   coverImage,
+  secondaryImage,
+  secondaryImageCredit,
+  mediaPermissionStatus,
+  mediaCredit,
+  lpvPartner,
 
   producer->{
     _id,

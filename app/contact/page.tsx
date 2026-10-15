@@ -25,18 +25,19 @@ export default function ContactPage() {
         </Link>
 
         <div className="mt-20 md:mt-28">
-          <p className="text-[0.68rem] font-medium uppercase tracking-[0.18em] text-[#85786d]">
-            Contact
-          </p>
-
-          <h1 className="mt-7 max-w-[700px] text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.94] tracking-[-0.06em]">
+<h1 className="mt-7 max-w-[700px] text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.94] tracking-[-0.06em]">
             Écrivez-nous.
           </h1>
 
+          <div className="mt-10 max-w-[650px] space-y-6 md:mt-12">
           <p className="mt-12 max-w-[560px] text-[1rem] leading-8 text-[#625a52]">
-            Producteur, vigneron, restaurateur, lecteur ou simplement curieux :
-            on sera heureux de vous lire.
+            Une bouteille à nous faire découvrir, un projet à nous présenter, une adresse qu’on devrait connaître ou une idée de collaboration? Écrivez-nous.
           </p>
+
+          <p className="mt-12 max-w-[560px] text-[1rem] leading-8 text-[#625a52]">
+            Producteurs, vignobles, cidreries, restaurants, cavistes, professionnels du vin ou simplement curieux, on aime découvrir ce qui se passe autour du vin au Québec et ailleurs. Pour une proposition, une question, une invitation ou simplement pour nous dire bonjour, notre boîte courriel est ouverte.
+          </p>
+        </div>
 
           <a
             href="mailto:contact@lepremierverre.com"

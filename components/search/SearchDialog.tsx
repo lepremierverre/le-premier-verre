@@ -48,69 +48,45 @@ export function SearchDialog() {
     }
   }, [open]);
 
+  const hasQuery = query.trim().length >= 2;
+
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[10000] bg-[var(--lpv-ink)]/42 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-[10000] bg-[var(--lpv-ink)]/35 backdrop-blur-[3px]" />
 
         <Dialog.Content
           aria-describedby={undefined}
-          className="fixed inset-x-0 top-0 z-[10001] max-h-screen overflow-y-auto bg-[var(--lpv-paper)] text-[var(--lpv-ink)] shadow-[0_30px_100px_rgba(33,29,26,0.22)] md:left-1/2 md:right-auto md:top-8 md:max-h-[calc(100vh-64px)] md:w-[min(1100px,calc(100vw-64px))] md:-translate-x-1/2"
+          className="fixed left-1/2 top-[14vh] z-[10001] max-h-[72vh] w-[calc(100vw-32px)] max-w-[820px] -translate-x-1/2 overflow-y-auto bg-[var(--lpv-paper)] text-[var(--lpv-ink)] shadow-[0_24px_70px_rgba(33,29,26,0.14)] md:w-[calc(100vw-80px)]"
         >
           <Dialog.Title className="sr-only">
             {isEn ? "Search Le Premier Verre" : "Rechercher sur Le Premier Verre"}
           </Dialog.Title>
 
-          <div className="flex items-center justify-between border-b border-[var(--lpv-line)] px-5 py-5 md:px-8">
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+          <div className="flex items-center justify-between border-b border-[var(--lpv-line)] px-6 py-4 md:px-8">
+            <p className="text-[0.68rem] font-medium uppercase tracking-[0.16em]">
               {isEn ? "Search" : "Recherche"}
             </p>
 
-            <Dialog.Close className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] transition-opacity hover:opacity-50">
-              {isEn ? "Close" : "Fermer"}
+            <Dialog.Close
+              aria-label={isEn ? "Close" : "Fermer"}
+              className="text-xl font-light leading-none transition-opacity hover:opacity-50"
+            >
+              ×
             </Dialog.Close>
           </div>
 
           <SearchInput value={query} onChange={setQuery} locale={locale} />
 
-          {query.trim().length < 2 ? (
-            <div className="grid min-h-[420px] gap-10 border-t border-[var(--lpv-line)] px-5 py-12 md:grid-cols-[0.62fr_0.38fr] md:px-8 md:py-16">
-              <div>
-                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                  {isEn ? "In the library" : "Dans la bibliothèque"}
-                </p>
-
-                <h2 className="lpv-display mt-6 max-w-3xl text-[clamp(4rem,8vw,8rem)] leading-[0.84]">
-                  {isEn ? "What are you looking for?" : "Que cherches-tu?"}
-                </h2>
-              </div>
-
-              <div className="border-t border-[var(--lpv-line)] pt-6 md:border-t-0">
-                <p className="text-base leading-8 text-[var(--lpv-muted)]">
-                  {isEn
-                    ? "A bottle, producer, region, grape, guide or story to read."
-                    : "Une bouteille, un producteur, une région, un cépage, un guide ou une histoire à lire."}
-                </p>
-
-                <div className="mt-8 border-t border-[var(--lpv-line)] pt-5 text-xs uppercase tracking-[0.15em] text-[var(--lpv-muted)]">
-                  <p>
-                    {isEn
-                      ? "Start typing at least two letters."
-                      : "Commence à écrire au moins deux lettres."}
-                  </p>
-                  <p className="mt-3">
-                    {isEn ? "Escape to close." : "Échap pour fermer."}
-                  </p>
-                </div>
-              </div>
+          {hasQuery ? (
+            <div className="border-t border-[var(--lpv-line)]">
+              <SearchResults
+                results={data}
+                onNavigate={() => setOpen(false)}
+                locale={locale}
+              />
             </div>
-          ) : (
-            <SearchResults
-              results={data}
-              onNavigate={() => setOpen(false)}
-              locale={locale}
-            />
-          )}
+          ) : null}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

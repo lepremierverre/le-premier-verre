@@ -102,7 +102,6 @@ export const bilingualRoutes = {
     en: "/en/scan",
   },
   recommendation: {
-    fr: "/recommandation",
     en: "/en/recommendation",
   },
   premium: {

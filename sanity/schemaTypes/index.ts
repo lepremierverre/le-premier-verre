@@ -22,8 +22,10 @@ import { wine } from "./wine";
 import { wineList } from "./wineList";
 import { wineJournalEntry } from "./wineJournalEntry";
 import { userPreferences } from "./userPreferences";
+import { event } from "./event";
 
 export const schemaTypes = [
+  event,
   // Configuration générale du site
   siteSettings,
   editorialAsset,

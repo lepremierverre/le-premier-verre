@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { trackAnalyticsEvent } from "@/components/analytics/trackAnalyticsEvent";
 
 type FavoriteButtonProps = {
   wineId: string;
   className?: string;
   size?: "sm" | "md" | "lg";
+  variant?: "icon" | "detail" | "bare";
+  locale?: "fr" | "en";
 };
 
 const buttonSizes: Record<NonNullable<FavoriteButtonProps["size"]>, string> = {
@@ -28,15 +31,17 @@ function HeartIcon({
   filled?: boolean;
 }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <path
-        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
-        fill={filled ? "currentColor" : "none"}
-        stroke="currentColor"
-        strokeWidth="1.65"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      aria-hidden="true"
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth="1.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 19.25 5.15 12.75C3.75 11.42 3 10.15 3 8.72 3 6.45 4.72 4.9 6.92 4.9 9.02 4.9 10.48 6.18 12 7.92 13.52 6.18 14.98 4.9 17.08 4.9 19.28 4.9 21 6.45 21 8.72 21 10.15 20.25 11.42 18.85 12.75L12 19.25Z" />
     </svg>
   );
 }
@@ -45,8 +50,25 @@ export default function FavoriteButton({
   wineId,
   className = "",
   size = "md",
+  variant = "icon",
+  locale = "fr",
 }: FavoriteButtonProps) {
   const [active, setActive] = useState(false);
+
+  const labels =
+    locale === "en"
+      ? {
+          add: "Add to favourites",
+          remove: "Remove from favourites",
+          short: "Favourites",
+          active: "Favourites",
+        }
+      : {
+          add: "Ajouter aux favoris",
+          remove: "Retirer des favoris",
+          short: "Favoris",
+          active: "Favoris",
+        };
   const [loading, setLoading] = useState(true);
   const [pending, setPending] = useState(false);
 
@@ -133,8 +155,18 @@ export default function FavoriteButton({
         favorite?: boolean;
       };
 
-      setActive(Boolean(data.favorite));
+      const confirmedFavorite = Boolean(data.favorite);
+
+      setActive(confirmedFavorite);
       setPending(false);
+
+      // Track only a confirmed transition from not-favorite to favorite.
+      if (!previous && confirmedFavorite) {
+        trackAnalyticsEvent("favorite_added", {
+          contentId: wineId,
+          contentType: "product",
+        });
+      }
     } catch {
       setActive(previous);
       setPending(false);
@@ -143,10 +175,62 @@ export default function FavoriteButton({
 
   const disabled = useMemo(() => loading || pending, [loading, pending]);
 
+  if (variant === "bare") {
+    return (
+      <button
+        type="button"
+        aria-label={active ? labels.remove : labels.add}
+        aria-pressed={active}
+        disabled={disabled}
+        onClick={toggleFavorite}
+        className={[
+          "group inline-flex items-center justify-center text-[var(--lpv-ink)]",
+          "transition-opacity duration-300 hover:opacity-55",
+          disabled ? "opacity-40" : "",
+          className,
+        ].join(" ")}
+      >
+        <HeartIcon
+          filled={active}
+          className={[
+            "h-[14px] w-[14px] transition-all duration-300",
+            active ? "scale-[0.94] text-[#7A263A]" : "",
+          ].join(" ")}
+        />
+      </button>
+    );
+  }
+
+  if (variant === "detail") {
+    return (
+      <button
+        type="button"
+        aria-label={active ? labels.remove : labels.add}
+        aria-pressed={active}
+        disabled={disabled}
+        onClick={toggleFavorite}
+        className={[
+          "inline-flex h-5 w-5 items-center justify-center",
+          "transition-opacity duration-300 hover:opacity-50",
+          disabled ? "opacity-40" : "",
+          className,
+        ].join(" ")}
+      >
+        <HeartIcon
+          filled={active}
+          className={[
+            "h-[12px] w-[12px]",
+            active ? "text-[#7A263A]" : "text-[var(--lpv-muted)]",
+          ].join(" ")}
+        />
+      </button>
+    );
+  }
+
   return (
     <button
       type="button"
-      aria-label={active ? "Retirer des favoris" : "Ajouter aux favoris"}
+      aria-label={active ? labels.remove : labels.add}
       aria-pressed={active}
       disabled={disabled}
       onClick={toggleFavorite}

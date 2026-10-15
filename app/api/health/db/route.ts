@@ -3,16 +3,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const wineCount = await prisma.wine.count();
-    const cellarBottleCount = await prisma.cellarBottle.count();
+    await prisma.$queryRaw`SELECT 1`;
 
     return NextResponse.json({
       ok: true,
       database: "connected",
-      counts: {
-        wines: wineCount,
-        cellarBottles: cellarBottleCount,
-      },
     });
   } catch (error) {
     console.error("DB health check failed:", error);

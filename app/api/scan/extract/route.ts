@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { client } from "@/sanity/lib/client";
 import { findBestDbMatch } from "@/lib/ocr-db-matcher";
 import { buildWineCandidatesFromOcrLayout } from "@/lib/ocr-layout-parser";
 import { extractWinesFromOcr } from "@/lib/ocr-extract-wines";
@@ -1290,21 +1290,6 @@ function buildDbCandidateNames(detectedWines: Array<{ name?: string; rawText?: s
 async function fetchDbCandidates(wines: DetectedWine[]) {
   const candidateNames = buildDbCandidateNames(wines);
 
-  const select = {
-    id: true,
-    name: true,
-    producer: true,
-    vintage: true,
-    price: true,
-    color: true,
-    country: true,
-    region: true,
-    grape: true,
-    description: true,
-    aromasJson: true,
-    tagsJson: true,
-  } as const;
-
   if (!candidateNames.length) {
     return {
       candidateNames,
@@ -1320,26 +1305,52 @@ async function fetchDbCandidates(wines: DetectedWine[]) {
 
     if (!tokens.length) continue;
 
-    const orConditions = tokens.flatMap((token) => [
-      { name: { contains: token, mode: "insensitive" as const } },
-      { producer: { contains: token, mode: "insensitive" as const } },
-      { region: { contains: token, mode: "insensitive" as const } },
-      { grape: { contains: token, mode: "insensitive" as const } },
-      { country: { contains: token, mode: "insensitive" as const } },
-    ]);
-
-    const rows = await prisma.wine.findMany({
-      where: {
-        OR: orConditions,
-      },
-      select,
-      take: 12,
-    });
+    const rows = await client.fetch<any[]>(
+      `
+        *[
+          _type == "wine" &&
+          defined(slug.current) &&
+          (
+            name match $patterns ||
+            producer->name match $patterns ||
+            region->name match $patterns ||
+            country->name match $patterns ||
+            count(grapes[@->name match $patterns]) > 0
+          )
+        ][0...12]{
+          "id": _id,
+          name,
+          "producer": producer->name,
+          vintage,
+          "price": approxPrice,
+          color,
+          "country": country->name,
+          "region": region->name,
+          "grape": grapes[0]->name,
+          "description": coalesce(oneLiner, whyWeRecommend),
+          "aromasJson": coalesce(tastingKeywords, []),
+          "tagsJson": coalesce(perfectFor, [])
+        }
+      `,
+      {
+        patterns: tokens.map((token) => `*${token}*`),
+      }
+    );
 
     for (const row of rows) {
       if (!row?.id || seenIds.has(row.id)) continue;
+
       seenIds.add(row.id);
-      collected.push(row);
+
+      collected.push({
+        ...row,
+        aromasJson: JSON.stringify(
+          Array.isArray(row.aromasJson) ? row.aromasJson : []
+        ),
+        tagsJson: JSON.stringify(
+          Array.isArray(row.tagsJson) ? row.tagsJson : []
+        ),
+      });
     }
 
     if (collected.length >= 60) break;

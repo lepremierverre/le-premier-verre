@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { client } from "@/sanity/lib/client";
 
 type MapMode = "quebec" | "world";
@@ -373,31 +372,36 @@ export async function GET(request: NextRequest) {
 
     const limit = getLimit(searchParams, 800);
 
-    const wines = await prisma.wine.findMany({
-      where: {
-        OR: [{ dataSource: "SAQ" }, { saqUrl: { not: null } }],
-        country: {
-          in: selectedCountries,
-          mode: "insensitive",
-        },
-      },
-      orderBy: [{ name: "asc" }],
-      take: limit,
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        producer: true,
-        country: true,
-        region: true,
-        latitude: true,
-        longitude: true,
-        image: true,
-        isQuebec: true,
-        dataSource: true,
-        saqUrl: true,
-      },
-    });
+    const wines = await client.fetch<WineRow[]>(
+      `
+        *[
+          _type == "wine" &&
+          defined(slug.current) &&
+          country->name in $countries
+        ]
+        | order(name asc)[0...$limit]{
+          "id": _id,
+          "slug": slug.current,
+          name,
+          "producer": producer->name,
+          "country": country->name,
+          "region": region->name,
+          "latitude": coalesce(region->latitude, country->latitude),
+          "longitude": coalesce(region->longitude, country->longitude),
+          "image": null,
+          "isQuebec": coalesce(
+            country->name == "Canada" && region->name match "Québec*",
+            false
+          ),
+          "dataSource": null,
+          "saqUrl": purchaseUrl
+        }
+      `,
+      {
+        countries: selectedCountries,
+        limit,
+      }
+    );
 
     const points: MapPoint[] = (wines as WineRow[])
       .filter((w) =>

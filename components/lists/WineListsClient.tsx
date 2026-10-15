@@ -162,82 +162,59 @@ export default function WineListsClient({
 
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
-      <div className="mx-auto max-w-[1500px] px-5 pb-16 pt-8 sm:px-8 md:px-12 md:pb-24 md:pt-10 lg:px-16">
-        {/* MA CAVE */}
-        <header>
-          <div className="grid gap-6 py-1 md:grid-cols-[1fr_0.42fr] md:items-end md:gap-12 md:py-4">
-            <div>
-              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                {isEn ? "My cellar" : "Ma cave"}
-              </p>
+      <section className="lpv-container pt-10 md:pt-16">
+        <h1 className="lpv-display text-[clamp(3.6rem,8vw,7rem)] leading-[0.88] tracking-[-0.045em]">
+          {isEn ? "Lists." : "Listes."}
+        </h1>
 
-              <h1 className="lpv-display mt-4 text-[clamp(3.2rem,13vw,4.2rem)] leading-[0.86] md:mt-5 md:text-[clamp(4rem,7vw,6.5rem)] md:leading-[0.84]">
-                {isEn ? "My lists." : "Mes listes."}
-              </h1>
-            </div>
+        <p className="mt-6 max-w-xl text-[0.95rem] leading-7 md:text-base">
+          {isEn
+            ? "Your selections, for an occasion or for later."
+            : "Tes sélections, pour une occasion ou pour plus tard."}
+        </p>
+      </section>
 
-            <div className="border-t border-[var(--lpv-line)] pt-5 md:border-t-0 md:pb-1">
-              <p className="max-w-sm text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
-                {isEn
-                  ? "Keep bottles together by occasion, mood or simply so you don’t forget them."
-                  : "Garde certaines bouteilles ensemble selon l’occasion, l’envie ou simplement pour ne pas les oublier."}
-              </p>
-            </div>
-          </div>
-        </header>
-
+      <div className="mt-14 md:mt-20">
         <CaveNav />
+      </div>
 
-        <section className="border-b border-[var(--lpv-line)] py-7 md:py-10">
-          <div className="grid gap-5 md:grid-cols-[1fr_0.42fr] md:items-end md:gap-12">
-            <div>
-              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                {isEn ? "Collections" : "Collections"}
-              </p>
-
-              <h2 className="lpv-display mt-3 text-[2.8rem] leading-[0.9] md:mt-4 md:text-6xl">
-                {isEn ? "Put them together." : "À rassembler."}
-              </h2>
-            </div>
-
-            <form
-              onSubmit={createList}
-              className="border-t border-[var(--lpv-line)] pt-5"
+      <section className="lpv-container">
+        <form
+          onSubmit={createList}
+          className="flex flex-col gap-3 border-b border-[var(--lpv-line)] py-6 sm:flex-row sm:items-end sm:gap-6"
+        >
+          <div className="min-w-0 flex-1">
+            <label
+              htmlFor="list-name"
+              className="text-[0.62rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-muted)]"
             >
-              <label
-                htmlFor="list-name"
-                className="text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-muted)]"
-              >
-                {isEn ? "New list" : "Nouvelle liste"}
-              </label>
+              {isEn ? "New list" : "Nouvelle liste"}
+            </label>
 
-              <div className="mt-3 flex border-b border-[var(--lpv-ink)]">
-                <input
-                  id="list-name"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  maxLength={80}
-                  placeholder={isEn ? "E.g. To try" : "Ex. À essayer"}
-                  className="min-w-0 flex-1 bg-transparent py-2.5 text-base outline-none placeholder:text-[var(--lpv-muted)] md:py-3 md:text-lg"
-                />
-
-                <button
-                  type="submit"
-                  disabled={!name.trim() || pending}
-                  className="px-3 text-[0.6rem] font-medium uppercase tracking-[0.16em] transition disabled:opacity-35"
-                >
-                  {pending
-                    ? isEn
-                      ? "Creating…"
-                      : "Création…"
-                    : isEn
-                      ? "Create →"
-                      : "Créer →"}
-                </button>
-              </div>
-            </form>
+            <input
+              id="list-name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              maxLength={80}
+              placeholder={isEn ? "E.g. To try" : "Ex. À essayer"}
+              className="mt-2 block w-full border-0 bg-transparent py-1 text-[1.15rem] outline-none placeholder:text-[var(--lpv-muted)] sm:text-[1.3rem]"
+            />
           </div>
-        </section>
+
+          <button
+            type="submit"
+            disabled={!name.trim() || pending}
+            className="inline-flex w-fit shrink-0 items-center border-b border-[var(--lpv-ink)] pb-1 text-[0.72rem] font-medium transition-opacity hover:opacity-50 disabled:opacity-30"
+          >
+            {pending
+              ? isEn
+                ? "Creating…"
+                : "Création…"
+              : isEn
+                ? "Create →"
+                : "Créer →"}
+          </button>
+        </form>
 
         {error ? (
           <p className="border-b border-[var(--lpv-line)] py-5 text-sm">
@@ -246,113 +223,117 @@ export default function WineListsClient({
         ) : null}
 
         {loading ? (
-          <p className="py-10 text-sm uppercase tracking-[0.18em] text-[var(--lpv-muted)] md:py-16">
+          <p className="py-12 text-sm text-[var(--lpv-muted)]">
             {isEn ? "Loading…" : "Chargement…"}
           </p>
         ) : lists.length === 0 ? (
-          <section className="py-12 md:py-28">
-            <p className="lpv-display max-w-3xl text-[2.8rem] leading-[0.92] tracking-[-0.05em] md:text-7xl md:leading-[0.9]">
-              {isEn ? "Your first list starts with a bottle." : "Ta première liste commence par une bouteille."}
+          <div className="py-14 md:py-20">
+            <p className="text-base">
+              {isEn
+                ? "No lists yet."
+                : "Aucune liste pour le moment."}
             </p>
 
             <Link
               href={isEn ? "/en/wines" : "/vins"}
-              className="mt-7 inline-flex border-b border-[var(--lpv-ink)] pb-1 text-xs uppercase tracking-[0.22em] md:mt-10"
+              className="mt-6 inline-flex items-center gap-3 text-sm font-medium transition-opacity hover:opacity-50"
             >
-              {isEn ? "Explore bottles →" : "Explorer les bouteilles →"}
+              {isEn ? "View wines" : "Voir les vins"} <span>→</span>
             </Link>
-          </section>
+          </div>
         ) : (
-          <div>
-            {lists.map((list, index) => {
+          <div className="pb-14 md:pb-20">
+            {lists.map((list) => {
               const wines = list.wines ?? [];
 
               return (
                 <section
                   key={list._id}
-                  className="grid gap-5 border-b border-[var(--lpv-line)] py-8 md:grid-cols-[0.28fr_0.72fr] md:gap-8 md:py-16"
+                  className="border-b border-[var(--lpv-line)] py-9 md:py-12"
                 >
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-[var(--lpv-muted)]">
-                      {isEn ? "List" : "Liste"} {String(index + 1).padStart(2, "0")}
-                    </p>
+                  <div className="flex items-end justify-between gap-6 pb-6 md:pb-8">
+                    <div className="flex min-w-0 items-baseline gap-4 md:gap-6">
+                      <h2 className="lpv-display truncate text-[2.8rem] leading-[0.9] tracking-[-0.035em] md:text-[4.2rem]">
+                        {list.name}
+                      </h2>
 
-                    <h2 className="lpv-display mt-3 text-[2.6rem] leading-[0.9] tracking-[-0.05em] md:mt-4 md:text-6xl">
-                      {list.name}
-                    </h2>
-
-                    <p className="mt-3 text-sm text-[var(--lpv-muted)] md:mt-5">
-                      {wines.length} {isEn ? `bottle${wines.length === 1 ? "" : "s"}` : `bouteille${wines.length === 1 ? "" : "s"}`}
-                    </p>
+                      <span className="shrink-0 text-[12px] text-[var(--lpv-muted)]">
+                        {wines.length}{" "}
+                        {isEn
+                          ? `bottle${wines.length === 1 ? "" : "s"}`
+                          : `bouteille${wines.length === 1 ? "" : "s"}`}
+                      </span>
+                    </div>
 
                     <button
                       type="button"
                       onClick={() => deleteList(list._id)}
-                      className="mt-5 text-xs uppercase tracking-[0.18em] text-[var(--lpv-muted)] transition hover:text-[var(--lpv-ink)] md:mt-8"
+                      className="shrink-0 pb-1 text-[12px] text-[var(--lpv-muted)] transition-opacity hover:opacity-50"
                     >
-                      {isEn ? "Delete list" : "Supprimer la liste"}
+                      {isEn ? "Delete" : "Supprimer"}
                     </button>
                   </div>
 
-                  <div>
-                    {wines.length === 0 ? (
-                      <div className="border-t border-[var(--lpv-line)] py-5 md:py-6">
-                        <p className="text-sm leading-7 text-[var(--lpv-muted)]">
-                          {isEn ? "No bottles in this list yet." : "Aucune bouteille dans cette liste pour le moment."}
-                        </p>
+                  {wines.length === 0 ? (
+                    <div className="border-t border-[var(--lpv-line)] py-6">
+                      <p className="text-[14px] text-[var(--lpv-muted)]">
+                        {isEn
+                          ? "No bottles in this list yet."
+                          : "Aucune bouteille dans cette liste pour le moment."}
+                      </p>
 
-                        <Link
-                          href={isEn ? "/en/wines" : "/vins"}
-                          className="mt-4 inline-flex border-b border-[var(--lpv-ink)] pb-1 text-xs uppercase tracking-[0.2em] md:mt-5"
+                      <Link
+                        href={isEn ? "/en/wines" : "/vins"}
+                        className="mt-4 inline-flex items-center gap-2 text-[13px] font-medium transition-opacity hover:opacity-50"
+                      >
+                        {isEn ? "Add a bottle" : "Ajouter une bouteille"} <span>→</span>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="border-t border-[var(--lpv-line)]">
+                      {wines.map((wine) => (
+                        <div
+                          key={wine._id}
+                          className="flex items-center justify-between gap-6 border-b border-[var(--lpv-line)] py-5 md:py-6"
                         >
-                          {isEn ? "Add a bottle →" : "Ajouter une bouteille →"}
-                        </Link>
-                      </div>
-                    ) : (
-                      <div className="border-t border-[var(--lpv-line)]">
-                        {wines.map((wine) => (
-                          <div
-                            key={wine._id}
-                            className="flex items-center justify-between gap-4 border-b border-[var(--lpv-line)] py-4 md:gap-6 md:py-6"
+                          <Link
+                            href={
+                              wine.slug
+                                ? `${isEn ? "/en/wines" : "/vins"}/${wine.slug}`
+                                : isEn
+                                  ? "/en/wines"
+                                  : "/vins"
+                            }
+                            className="group min-w-0"
                           >
-                            <Link
-                              href={
-                                wine.slug
-                                  ? `${isEn ? "/en/wines" : "/vins"}/${wine.slug}`
-                                  : isEn ? "/en/wines" : "/vins"
-                              }
-                              className="group min-w-0"
-                            >
-                              <p className="text-xs uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
-                                {wine.producer?.name ?? (isEn ? "Producer" : "Producteur")}
-                              </p>
+                            <p className="text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+                              {wine.producer?.name ??
+                                (isEn ? "Producer" : "Producteur")}
+                            </p>
 
-                              <p className="mt-1.5 text-lg leading-6 transition group-hover:opacity-60 md:mt-2 md:text-xl">
-                                {wine.name}
-                                {wine.vintage ? ` · ${wine.vintage}` : ""}
-                              </p>
-                            </Link>
+                            <p className="mt-2 text-[1.05rem] leading-6 transition-opacity group-hover:opacity-55 md:text-[1.2rem]">
+                              {wine.name}
+                              {wine.vintage ? ` · ${wine.vintage}` : ""}
+                            </p>
+                          </Link>
 
-                            <button
-                              type="button"
-                              onClick={() =>
-                                removeWine(list._id, wine._id)
-                              }
-                              className="shrink-0 text-xs uppercase tracking-[0.18em] text-[var(--lpv-muted)] transition hover:text-[var(--lpv-ink)]"
-                            >
-                              {isEn ? "Remove" : "Retirer"}
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                          <button
+                            type="button"
+                            onClick={() => removeWine(list._id, wine._id)}
+                            className="shrink-0 text-[12px] text-[var(--lpv-muted)] transition-opacity hover:opacity-50"
+                          >
+                            {isEn ? "Remove" : "Retirer"}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </section>
               );
             })}
           </div>
         )}
-      </div>
+      </section>
     </main>
   );
 }

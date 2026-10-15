@@ -7,7 +7,6 @@ const itemsFr = [
   { label: "Aperçu", href: "/ma-cave" },
   { label: "Carnet", href: "/mon-carnet" },
   { label: "Favoris", href: "/favoris" },
-  { label: "Listes", href: "/mes-listes" },
   { label: "Préférences", href: "/mes-preferences" },
 ];
 
@@ -15,7 +14,6 @@ const itemsEn = [
   { label: "Overview", href: "/en/cellar" },
   { label: "Notebook", href: "/en/notebook" },
   { label: "Favorites", href: "/en/favorites" },
-  { label: "Lists", href: "/en/lists" },
   { label: "Preferences", href: "/en/preferences" },
 ];
 

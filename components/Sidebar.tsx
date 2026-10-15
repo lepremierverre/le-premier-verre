@@ -14,7 +14,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Accueil", eyebrow: "Maison" },
   { href: "/repertoire", label: "Répertoire", eyebrow: "Explorer" },
   { href: "/scan", label: "Scan", eyebrow: "OCR" },
-  { href: "/recommandation", label: "Recommandation", eyebrow: "Sélection" },
+  { href: "/accords", label: "Accords", eyebrow: "Moments" },
   { href: "/carte", label: "Carte", eyebrow: "Découvrir" },
   { href: "/blog", label: "Blogue", eyebrow: "Éditorial" },
   { href: "/boutique", label: "Boutique", eyebrow: "Objets" },

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { buildNewsletterAnalyticsContext } from "@/components/newsletter/trackNewsletterSubscription";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -19,6 +20,10 @@ export default function NewsletterForm() {
     setStatus("loading");
 
     try {
+      const analytics = buildNewsletterAnalyticsContext(
+        isEn ? "newsletter_page_en" : "newsletter_page_fr"
+      );
+
       const response = await fetch("/api/newsletter", {
         method: "POST",
         headers: {
@@ -28,6 +33,7 @@ export default function NewsletterForm() {
           firstName: firstName.trim(),
           email: email.trim(),
           language: isEn ? "en" : "fr",
+          analytics,
         }),
       });
 
@@ -53,11 +59,11 @@ export default function NewsletterForm() {
   }
 
   return (
-    <div className="mt-14 max-w-[720px]">
+    <div className="mt-12 max-w-[720px] md:mt-14">
       <form onSubmit={submit}>
         <div className="grid gap-7 md:grid-cols-[0.8fr_1.2fr]">
           <label className="block">
-            <span className="mb-2 block text-[0.62rem] font-medium uppercase tracking-[0.18em] text-[#85786d]">
+            <span className="mb-2 block text-[0.78rem] font-normal text-[var(--lpv-ink)]">
               {isEn ? "First name" : "Prénom"}
             </span>
 
@@ -70,12 +76,12 @@ export default function NewsletterForm() {
               }}
               placeholder={isEn ? "Optional" : "Facultatif"}
               autoComplete="given-name"
-              className="h-14 w-full border-0 border-b border-[#a49a90] bg-transparent px-0 text-[0.95rem] text-[#211d19] outline-none placeholder:text-[#aaa097] focus:border-[#211d19]"
+              className="h-14 w-full border-0 border-b border-[var(--lpv-line)] bg-transparent px-0 text-[0.95rem] text-[var(--lpv-ink)] outline-none placeholder:text-[var(--lpv-muted)]/60 focus:border-[var(--lpv-ink)]"
             />
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-[0.62rem] font-medium uppercase tracking-[0.18em] text-[#85786d]">
+            <span className="mb-2 block text-[0.78rem] font-normal text-[var(--lpv-ink)]">
               {isEn ? "Email" : "Courriel"}
             </span>
 
@@ -89,7 +95,7 @@ export default function NewsletterForm() {
               }}
               placeholder={isEn ? "you@example.com" : "tonadresse@exemple.com"}
               autoComplete="email"
-              className="h-14 w-full border-0 border-b border-[#a49a90] bg-transparent px-0 text-[0.95rem] text-[#211d19] outline-none placeholder:text-[#aaa097] focus:border-[#211d19]"
+              className="h-14 w-full border-0 border-b border-[var(--lpv-line)] bg-transparent px-0 text-[0.95rem] text-[var(--lpv-ink)] outline-none placeholder:text-[var(--lpv-muted)]/60 focus:border-[var(--lpv-ink)]"
             />
           </label>
         </div>
@@ -98,19 +104,19 @@ export default function NewsletterForm() {
           <button
             type="submit"
             disabled={status === "loading"}
-            className="inline-flex min-h-12 items-center justify-center bg-[#4a372b] px-7 text-[0.68rem] font-medium uppercase tracking-[0.17em] text-[#f7f1e8] transition-opacity hover:opacity-75 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex items-center border-b border-[var(--lpv-ink)] pb-1 text-[0.78rem] font-medium transition-opacity hover:opacity-50 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {status === "loading"
               ? isEn
                 ? "Signing up…"
                 : "Inscription…"
               : isEn
-                ? "Sign up"
-                : "S’inscrire"}
+                ? "Sign up →"
+                : "S’inscrire →"}
           </button>
         </div>
 
-        <p className="mt-6 max-w-[620px] text-[0.68rem] leading-5 text-[#857d75]">
+        <p className="mt-6 max-w-[620px] text-[0.68rem] leading-5 text-[var(--lpv-muted)]">
           {isEn ? (
             <>
               By signing up, you agree to receive the Le Premier Verre

@@ -12,62 +12,41 @@ export default async function MesPreferencesPage() {
   if (!userId) {
     return (
       <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
-        <section className="border-b border-[var(--lpv-line)]">
-          <div className="lpv-container grid gap-7 py-10 md:grid-cols-[1fr_0.42fr] md:items-end md:gap-12 md:py-24">
-            <div>
-              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                Mon espace
-              </p>
+        <section className="lpv-container py-12 md:py-20">
+          <h1 className="lpv-display text-[clamp(3.6rem,8vw,7rem)] leading-[0.88] tracking-[-0.045em]">
+            Mes préférences.
+          </h1>
 
-              <h1 className="lpv-display mt-4 text-[clamp(3.7rem,14vw,4.7rem)] leading-[0.84] md:mt-7 md:text-[clamp(4.5rem,10vw,9rem)] md:leading-[0.82]">
-                Mes préférences.
-              </h1>
-            </div>
+          <p className="mt-6 max-w-xl text-[0.95rem] leading-7 md:text-base">
+            Quelques repères pour mieux comprendre ce que tu aimes.
+          </p>
 
-            <div className="border-t border-[var(--lpv-line)] pt-4 md:border-t-0 md:pb-2 md:pt-6">
-              <p className="max-w-sm text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
-                Quelques repères simples sur ce que tu aimes boire.
-              </p>
-
-              <Link
-                href="/connexion"
-                className="lpv-button lpv-button-dark mt-8"
-              >
-                Se connecter
-              </Link>
-            </div>
-          </div>
+          <Link
+            href="/connexion"
+            className="mt-8 inline-flex border-b border-[var(--lpv-ink)] pb-1 text-[13px] font-medium"
+          >
+            Se connecter →
+          </Link>
         </section>
       </main>
     );
   }
 
-
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
-      {/* MA CAVE */}
-      <section>
-        <div className="lpv-container grid gap-6 py-9 md:grid-cols-[1fr_0.42fr] md:items-end md:gap-12 md:py-14">
-          <div>
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              Ma cave
-            </p>
+      <section className="lpv-container pt-10 md:pt-16">
+        <h1 className="lpv-display text-[clamp(3.6rem,8vw,7rem)] leading-[0.88] tracking-[-0.045em]">
+          Mes préférences.
+        </h1>
 
-            <h1 className="lpv-display mt-4 text-[clamp(3.2rem,13vw,4.2rem)] leading-[0.86] md:mt-5 md:text-[clamp(4rem,7vw,6.5rem)] md:leading-[0.84]">
-              Mes préférences.
-            </h1>
-          </div>
-
-          <div className="border-t border-[var(--lpv-line)] pt-5 md:border-t-0 md:pb-1">
-            <p className="max-w-sm text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
-              Quelques repères pour mieux comprendre ce que tu aimes.
-              Tu peux les modifier en tout temps.
-            </p>
-          </div>
-        </div>
+        <p className="mt-6 max-w-xl text-[0.95rem] leading-7 md:text-base">
+          Quelques repères pour mieux comprendre ce que tu aimes.
+        </p>
       </section>
 
-      <CaveNav />
+      <div className="mt-14 md:mt-20">
+        <CaveNav />
+      </div>
 
       <PreferencesForm locale="fr" />
     </main>

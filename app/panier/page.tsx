@@ -25,7 +25,7 @@ export default function CartPage() {
   const [items, setItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    const raw = localStorage.getItem("lexvinum_cart");
+    const raw = localStorage.getItem("lepremierverre_cart");
     setItems(raw ? JSON.parse(raw) : []);
   }, []);
 
@@ -40,7 +40,7 @@ export default function CartPage() {
       .filter((item) => item.quantity > 0);
 
     setItems(next);
-    localStorage.setItem("lexvinum_cart", JSON.stringify(next));
+    localStorage.setItem("lepremierverre_cart", JSON.stringify(next));
   }
 
   return (

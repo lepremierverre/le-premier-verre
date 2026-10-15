@@ -146,6 +146,100 @@ export const place = defineType({
       title: "Image principale",
       type: "image",
       options: { hotspot: true },
+      description:
+        "Ne sera affichée publiquement que si le statut des droits ci-dessous autorise son utilisation.",
+    }),
+
+    defineField({
+      name: "secondaryImage",
+      title: "Deuxième image",
+      type: "image",
+      options: { hotspot: true },
+      description:
+        "Deuxième visuel utilisé sur les fiches partenaires Bonnes adresses.",
+    }),
+
+    defineField({
+      name: "secondaryImageCredit",
+      title: "Crédit de la deuxième image",
+      type: "string",
+      description:
+        "Crédit à afficher sous la deuxième image.",
+    }),
+
+    defineField({
+      name: "mediaPermissionStatus",
+      title: "Droits d’utilisation du visuel",
+      type: "string",
+      description:
+        "Ce statut détermine si la photo peut être affichée publiquement sur Le Premier Verre.",
+      initialValue: "none",
+      options: {
+        layout: "radio",
+        list: [
+          {
+            title: "Aucune autorisation — ne pas publier",
+            value: "none",
+          },
+          {
+            title: "Visuel fourni directement par l’établissement",
+            value: "provided_by_place",
+          },
+          {
+            title: "Utilisation autorisée par l’établissement",
+            value: "authorized_by_place",
+          },
+          {
+            title: "Photo originale Le Premier Verre",
+            value: "lpv_original",
+          },
+          {
+            title: "Visuel sous licence",
+            value: "licensed",
+          },
+        ],
+      },
+    }),
+
+    defineField({
+      name: "mediaCredit",
+      title: "Crédit du visuel",
+      type: "string",
+      description:
+        "Ex. établissement, photographe, agence ou Le Premier Verre.",
+      hidden: ({ document }) =>
+        !document?.mediaPermissionStatus ||
+        document.mediaPermissionStatus === "none",
+    }),
+
+    defineField({
+      name: "mediaPermissionDate",
+      title: "Date de l’autorisation / réception",
+      type: "date",
+      hidden: ({ document }) =>
+        !document?.mediaPermissionStatus ||
+        document.mediaPermissionStatus === "none",
+    }),
+
+    defineField({
+      name: "mediaPermissionNote",
+      title: "Note interne sur les droits",
+      type: "text",
+      rows: 3,
+      description:
+        "Usage interne seulement. Ex. autorisation reçue par courriel, photos transmises directement, portée de la licence, etc.",
+      hidden: ({ document }) =>
+        !document?.mediaPermissionStatus ||
+        document.mediaPermissionStatus === "none",
+    }),
+
+    defineField({
+      name: "lpvPartner",
+      title: "Partenaire Le Premier Verre",
+      type: "boolean",
+      initialValue: false,
+      description:
+        "Activer uniquement lorsqu’une collaboration ou un partenariat avec Le Premier Verre est confirmé. Les établissements partenaires peuvent être mis en avant dans Bonnes adresses.",
     }),
     defineField({
       name: "published",

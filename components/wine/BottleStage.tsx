@@ -8,41 +8,16 @@ type BottleStageProps = {
   color?: string;
   variant?: "hero" | "card" | "mini";
   className?: string;
+  imageFit?: "contain" | "cover";
 };
-
-function getImageDimensions(image?: SanityImageSource) {
-  if (!image || typeof image !== "object") return null;
-
-  const asset = (image as {
-    asset?: {
-      _ref?: string;
-    };
-  }).asset;
-
-  const ref = asset?._ref;
-  if (!ref) return null;
-
-  const match = ref.match(/-(\d+)x(\d+)-/);
-  if (!match) return null;
-
-  return {
-    width: Number(match[1]),
-    height: Number(match[2]),
-  };
-}
 
 export default function BottleStage({
   image,
   alt,
   variant = "hero",
   className = "",
+  imageFit = "contain",
 }: BottleStageProps) {
-  const dimensions = getImageDimensions(image);
-
-  const isSquare =
-    dimensions &&
-    Math.abs(dimensions.width / dimensions.height - 1) < 0.08;
-
   const imageSrc = image
     ? urlFor(image)
         .ignoreImageParams()
@@ -65,19 +40,12 @@ export default function BottleStage({
         ? "h-[300px] w-full"
         : "h-[180px] w-full";
 
-  const standardImageClass =
+  const imageClass =
     variant === "hero"
-      ? "max-h-full max-w-[58%]"
+      ? "h-full w-auto max-w-full"
       : variant === "card"
-        ? "max-h-full max-w-[58%]"
-        : "max-h-full max-w-[65%]";
-
-  const squareImageClass =
-    variant === "hero"
-      ? "h-[125%] w-[125%] max-w-none object-contain"
-      : variant === "card"
-        ? "h-[130%] w-[130%] max-w-none object-contain"
-        : "h-[135%] w-[135%] max-w-none object-contain";
+        ? "h-full w-auto max-w-full"
+        : "h-full w-auto max-w-full";
 
   return (
     <div
@@ -85,18 +53,16 @@ export default function BottleStage({
     >
       <div
         className={`flex items-center justify-center ${
-          isSquare ? "overflow-hidden" : ""
-        } ${innerClass}`}
+          imageFit === "cover" ? "h-full w-full" : innerClass
+        }`}
       >
         {imageSrc ? (
           <img
             src={imageSrc}
             alt={alt}
-            className={`block drop-shadow-[0_16px_14px_rgba(38,29,22,0.07)] ${
-              isSquare
-                ? squareImageClass
-                : `h-auto w-auto object-contain ${standardImageClass}`
-            }`}
+            className={`block ${
+              imageFit === "cover" ? "h-full w-full object-cover" : "object-contain"
+            } drop-shadow-[0_16px_14px_rgba(38,29,22,0.07)] ${imageFit === "cover" ? "" : imageClass}`}
           />
         ) : (
           <div className="px-8 text-center">

@@ -130,14 +130,14 @@ export default async function ProductPage({
 
             <div className="p-7">
               <p className="text-[11px] uppercase tracking-[0.24em] text-[#6f8f7a]">
-                Esprit Lex Vinum
+                L’esprit du Premier Verre
               </p>
               <h2 className="mt-2 font-serif text-3xl text-[#1f2d24]">
                 Une boutique alignée avec le reste du site
               </h2>
               <p className="mt-3 text-sm leading-7 text-[#655c53]">
                 Même exigence visuelle, même palette, même élégance respirante.
-                La boutique s’intègre désormais naturellement à l’univers Lex Vinum Premium.
+                La boutique s’intègre désormais naturellement à l’univers du Premier Verre.
               </p>
             </div>
           </div>

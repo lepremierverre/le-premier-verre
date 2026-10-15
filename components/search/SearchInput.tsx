@@ -12,30 +12,22 @@ export function SearchInput({
   locale = "fr",
 }: Props) {
   const isEn = locale === "en";
+
   return (
-    <div className="px-5 py-8 md:px-8 md:py-10">
+    <div className="px-6 py-9 md:px-8 md:py-11">
       <label htmlFor="global-search" className="sr-only">
         {isEn ? "Search" : "Rechercher"}
       </label>
 
-      <div className="flex items-end gap-5">
-        <span
-          aria-hidden="true"
-          className="mb-3 hidden text-2xl text-[var(--lpv-muted)] sm:block"
-        >
-          ↳
-        </span>
-
-        <input
-          id="global-search"
-          autoFocus
-          type="search"
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          placeholder={isEn ? "Bottle, producer, region…" : "Bouteille, producteur, région…"}
-          className="lpv-display min-w-0 flex-1 border-0 bg-transparent py-2 text-[clamp(2.8rem,7vw,7rem)] leading-[0.95] text-[var(--lpv-ink)] outline-none placeholder:text-[var(--lpv-muted)]/35"
-        />
-      </div>
+      <input
+        id="global-search"
+        autoFocus
+        type="search"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={isEn ? "A wine, producer, region…" : "Un vin, un producteur, une région…"}
+        className="lpv-display w-full border-0 bg-transparent p-0 text-[clamp(1.9rem,4vw,3.4rem)] font-normal leading-[1.05] tracking-[-0.02em] text-[var(--lpv-ink)] outline-none placeholder:text-[var(--lpv-muted)]/40"
+      />
     </div>
   );
 }

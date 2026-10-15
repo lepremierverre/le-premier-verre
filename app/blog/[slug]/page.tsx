@@ -132,7 +132,7 @@ function ArticleProducerCardView({
   return (
     <Link
       href={`/producteurs/${producer.slug}`}
-      className="group my-10 grid max-w-[46rem] border-y border-[var(--lpv-line)] py-5 md:grid-cols-[150px_1fr] md:gap-7"
+      className="group my-10 grid max-w-[46rem] border-b border-[var(--lpv-line)] py-5 md:grid-cols-[150px_1fr] md:gap-7"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-[var(--lpv-paper-light)]">
         {imageSrc ? (
@@ -277,54 +277,58 @@ function ArticlePlaceCardView({
 
 function ArticleWineCardView({
   value,
+  interactive = true,
 }: {
   value: ArticleWineCard;
+  interactive?: boolean;
 }) {
   const wine = value.wine;
 
   if (!wine?.slug) return null;
 
-  return (
-    <Link
-      href={`/vins/${wine.slug}`}
-      className="group my-12 block max-w-[46rem] border-y border-[var(--lpv-line)] py-6 md:my-16 md:py-8"
-    >
-      <div className="grid gap-7 sm:grid-cols-[180px_1fr] sm:items-center md:grid-cols-[210px_1fr] md:gap-10">
-        <div className="relative">
-          <BottleStage
-            image={wine.bottleImage}
-            alt={wine.name ?? "Bouteille de vin"}
-            color={wine.color ?? undefined}
-            variant="card"
-            className="!h-[360px] transition duration-700 group-hover:scale-[1.02] sm:!h-[400px]"
-          />
+  const cardContent = (
+    <div className={`grid gap-3 sm:grid-cols-[180px_1fr] sm:items-center md:grid-cols-[210px_1fr] md:gap-5 ${interactive ? "" : "sm:gap-4"}`}>
+      <div className="relative">
+        <BottleStage
+          image={wine.bottleImage}
+          alt={wine.name ?? "Bouteille de vin"}
+          color={wine.color ?? undefined}
+          variant="card"
+          className={
+            interactive
+              ? "!h-[360px] transition duration-700 group-hover:scale-[1.02] sm:!h-[400px]"
+              : "!h-[360px] sm:!h-[400px]"
+          }
+        />
+      </div>
 
+      <div>
+        {interactive ? (
+          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            {wine.producer?.name || "Le Premier Verre"}
+          </p>
+        ) : null}
 
-        </div>
+        <h3 className={`lpv-display ${interactive ? "mt-3" : "mt-0"} text-[clamp(2.4rem,4vw,4rem)] leading-[0.9]`}>
+          {wine.name}
+        </h3>
 
-        <div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              {wine.producer?.name || "Le Premier Verre"}
-            </p>
+        {wine.oneLiner ? (
+          <p className="mt-5 max-w-lg text-sm leading-7 text-[var(--lpv-muted)] md:text-base">
+            {wine.oneLiner}
+          </p>
+        ) : null}
 
-            {typeof wine.approxPrice === "number" ? (
-              <span className="text-xs text-[var(--lpv-muted)]">
-                · {wine.approxPrice.toFixed(2).replace(".", ",")} $
-              </span>
-            ) : null}
-          </div>
+        {!interactive && typeof wine.approxPrice === "number" ? (
+          <p className="mt-5 text-xs leading-5 text-[var(--lpv-muted)]">
+            <span className="font-medium text-[var(--lpv-ink)]">
+              {wine.approxPrice.toFixed(2).replace(".", ",")} $
+            </span>
+            {" · "}Prix indicatif à la SAQ, sujet à changement.
+          </p>
+        ) : null}
 
-          <h3 className="lpv-display mt-3 text-[clamp(2.4rem,4vw,4rem)] leading-[0.9]">
-            {wine.name}
-          </h3>
-
-          {wine.oneLiner ? (
-            <p className="mt-5 max-w-lg text-sm leading-7 text-[var(--lpv-muted)] md:text-base">
-              {wine.oneLiner}
-            </p>
-          ) : null}
-
+        {interactive ? (
           <span className="mt-7 inline-flex items-center gap-3 border-b border-[var(--lpv-ink)] pb-1 text-sm font-medium">
             Voir la fiche
             <span
@@ -334,8 +338,25 @@ function ArticleWineCardView({
               →
             </span>
           </span>
-        </div>
+        ) : null}
       </div>
+    </div>
+  );
+
+  if (!interactive) {
+    return (
+      <div className="mb-12 mt-2 block max-w-[46rem] pb-6 pt-2 md:mb-16 md:mt-3 md:pb-8 md:pt-3">
+        {cardContent}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={`/vins/${wine.slug}`}
+      className="group my-12 block max-w-[46rem] py-6 md:my-16 md:py-8"
+    >
+      {cardContent}
     </Link>
   );
 }
@@ -462,28 +483,30 @@ export default async function ArticlePage({
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
       <article className="pb-24">
         <div className="lpv-container pt-8 md:pt-10">
-          <Link href="/blog" className="lpv-text-link">
-            <span>←</span> Retour au journal
+          <Link
+            href="/guides"
+            className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
+          >
+            <span aria-hidden="true">←</span>
+            <span>Retour aux articles</span>
           </Link>
         </div>
 
-        <header className="lpv-container grid gap-12 border-b border-[var(--lpv-line)] pb-16 pt-10 md:pb-24 md:pt-16 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="lg:sticky lg:top-24 lg:self-start">
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              {article.category || "Article"}
-            </p>
+        <header className="lpv-container grid items-center gap-7 border-b border-[var(--lpv-line)] pb-9 pt-7 md:gap-10 md:pb-12 md:pt-10 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="flex min-w-0 flex-col justify-center lg:pl-8">
 
-            <h1 className="lpv-display mt-7 text-[clamp(3.8rem,6.5vw,7rem)] leading-[0.88]">
+
+            <h1 className="lpv-display mt-0 max-w-[12ch] text-[clamp(3rem,5.2vw,5.4rem)] leading-[0.94] tracking-[-0.045em] lg:ml-3">
               {article.title}
             </h1>
 
             {article.excerpt ? (
-              <p className="mt-8 max-w-lg text-lg leading-8 text-[var(--lpv-muted)]">
+              <p className="mt-5 max-w-lg text-base leading-7 text-[var(--lpv-muted)] md:mt-6 md:text-lg md:leading-8">
                 {article.excerpt}
               </p>
             ) : null}
 
-            <div className="mt-10 flex flex-wrap gap-4 border-t border-[var(--lpv-line)] pt-7 text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+            <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 border-t border-[var(--lpv-line)] pt-4 text-[0.62rem] uppercase tracking-[0.14em] text-[var(--lpv-muted)] md:mt-7 md:pt-5">
               {article.author ? <span>{article.author}</span> : null}
 
               {formatDate(article.publishedAt || article._createdAt) ? (
@@ -494,7 +517,7 @@ export default async function ArticlePage({
             </div>
           </div>
 
-          <div className="relative min-h-[620px] overflow-hidden bg-[var(--lpv-paper-light)] md:min-h-[780px]">
+          <div className="relative aspect-[4/3] w-full self-center overflow-hidden bg-[var(--lpv-paper-light)]">
             {imageSrc ? (
               <img
                 src={imageSrc}
@@ -502,7 +525,7 @@ export default async function ArticlePage({
                 className="absolute inset-0 h-full w-full object-cover"
               />
             ) : (
-              <div className="flex min-h-[620px] items-center justify-center">
+              <div className="flex aspect-[4/3] items-center justify-center">
                 <p className="text-sm text-[var(--lpv-muted)]">
                   Image à ajouter dans Sanity.
                 </p>
@@ -531,6 +554,7 @@ export default async function ArticlePage({
                     articleWineCard: ({ value }) => (
                       <ArticleWineCardView
                         value={value as ArticleWineCard}
+                        interactive={slug !== "20-vins-a-connaitre-pour-commencer"}
                       />
                     ),
                     articleProducerCard: ({ value }) => (
@@ -839,6 +863,7 @@ export default async function ArticlePage({
                     articleWineCard: ({ value }) => (
                       <ArticleWineCardView
                         value={value as ArticleWineCard}
+                        interactive={slug !== "20-vins-a-connaitre-pour-commencer"}
                       />
                     ),
                     articleProducerCard: ({ value }) => (

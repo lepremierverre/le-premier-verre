@@ -44,6 +44,7 @@ type FavoriteWine = {
   alcoholFree?: boolean;
   color?: string;
   bottleImage?: SanityImageSource;
+  editorialImage?: SanityImageSource;
   approxPrice?: number;
   producer?: { name?: string };
   country?: { name?: string };
@@ -73,6 +74,7 @@ export default async function FavoritesPage() {
             alcoholFree,
             color,
             bottleImage,
+            editorialImage,
             approxPrice,
             producer->{name},
             country->{name},
@@ -85,157 +87,184 @@ export default async function FavoritesPage() {
 
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
-      {/* MA CAVE */}
-      <section>
-        <div className="lpv-container grid gap-6 py-9 md:grid-cols-[1fr_0.42fr] md:items-end md:gap-12 md:py-14">
-          <div>
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              Ma cave
-            </p>
+      <section className="lpv-container pt-10 md:pt-16">
+        <h1 className="lpv-display text-[clamp(3.6rem,8vw,7rem)] leading-[0.88] tracking-[-0.045em]">
+          Favoris.
+        </h1>
 
-            <h1 className="lpv-display mt-4 text-[clamp(3.2rem,13vw,4.2rem)] leading-[0.86] md:mt-5 md:text-[clamp(4rem,7vw,6.5rem)] md:leading-[0.84]">
-              Mes favoris.
-            </h1>
-          </div>
-
-          <div className="border-t border-[var(--lpv-line)] pt-5 md:border-t-0 md:pb-1">
-            <p className="max-w-sm text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
-              Les bouteilles mises de côté au fil de tes découvertes.
-            </p>
-
-            <p className="mt-5 text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
-              {orderedWines.length} favori{orderedWines.length > 1 ? "s" : ""}
-            </p>
-          </div>
-        </div>
+        <p className="mt-6 text-[0.95rem] leading-7 md:text-base">
+          Les bouteilles que tu veux retrouver.
+        </p>
       </section>
 
-      <CaveNav />
+      <div className="mt-14 md:mt-20">
+        <CaveNav />
+      </div>
 
-      <section className="lpv-container py-10 md:py-24">
-        <div className="flex items-end justify-between border-b border-[var(--lpv-line)] pb-5 md:pb-6">
-          <div>
-            <p className="text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
-              À garder
-            </p>
-
-            <h2 className="lpv-display mt-3 text-[2.8rem] leading-none md:mt-5 md:text-7xl">
-              Les bouteilles.
-            </h2>
-          </div>
-
-          <Link href="/vins" className="lpv-text-link hidden sm:inline-flex">
-            Explorer <span>→</span>
-          </Link>
-        </div>
-
+      <section className="lpv-container py-8 md:py-12">
         {orderedWines.length > 0 ? (
-          <div className="grid grid-cols-2 gap-x-4 md:gap-x-8 xl:grid-cols-3 xl:gap-x-12">
-            {orderedWines.map((wine, index) => {
-const price = wine.approxPrice;
-
-              return (
+          <>
+            {/* MOBILE — mêmes cartes que le catalogue */}
+            <div className="grid grid-cols-2 gap-3 pt-4 md:hidden">
+              {orderedWines.map((wine) => (
                 <article
                   key={wine._id}
-                  className="group flex min-w-0 flex-col border-b border-[var(--lpv-line)] py-6 md:py-10"
+                  className="group relative min-w-0 border border-[var(--lpv-line)]"
                 >
-                  <div className="relative">
+                  <div className="relative flex h-[470px] flex-col px-5 pb-5 pt-5">
+                    <div className="absolute right-5 top-2 z-20">
+                      <FavoriteButton
+                        wineId={wine._id}
+                        size="sm"
+                        variant="bare"
+                      />
+                    </div>
+
                     <Link
                       href={`/vins/${wine.slug}`}
-                      className="block w-full"
+                      className="mt-8 block"
                     >
                       <BottleStage
-                        image={wine.bottleImage}
-                        alt={wine.name ?? "Bouteille"}
+                        image={wine.editorialImage ?? wine.bottleImage}
+                        alt={wine.name}
                         color={
                           wine.beverageType === "cider"
                             ? undefined
-                            : wine.color ?? undefined
+                            : wine.color
                         }
                         variant="card"
-                        className="h-[250px] [&>div]:!overflow-visible [&>div]:h-[210px] [&_img]:object-contain transition duration-700 group-hover:scale-[1.025] md:h-[360px] md:[&>div]:h-[300px]"
+                        imageFit={wine.editorialImage ? "cover" : "contain"}
+                        className={
+                          wine.editorialImage
+                            ? "!h-[285px] !w-full [&>div]:!h-[265px] [&>div]:!w-full [&>div]:!overflow-hidden [&_img]:!h-[265px] [&_img]:!w-full [&_img]:!max-h-none [&_img]:!max-w-none [&_img]:!object-cover"
+                            : "!h-[285px] !w-full [&>div]:!h-[265px] [&>div]:!w-full [&_img]:!max-h-[245px] [&_img]:!max-w-[72%] [&_img]:!object-contain"
+                        }
                       />
                     </Link>
 
-                    <div className="absolute right-0 top-0 z-20">
-                      <FavoriteButton wineId={wine._id} size="sm" />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-1 flex-col pt-4 md:pt-7">
-                    <div className="flex items-baseline justify-between gap-2 md:gap-6">
-                      <p className="text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
+                    <div className="flex min-h-[125px] flex-1 flex-col pt-2">
+                      <p className="lpv-kicker text-[0.55rem] leading-4 tracking-[0.16em] text-[var(--lpv-cocoa)]">
                         {[
                           wine.beverageType === "cider"
-                            ? "Cidre"
-                            : formatLabel(wine.color) || "Vin",
+                              ? "Cidre"
+                              : formatLabel(wine.color) || "Vin",
                           wine.alcoholFree ? "Sans alcool" : null,
-                          wine.vintage,
                         ]
                           .filter(Boolean)
                           .join(" · ")}
                       </p>
 
-                      <span className="relative -top-[1px] text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                    </div>
-
-                    <Link href={`/vins/${wine.slug}`}>
-                      <h2 className="lpv-display mt-3 min-h-[3.35rem] text-[1.8rem] leading-[0.92] transition-opacity group-hover:opacity-60 md:mt-5 md:min-h-[5.6rem] md:text-5xl">
-                        {wine.name}
-                      </h2>
-                    </Link>
-
-                    {wine.producer?.name ? (
-                      <p className="mt-3 min-h-5 text-xs leading-5 text-[var(--lpv-muted)] md:mt-5 md:min-h-6 md:text-sm">
-                        {wine.producer.name}
-                      </p>
-                    ) : null}
-
-                    <div className="mt-auto flex items-end justify-between gap-2 border-t border-[var(--lpv-line)] pt-3 md:mt-7 md:gap-6 md:pt-5">
-                      <div>
-                        <p className="text-[0.68rem] leading-5 text-[var(--lpv-muted)] md:text-xs md:leading-6">
-                          {[wine.region?.name, wine.country?.name]
-                            .filter(Boolean)
-                            .join(" · ")}
-                        </p>
-
-                        {price ? (
-                          <p className="mt-1 text-xs md:mt-2 md:text-sm">
-                            {formatPrice(price)}
-                          </p>
-                        ) : null}
-                      </div>
-
                       <Link
                         href={`/vins/${wine.slug}`}
-                        className="lpv-text-link"
+                        className="mt-3 block"
                       >
-                        Voir <span>→</span>
+                        <h3 className="lpv-display text-[1.55rem] leading-[0.94]">
+                          {wine.name}
+                        </h3>
                       </Link>
+
+                      {wine.producer?.name ? (
+                        <p className="mt-auto pt-4 text-xs leading-5 text-[var(--lpv-muted)]">
+                          {wine.producer.name}
+                          {wine.vintage ? ` · ${wine.vintage}` : ""}
+                        </p>
+                      ) : null}
                     </div>
                   </div>
                 </article>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+
+            {/* DESKTOP — mêmes cartes que le catalogue */}
+            <div className="hidden grid-cols-4 md:grid">
+              {orderedWines.map((wine, index) => (
+                <article
+                  key={wine._id}
+                  className={`group relative flex min-w-0 flex-col border-b border-[var(--lpv-line)] px-6 pb-7 pt-6 ${
+                    index % 4 !== 0
+                      ? "border-l border-[var(--lpv-line)]"
+                      : ""
+                  }`}
+                >
+                  <div className="relative">
+                    <Link
+                      href={`/vins/${wine.slug}`}
+                      className={
+                        wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                          ? "relative block h-[350px] overflow-hidden bg-[#A28F80]"
+                          : "relative block h-[350px]"
+                      }
+                    >
+                      <BottleStage
+                        image={wine.editorialImage ?? wine.bottleImage}
+                        alt={wine.name}
+                        color={wine.color}
+                        variant="card"
+                        imageFit={
+                          wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                            ? "contain"
+                            : wine.editorialImage
+                              ? "cover"
+                              : "contain"
+                        }
+                        className={
+                          wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                            ? "!h-[350px] !w-full [&>div]:!h-[350px] [&>div]:!w-full [&_img]:!h-[455px] [&_img]:!w-auto [&_img]:!max-h-none [&_img]:!max-w-none [&_img]:rotate-[7deg] [&_img]:scale-[1.08]"
+                            : wine.editorialImage
+                              ? "!h-[350px] !w-full [&>div]:!h-[350px] [&>div]:!w-full [&_img]:!h-full [&_img]:!w-full [&_img]:!max-h-none [&_img]:!max-w-none"
+                              : "!h-[300px] [&>div]:!h-[280px] [&_img]:!max-h-[270px] [&_img]:!max-w-[64%]"
+                        }
+                      />
+                    </Link>
+
+                    <div className="absolute -top-5 right-0 z-20">
+                      <FavoriteButton
+                        wineId={wine._id}
+                        size="sm"
+                        variant="bare"
+                      />
+                    </div>
+                  </div>
+
+                  <Link
+                    href={`/vins/${wine.slug}`}
+                    className="block pt-5"
+                  >
+                    <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                      {[
+                        wine.beverageType === "cider"
+                              ? "Cidre"
+                              : formatLabel(wine.color) || "Vin",
+                        wine.alcoholFree ? "Sans alcool" : null,
+                        wine.vintage,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+
+                    <h3 className="lpv-display mt-3 min-h-[4rem] max-w-[360px] text-[2.15rem] leading-[0.94] tracking-[-0.035em]">
+                      {wine.name}
+                    </h3>
+
+                    {wine.producer?.name ? (
+                      <p className="mt-5 text-sm leading-5 text-[var(--lpv-muted)]">
+                        {wine.producer.name}
+                      </p>
+                    ) : null}
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </>
         ) : (
-          <div className="py-24 text-center">
-            <p className="text-[0.6rem] font-medium uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
-              Rien pour le moment
-            </p>
+          <div className="border-t border-[var(--lpv-line)] py-16 md:py-24">
+            <p className="text-base">Aucune bouteille pour le moment.</p>
 
-            <h2 className="lpv-display mt-6 text-5xl md:text-7xl">
-              Ta sélection est vide.
-            </h2>
-
-            <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-[var(--lpv-muted)]">
-              Ajoute des bouteilles depuis le répertoire ou une fiche bouteille.
-            </p>
-
-            <Link href="/vins" className="lpv-button lpv-button-dark mt-9">
-              Explorer les bouteilles
+            <Link
+              href="/vins"
+              className="mt-6 inline-flex items-center gap-3 text-sm font-medium transition-opacity hover:opacity-50"
+            >
+              Voir les vins <span>→</span>
             </Link>
           </div>
         )}

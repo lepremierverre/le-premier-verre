@@ -5,7 +5,7 @@ export default function WineNotFound() {
     <main className="flex min-h-screen items-center justify-center bg-[#120d0b] px-6 text-[#f6eee8]">
       <div className="max-w-xl rounded-[32px] border border-white/10 bg-[#1a120f] p-10 text-center">
         <p className="text-sm uppercase tracking-[0.28em] text-[#b78a6b]">
-          Lex Vinum
+          Le Premier Verre
         </p>
 
         <h1 className="mt-4 text-3xl font-semibold text-white">

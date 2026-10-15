@@ -48,7 +48,20 @@ export const wine = defineType({
       group: "identity",
       initialValue: false,
       description: "Activez pour une bouteille présentée dans la sélection sans alcool.",
-      validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "categories",
+      title: "Catégories",
+      type: "array",
+      group: "identity",
+      description: "Catégories éditoriales de la bouteille, par exemple Cidres ou Sans alcool.",
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "category" }],
+        },
+      ],
     }),
 
     defineField({
@@ -121,6 +134,30 @@ export const wine = defineType({
     }),
 
     defineField({
+      name: "editorialImage",
+      title: "Photo éditoriale LPV",
+      type: "image",
+      group: "identity",
+      options: {
+        hotspot: true,
+      },
+      description:
+        "Vraie photo utilisée dans la nouvelle fiche LPV et, une fois validée, dans le répertoire des vins. Ne pas utiliser une bouteille détourée artificiellement.",
+      fields: [
+        {
+          name: "alt",
+          title: "Texte alternatif",
+          type: "string",
+        },
+        {
+          name: "credit",
+          title: "Crédit photo",
+          type: "string",
+        },
+      ],
+    }),
+
+    defineField({
       name: "country",
       title: "Pays",
       type: "reference",
@@ -176,7 +213,6 @@ export const wine = defineType({
       type: "image",
       group: "identity",
       options: { hotspot: true },
-      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
@@ -521,6 +557,141 @@ export const wine = defineType({
       options: { collapsible: true, collapsed: true },
       fields: [
         defineField({
+          name: "body",
+          title: "Corps",
+          type: "object",
+          fields: [
+            defineField({
+              name: "confidence",
+              title: "Confiance",
+              type: "number",
+              validation: (Rule) => Rule.min(0).max(1),
+            }),
+            defineField({
+              name: "source",
+              title: "Source",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Donnée technique", value: "technical" },
+                  { title: "Dégustation", value: "tasting" },
+                  { title: "Éditorial LPV", value: "editorial" },
+                  { title: "Inférence", value: "inferred" },
+                ],
+              },
+            }),
+          ],
+        }),
+
+        defineField({
+          name: "sweetness",
+          title: "Sucrosité",
+          type: "object",
+          fields: [
+            defineField({
+              name: "confidence",
+              title: "Confiance",
+              type: "number",
+              validation: (Rule) => Rule.min(0).max(1),
+            }),
+            defineField({
+              name: "source",
+              title: "Source",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Donnée technique", value: "technical" },
+                  { title: "Dégustation", value: "tasting" },
+                  { title: "Éditorial LPV", value: "editorial" },
+                  { title: "Inférence", value: "inferred" },
+                ],
+              },
+            }),
+          ],
+        }),
+
+        defineField({
+          name: "roundness",
+          title: "Rondeur",
+          type: "object",
+          fields: [
+            defineField({
+              name: "confidence",
+              title: "Confiance",
+              type: "number",
+              validation: (Rule) => Rule.min(0).max(1),
+            }),
+            defineField({
+              name: "source",
+              title: "Source",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Donnée technique", value: "technical" },
+                  { title: "Dégustation", value: "tasting" },
+                  { title: "Éditorial LPV", value: "editorial" },
+                  { title: "Inférence", value: "inferred" },
+                ],
+              },
+            }),
+          ],
+        }),
+
+        defineField({
+          name: "acidity",
+          title: "Acidité",
+          type: "object",
+          fields: [
+            defineField({
+              name: "confidence",
+              title: "Confiance",
+              type: "number",
+              validation: (Rule) => Rule.min(0).max(1),
+            }),
+            defineField({
+              name: "source",
+              title: "Source",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Donnée technique", value: "technical" },
+                  { title: "Dégustation", value: "tasting" },
+                  { title: "Éditorial LPV", value: "editorial" },
+                  { title: "Inférence", value: "inferred" },
+                ],
+              },
+            }),
+          ],
+        }),
+
+        defineField({
+          name: "tannins",
+          title: "Tanins",
+          type: "object",
+          fields: [
+            defineField({
+              name: "confidence",
+              title: "Confiance",
+              type: "number",
+              validation: (Rule) => Rule.min(0).max(1),
+            }),
+            defineField({
+              name: "source",
+              title: "Source",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Donnée technique", value: "technical" },
+                  { title: "Dégustation", value: "tasting" },
+                  { title: "Éditorial LPV", value: "editorial" },
+                  { title: "Inférence", value: "inferred" },
+                ],
+              },
+            }),
+          ],
+        }),
+
+        defineField({
           name: "fruitIntensity",
           title: "Expression du fruit",
           type: "object",
@@ -550,6 +721,87 @@ export const wine = defineType({
         defineField({
           name: "minerality",
           title: "Minéralité",
+          type: "object",
+          fields: [
+            defineField({
+              name: "confidence",
+              title: "Confiance",
+              type: "number",
+              validation: (Rule) => Rule.min(0).max(1),
+            }),
+            defineField({
+              name: "source",
+              title: "Source",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Donnée technique", value: "technical" },
+                  { title: "Dégustation", value: "tasting" },
+                  { title: "Éditorial LPV", value: "editorial" },
+                  { title: "Inférence", value: "inferred" },
+                ],
+              },
+            }),
+          ],
+        }),
+
+        defineField({
+          name: "intensity",
+          title: "Intensité aromatique",
+          type: "object",
+          fields: [
+            defineField({
+              name: "confidence",
+              title: "Confiance",
+              type: "number",
+              validation: (Rule) => Rule.min(0).max(1),
+            }),
+            defineField({
+              name: "source",
+              title: "Source",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Donnée technique", value: "technical" },
+                  { title: "Dégustation", value: "tasting" },
+                  { title: "Éditorial LPV", value: "editorial" },
+                  { title: "Inférence", value: "inferred" },
+                ],
+              },
+            }),
+          ],
+        }),
+
+        defineField({
+          name: "complexity",
+          title: "Complexité",
+          type: "object",
+          fields: [
+            defineField({
+              name: "confidence",
+              title: "Confiance",
+              type: "number",
+              validation: (Rule) => Rule.min(0).max(1),
+            }),
+            defineField({
+              name: "source",
+              title: "Source",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Donnée technique", value: "technical" },
+                  { title: "Dégustation", value: "tasting" },
+                  { title: "Éditorial LPV", value: "editorial" },
+                  { title: "Inférence", value: "inferred" },
+                ],
+              },
+            }),
+          ],
+        }),
+
+        defineField({
+          name: "oakInfluence",
+          title: "Influence du bois",
           type: "object",
           fields: [
             defineField({

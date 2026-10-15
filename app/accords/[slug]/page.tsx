@@ -1,184 +1,65 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { PortableTextBlock } from "@portabletext/types";
-import { PortableText } from "@portabletext/react";
 import type { SanityImageSource } from "@sanity/image-url";
 
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
-import { buildTasteDna } from "@/lib/taste-dna";
 import BottleStage from "@/components/wine/BottleStage";
+import FavoriteButton from "@/components/favorites/FavoriteButton";
+import { VIBE_PROFILES } from "@/lib/vibes/profiles";
 import {
-  buildRecommendationPool,
-  type RecommendationWine,
-} from "@/lib/recommendation-engine";
-import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
+  buildVibeCandidatePool,
+  type VibeRecommendationWine,
+  type VibeDimensionScore,
+} from "@/lib/vibe-engine";
 
 export const revalidate = 60;
 
-type FoodPage = {
+type RecommendationWine = VibeRecommendationWine & {
   _id: string;
+  slug: string;
   name: string;
-  slug: string;
-  category?: string;
-  image?: SanityImageSource;
-
-  oneLiner?: string;
-  description?: PortableTextBlock[];
-  lpvAdvice?: string;
-  wineStyles?: string[];
-  avoid?: string;
-  servingTip?: string;
-
-  recommendedColors?: string[];
-
-  bodyTarget?: number;
-  bodyTolerance?: number;
-
-  sweetnessTarget?: number;
-  sweetnessTolerance?: number;
-
-  roundnessTarget?: number;
-  roundnessTolerance?: number;
-
-  acidityTarget?: number;
-  acidityTolerance?: number;
-
-  tanninsMax?: number;
-
-  fruitIntensityTarget?: number;
-  fruitIntensityTolerance?: number;
-
-  mineralityTarget?: number;
-  mineralityTolerance?: number;
-
-  intensityTarget?: number;
-  intensityTolerance?: number;
-
-  complexityTarget?: number;
-  complexityTolerance?: number;
-
-  oakInfluenceMax?: number;
-
-  savoryTarget?: number;
-  savoryTolerance?: number;
-
-  editorialWineIds?: string[];
-
-  seoTitle?: string;
-  seoDescription?: string;
-};
-
-type Wine = RecommendationWine & {
-  slug: string;
-
   vintage?: number;
   beverageType?: "wine" | "cider";
   alcoholFree?: boolean;
+  color?: string;
+  style?: string;
+  saqPrice?: number;
   bottleImage?: SanityImageSource;
-
   producer?: {
     name?: string;
     slug?: string;
   };
-
   country?: {
     name?: string;
     slug?: string;
   };
-
   region?: {
     name?: string;
     slug?: string;
   };
-
   appellation?: {
     name?: string;
     slug?: string;
   };
-
-  grapes?: Array<{
-    _id?: string;
-    name?: string;
-    slug?: string;
-  }>;
 };
 
-const foodQuery = `
-  *[
-    _type == "food" &&
-    slug.current == $slug &&
-    published == true &&
-    !(_id in path("drafts.**"))
-  ][0] {
-    _id,
-    name,
-    "slug": slug.current,
-    category,
-    image,
-
-    oneLiner,
-    description,
-    lpvAdvice,
-    wineStyles,
-    avoid,
-    servingTip,
-
-    recommendedColors,
-
-    bodyTarget,
-    bodyTolerance,
-
-    sweetnessTarget,
-    sweetnessTolerance,
-
-    roundnessTarget,
-    roundnessTolerance,
-
-    acidityTarget,
-    acidityTolerance,
-
-    tanninsMax,
-
-    fruitIntensityTarget,
-    fruitIntensityTolerance,
-
-    mineralityTarget,
-    mineralityTolerance,
-
-    intensityTarget,
-    intensityTolerance,
-
-    complexityTarget,
-    complexityTolerance,
-
-    oakInfluenceMax,
-
-    savoryTarget,
-    savoryTolerance,
-
-    "editorialWineIds": wines[]._ref,
-
-    seoTitle,
-    seoDescription
-  }
-`;
-
-const recommendationWinesQuery = `
+const winesQuery = `
   *[
     _type == "wine" &&
     published == true &&
+    defined(slug.current) &&
     !(_id in path("drafts.**"))
   ] {
     _id,
-    name,
     "slug": slug.current,
-
+    name,
     vintage,
     beverageType,
     alcoholFree,
     color,
     style,
+    alcohol,
+
     saqPrice,
     bottleImage,
 
@@ -214,32 +95,9 @@ const recommendationWinesQuery = `
     oakInfluence,
     savory,
 
-    dnaMetadata,
-
-    grapes[]->{
-      _id,
-      name,
-      "slug": slug.current
-    }
+    dnaMetadata
   }
 `;
-
-function categoryLabel(category?: string) {
-  const labels: Record<string, string> = {
-    aperitif: "Apéritif",
-    fish: "Poisson",
-    seafood: "Fruits de mer",
-    poultry: "Volaille",
-    "red-meat": "Viande",
-    charcuterie: "Charcuterie",
-    cheese: "Fromage",
-    vegetarian: "Végétarien",
-    dessert: "Dessert",
-    other: "À table",
-  };
-
-  return category ? labels[category] ?? category : "Accord";
-}
 
 function colorLabel(color?: string | null) {
   const labels: Record<string, string> = {
@@ -254,278 +112,201 @@ function colorLabel(color?: string | null) {
   return color ? labels[color] ?? color : "Vin";
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+function dimensionReason(dimension: VibeDimensionScore): string | null {
+  if (
+    typeof dimension.value !== "number" ||
+    typeof dimension.score !== "number" ||
+    dimension.score < 0.8
+  ) {
+    return null;
+  }
 
-  return buildDynamicMetadata({
-    entity: "food",
-    slug,
-    locale: "fr",
-  });
+  const value = dimension.value;
+
+  switch (dimension.dimension) {
+    case "body":
+      if (value <= 2) return "Un corps léger, sans lourdeur.";
+      if (value >= 4) return "Plus de matière et de présence.";
+      return "Un corps équilibré.";
+
+    case "sweetness":
+      if (value <= 2) return "Un profil sec et net.";
+      if (value >= 4) return "Une douceur assumée.";
+      return "Une légère rondeur.";
+
+    case "roundness":
+      if (value <= 2) return "Un profil vif et droit.";
+      if (value >= 4) return "Une texture ronde et enveloppante.";
+      return "Un équilibre entre tension et rondeur.";
+
+    case "acidity":
+      if (value >= 4) return "Une fraîcheur vive et nette.";
+      if (value <= 2) return "Une acidité douce, plus posée.";
+      return "Une fraîcheur bien intégrée.";
+
+    case "tannins":
+      if (value <= 2) return "Des tanins discrets.";
+      if (value >= 4) return "Une structure tannique bien présente.";
+      return "Des tanins présents sans dominer.";
+
+    case "fruitIntensity":
+      if (value >= 4) return "Le fruit est bien présent.";
+      if (value <= 2) return "Le fruit reste en retrait.";
+      return "Un fruit mesuré.";
+
+    case "minerality":
+      if (value >= 4) return "Une trame minérale nette.";
+      if (value <= 2) return "La minéralité reste discrète.";
+      return "La minéralité joue en soutien.";
+
+    case "intensity":
+      if (value <= 2) return "Une expression légère et facile.";
+      if (value >= 4) return "Une expression aromatique soutenue.";
+      return "Une intensité mesurée.";
+
+    case "complexity":
+      if (value >= 4) return "Assez de profondeur pour qu’on s’y attarde.";
+      if (value <= 2) return "Une lecture simple et immédiate.";
+      return "Une complexité juste assez présente.";
+
+    case "oakInfluence":
+      if (value <= 2) return "Le bois reste discret.";
+      if (value >= 4) return "L’élevage boisé est bien présent.";
+      return "Le bois est bien intégré.";
+
+    case "savory":
+      if (value >= 4) return "Un registre plus herbacé, épicé ou terreux.";
+      if (value <= 2) return "Un profil surtout porté par le fruit.";
+      return "Un peu de relief herbacé ou épicé.";
+
+    default:
+      return null;
+  }
+}
+
+function reasonsForCandidate(
+  dimensions: VibeDimensionScore[]
+): string[] {
+  return dimensions
+    .filter(
+      (dimension) =>
+        typeof dimension.value === "number" &&
+        typeof dimension.score === "number" &&
+        dimension.score >= 0.8
+    )
+    .sort((a, b) => {
+      const contributionA =
+        (a.score ?? 0) * a.weight * a.confidence;
+
+      const contributionB =
+        (b.score ?? 0) * b.weight * b.confidence;
+
+      return contributionB - contributionA;
+    })
+    .map(dimensionReason)
+    .filter((reason): reason is string => Boolean(reason))
+    .slice(0, 3);
 }
 
 export default async function AccordPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ alcohol?: string }>;
 }) {
   const { slug } = await params;
-  const queryParams = await searchParams;
-  const alcoholChoice =
-    queryParams.alcohol === "without" ? "without" : "with";
 
-  const [food, wines] = await Promise.all([
-    client.fetch<FoodPage | null>(foodQuery, { slug }),
-    client.fetch<Wine[]>(recommendationWinesQuery),
-  ]);
+  const vibe = VIBE_PROFILES.find(
+    (candidate) => candidate.slug === slug
+  );
 
-  if (!food) {
+  if (!vibe) {
     notFound();
   }
 
-  /*
-   * Profil anonyme.
-   *
-   * À ce stade, aucune préférence personnelle n'est injectée.
-   * Le classement repose donc essentiellement sur Food DNA,
-   * avec les couches éditoriales prévues par le moteur.
-   *
-   * Plus tard, le Taste DNA réel de l'utilisateur connecté
-   * pourra remplacer ce profil sans modifier cette page.
-   */
-  const anonymousTaste = buildTasteDna({
-    preferences: {},
-    favorites: [],
-    journal: [],
-  });
-
-  const eligibleWines = wines.filter((wine) =>
-    alcoholChoice === "without"
-      ? wine.alcoholFree === true
-      : wine.alcoholFree !== true
+  const wines = await client.fetch<RecommendationWine[]>(
+    winesQuery
   );
 
-  const recommendationPool = buildRecommendationPool(
-    eligibleWines,
-    food,
-    anonymousTaste
-  );
+  const pool = buildVibeCandidatePool(wines, vibe);
 
-  const recommendations = recommendationPool.candidates.slice(0, 4);
-
-  const imageSrc = food.image
-    ? urlFor(food.image)
-        .width(1600)
-        .height(1100)
-        .fit("crop")
-        .url()
-    : null;
+  const recommendations = pool.eligible
+    .slice(0, 4)
+    .map((candidate) => ({
+      ...candidate.wine,
+      affinity: Math.round(candidate.adjustedScore * 100),
+      reasons: reasonsForCandidate(candidate.dimensions),
+    }));
 
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+
       {/* FIL D'ARIANE */}
       <section className="border-b border-[var(--lpv-line)]">
         <div className="lpv-container flex items-center py-5">
           <Link
             href="/accords"
-            className="border-b border-[var(--lpv-ink)] pb-1 text-xs uppercase tracking-[0.16em] text-[var(--lpv-ink)] transition-opacity hover:opacity-50"
+            className="border-b border-[var(--lpv-ink)] pb-1 text-xs uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
           >
-            ← Tous les accords
+            ← Tous les moments
           </Link>
         </div>
       </section>
 
       {/* HERO */}
       <section className="border-b border-[var(--lpv-line)]">
-        {imageSrc ? (
-          /* AVEC PHOTO */
-          <div className="lpv-container grid lg:grid-cols-[0.58fr_0.42fr]">
-            <div className="py-14 pr-0 lg:border-r lg:border-[var(--lpv-line)] lg:py-24 lg:pr-14">
+        <div className="lpv-container py-16 md:py-24">
+          <div className="grid gap-12 md:grid-cols-[0.7fr_0.3fr] md:items-end">
+            <div>
               <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                {categoryLabel(food.category)}
+                Le moment
               </p>
 
-              <h1 className="lpv-display mt-7 max-w-4xl text-[clamp(4.8rem,9vw,9rem)] leading-[0.82]">
-                {food.name}
+              <h1 className="lpv-display mt-7 max-w-[12ch] text-[clamp(5rem,10vw,10rem)] leading-[0.8] tracking-[-0.045em]">
+                {vibe.title}
               </h1>
+            </div>
 
-              {food.oneLiner ? (
-                <p className="mt-10 max-w-2xl text-xl leading-9 text-[var(--lpv-muted)] md:text-2xl md:leading-10">
-                  {food.oneLiner}
+            <div className="md:pb-2">
+              {vibe.description ? (
+                <p className="max-w-md text-lg leading-8 text-[var(--lpv-muted)] md:text-xl">
+                  {vibe.description}
                 </p>
               ) : null}
-            </div>
 
-            <div className="border-t border-[var(--lpv-line)] py-10 lg:border-t-0 lg:py-14 lg:pl-14">
-              <div className="aspect-[4/5] overflow-hidden bg-[var(--lpv-paper-light)]">
-                <img
-                  src={imageSrc}
-                  alt={food.name}
-                  className="h-full w-full object-cover"
-                />
-              </div>
+              <p className="mt-7 text-[0.65rem] uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                {pool.diagnostics.eligible} vins compatibles
+              </p>
             </div>
           </div>
-        ) : (
-          /* SANS PHOTO */
-          <div className="lpv-container py-16 md:py-24">
-            <div className="grid gap-10 md:grid-cols-[0.7fr_0.3fr] md:items-end">
-              <div>
-                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                  {categoryLabel(food.category)}
-                </p>
-
-                <h1 className="lpv-display mt-7 max-w-[10ch] text-[clamp(5.5rem,11vw,11rem)] leading-[0.8] tracking-[-0.045em]">
-                  {food.name}
-                </h1>
-              </div>
-
-              {food.oneLiner ? (
-                <div className="border-t border-[var(--lpv-line)] pt-6 md:border-t-0 md:pb-2">
-                  <p className="max-w-md text-lg leading-8 text-[var(--lpv-muted)] md:text-xl md:leading-9">
-                    {food.oneLiner}
-                  </p>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        )}
+        </div>
       </section>
 
-      {/* EXPLICATION */}
-      {(food.description?.length || food.lpvAdvice) ? (
-        <section className="border-b border-[var(--lpv-line)]">
-          <div className="lpv-container grid lg:grid-cols-[0.34fr_0.66fr]">
-            <div className="py-14 lg:py-20 lg:pr-12">
-              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                L’accord
-              </p>
-
-              <h2 className="lpv-display mt-6 text-5xl leading-[0.92] md:text-6xl">
-                Pourquoi
-                <br />
-                ça marche.
-              </h2>
-            </div>
-
-            <div className="border-t border-[var(--lpv-line)] py-14 lg:border-t-0 lg:py-20 lg:pl-14">
-              {food.description?.length ? (
-                <div className="max-w-3xl space-y-6 text-base leading-8 text-[var(--lpv-muted)] [&_strong]:font-semibold [&_strong]:text-[var(--lpv-ink)]">
-                  <PortableText value={food.description} />
-                </div>
-              ) : null}
-
-              {food.lpvAdvice ? (
-                <div
-                  className={`${food.description?.length ? "mt-14 pt-8 border-t border-[var(--lpv-line)]" : ""}`}
-                >
-                  <p className="text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
-                    En pratique
-                  </p>
-
-                  <p className="mt-5 max-w-2xl text-2xl leading-[1.45] md:text-[1.7rem]">
-                    {food.lpvAdvice}
-                  </p>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {/* STYLES */}
-      {food.wineStyles?.length ? (
-        <section className="border-b border-[var(--lpv-line)]">
-          <div className="lpv-container py-14 md:py-20">
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              Dans le verre
-            </p>
-
-            <div className="mt-6 grid gap-8 md:grid-cols-[0.4fr_0.6fr] md:items-start">
-              <h2 className="lpv-display text-5xl leading-[0.92] md:text-7xl">
-                Ce qu’on
-                <br />
-                cherche.
-              </h2>
-
-              <div className="border-t border-[var(--lpv-line)]">
-                {food.wineStyles.map((style, index) => (
-                  <div
-                    key={`${style}-${index}`}
-                    className="flex items-center justify-between gap-6 border-b border-[var(--lpv-line)] py-5"
-                  >
-                    <span className="text-lg">
-                      {style}
-                    </span>
-
-                    <span className="text-xs tracking-[0.16em] text-[var(--lpv-muted)]">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-      ) : null}
 
       {/* RECOMMANDATIONS */}
       <section className="border-b border-[var(--lpv-line)]">
         <div className="lpv-container py-16 md:py-24">
-          <div className="flex flex-col gap-6 border-b border-[var(--lpv-line)] pb-7 md:flex-row md:items-end md:justify-between">
+          <div className="grid gap-8 md:grid-cols-[0.3fr_0.7fr] md:items-end">
             <div>
               <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                La sélection LPV
+                Les bouteilles
               </p>
 
               <h2 className="lpv-display mt-6 text-5xl leading-[0.92] md:text-7xl">
-                Quatre bouteilles
+                On ouvre
                 <br />
-                pour ce plat.
+                quoi?
               </h2>
             </div>
 
-            <p className="max-w-sm text-sm leading-7 text-[var(--lpv-muted)]">
-              Une sélection choisie parmi les bouteilles de la bibliothèque
-              selon leur profil et leur affinité avec ce plat.
+            <p className="max-w-xl text-lg leading-8 text-[var(--lpv-muted)]">
+              Quatre bouteilles qui passent réellement le test.
+              Pas quatre bouteilles qu’on essaie de faire fitter.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-x-8 gap-y-3 border-b border-[var(--lpv-line)] py-6">
-            <Link
-              href={`/accords/${slug}?alcohol=with`}
-              className={`text-xs uppercase tracking-[0.16em] transition-opacity hover:opacity-50 ${
-                alcoholChoice === "with"
-                  ? "text-[var(--lpv-ink)] underline underline-offset-8"
-                  : "text-[var(--lpv-muted)]"
-              }`}
-            >
-              Avec alcool
-            </Link>
-
-            <Link
-              href={`/accords/${slug}?alcohol=without`}
-              className={`text-xs uppercase tracking-[0.16em] transition-opacity hover:opacity-50 ${
-                alcoholChoice === "without"
-                  ? "text-[var(--lpv-ink)] underline underline-offset-8"
-                  : "text-[var(--lpv-muted)]"
-              }`}
-            >
-              Sans alcool
-            </Link>
-          </div>
-
           {recommendations.length ? (
-            <div className="grid md:grid-cols-2 xl:grid-cols-4">
-              {recommendations.map((candidate, index) => {
-                const wine = candidate.wine;
-
+            <div className="mt-14 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-8 md:gap-y-14">
+              {recommendations.map((wine, index) => {
                 const location = [
                   wine.region?.name,
                   wine.country?.name,
@@ -536,29 +317,33 @@ export default async function AccordPage({
                 return (
                   <article
                     key={wine._id}
-                    className="group py-9 md:px-5 xl:px-7 xl:first:pl-0 xl:last:pr-0"
+                    className="group flex min-w-0 flex-col border-b border-[var(--lpv-line)] pt-2 pb-3 md:pt-3 md:pb-3"
                   >
-                    <Link href={`/vins/${wine.slug}`}>
-                      <div className="relative">
+                    <div className="relative">
+                      <Link
+                        href={`/vins/${wine.slug}`}
+                        className="block w-full"
+                      >
                         <BottleStage
                           image={wine.bottleImage}
-                          alt={wine.name ?? "Bouteille"}
-                          color={
-                            wine.beverageType === "cider"
-                              ? undefined
-                              : wine.color ?? undefined
-                          }
+                          alt={wine.name}
+                          color={wine.color}
                           variant="card"
-                          className="!h-[330px] transition duration-700 group-hover:scale-[1.025]"
+                          className="!h-[220px] [&>div]:!h-[190px] transition duration-700 group-hover:scale-[1.025] sm:!h-[250px] sm:[&>div]:!h-[220px] md:!h-[360px] md:[&>div]:!h-[300px]"
                         />
+                      </Link>
 
-                        <span className="absolute right-4 top-4 z-20 text-[0.6rem] tracking-[0.16em] text-[var(--lpv-muted)]">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
+                      <div className="absolute right-0 top-0 z-20">
+                        <FavoriteButton
+                          wineId={wine._id}
+                          size="sm"
+                        />
                       </div>
+                    </div>
 
-                      <div className="flex min-h-[210px] flex-col pt-6">
-                        <p className="lpv-kicker min-h-[1rem] text-[var(--lpv-cocoa)]">
+                    <div className="flex flex-1 flex-col pt-4 md:pt-7">
+                      <div className="flex min-h-[16px] items-start justify-between gap-2 md:min-h-[18px] md:gap-6">
+                        <p className="lpv-kicker min-w-0 text-[0.55rem] leading-4 tracking-[0.16em] text-[var(--lpv-cocoa)] md:text-[0.62rem] md:leading-normal md:tracking-[0.18em]">
                           {[
                             wine.beverageType === "cider"
                               ? "Cidre"
@@ -570,94 +355,88 @@ export default async function AccordPage({
                             .join(" · ")}
                         </p>
 
-                        <h3 className="lpv-display mt-4 min-h-[3.6rem] text-3xl leading-[0.94] transition-opacity group-hover:opacity-60">
+                        <span className="shrink-0 text-[0.52rem] tracking-[0.12em] text-[var(--lpv-muted)] md:text-[0.6rem] md:tracking-[0.16em]">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                      </div>
+
+                      <Link
+                        href={`/vins/${wine.slug}`}
+                        className="mt-3 block md:mt-5 md:h-[8.3rem]"
+                      >
+                        <h3 className="lpv-display min-h-[2.73rem] text-[1.45rem] leading-[0.94] transition-opacity group-hover:opacity-60 md:text-5xl md:leading-[0.92]">
                           {wine.name}
                         </h3>
+                      </Link>
 
-                        <div className="mt-4 min-h-[1.5rem]">
-                          {wine.producer?.name ? (
-                            <p className="text-sm text-[var(--lpv-muted)]">
+                      <div className="min-h-[2.8rem] border-b border-[var(--lpv-line)] pt-3 md:min-h-[2.8rem] md:pt-4">
+                        {wine.producer?.name ? (
+                          wine.producer.slug ? (
+                            <Link
+                              href={`/producteurs/${wine.producer.slug}`}
+                              className="block w-fit text-xs leading-5 text-[var(--lpv-muted)] transition-opacity hover:opacity-50 md:text-sm"
+                            >
                               {wine.producer.name}
+                            </Link>
+                          ) : (
+                            <p className="text-xs leading-5 text-[var(--lpv-muted)] md:text-sm">
+                              {wine.producer.name}
+                            </p>
+                          )
+                        ) : null}
+                      </div>
+
+                      <div className="mt-auto flex flex-col items-start justify-between gap-2 pt-2 md:flex-row md:items-end md:gap-6 md:pt-2">
+                        <div className="min-w-0">
+                          {location ? (
+                            <p className="text-[0.68rem] leading-5 text-[var(--lpv-muted)] md:text-xs md:leading-6">
+                              {location}
+                            </p>
+                          ) : null}
+
+                          {wine.appellation?.name ? (
+                            <p className="text-[0.68rem] leading-5 text-[var(--lpv-muted)] md:text-xs md:leading-6">
+                              {wine.appellation.name}
                             </p>
                           ) : null}
                         </div>
 
-                        <div className="mt-auto flex min-h-[3.5rem] items-end justify-between gap-4 border-t border-[var(--lpv-line)] pt-4">
-                          <p className="text-xs leading-6 text-[var(--lpv-muted)]">
-                            {location}
+                        {typeof wine.saqPrice === "number" ? (
+                          <p className="shrink-0 text-sm md:text-base">
+                            {wine.saqPrice.toFixed(2).replace(".", ",")} $
                           </p>
-
-                          <span className="lpv-text-link shrink-0">
-                            Voir →
-                          </span>
-                        </div>
+                        ) : null}
                       </div>
-                    </Link>
+
+
+                    </div>
                   </article>
                 );
               })}
             </div>
           ) : (
-            <div className="py-14">
-              <p className="max-w-xl text-base leading-8 text-[var(--lpv-muted)]">
-                {alcoholChoice === "without"
-                  ? "Aucune bouteille sans alcool ne correspond encore à cet accord. La sélection s’agrandit progressivement."
-                  : "La bibliothèque s’agrandit. Les bouteilles correspondant à cet accord seront ajoutées ici."}
+            <div className="mt-14 border-t border-[var(--lpv-line)] py-14">
+              <p className="lpv-display text-4xl">
+                Rien qu’on veut forcer.
+              </p>
+
+              <p className="mt-5 max-w-xl text-[var(--lpv-muted)]">
+                Aucun vin du répertoire ne passe actuellement cette grille
+                avec assez de confiance.
               </p>
             </div>
           )}
         </div>
       </section>
 
-      {/* CONSEILS PRATIQUES */}
-      {(food.avoid || food.servingTip) ? (
-        <section className="border-b border-[var(--lpv-line)]">
-          <div className="lpv-container grid md:grid-cols-2">
-            {food.avoid ? (
-              <div className="py-14 md:border-r md:border-[var(--lpv-line)] md:py-20 md:pr-16">
-                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                  À éviter
-                </p>
-
-                <p className="mt-6 max-w-xl text-xl leading-9">
-                  {food.avoid}
-                </p>
-              </div>
-            ) : null}
-
-            {food.servingTip ? (
-              <div className="py-14 md:py-20 md:pl-16">
-                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                  Au moment de servir
-                </p>
-
-                <p className="mt-6 max-w-xl text-xl leading-9">
-                  {food.servingTip}
-                </p>
-              </div>
-            ) : null}
-          </div>
-        </section>
-      ) : null}
-
-      {/* SORTIE */}
+      {/* RETOUR */}
       <section>
-        <div className="lpv-container py-16 text-center md:py-24">
-          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-            Un autre repas?
-          </p>
-
-          <h2 className="lpv-display mx-auto mt-6 max-w-3xl text-5xl leading-[0.9] md:text-7xl">
-            On repart
-            <br />
-            de l’assiette.
-          </h2>
-
+        <div className="lpv-container py-12">
           <Link
             href="/accords"
-            className="lpv-button lpv-button-dark mt-9"
+            className="text-sm border-b border-[var(--lpv-ink)] pb-1 transition-opacity hover:opacity-50"
           >
-            Voir tous les accords
+            Voir les 50 moments →
           </Link>
         </div>
       </section>

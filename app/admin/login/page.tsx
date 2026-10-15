@@ -39,7 +39,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md rounded-[28px] border border-white/10 bg-[#1a120f] p-8">
         <h1 className="text-2xl font-semibold">Connexion admin</h1>
         <p className="mt-2 text-sm text-[#d7c2b5]">
-          Accès réservé à l’administration Lex Vinum.
+          Accès réservé à l’administration du Premier Verre.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">

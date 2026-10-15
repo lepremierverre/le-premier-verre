@@ -158,7 +158,7 @@ export default function HomePage() {
               },
               {
                 title: "Accords & tables",
-                href: "/recommandation",
+                href: "/accords",
                 img: "/images/grid-2.jpeg",
               },
               {
@@ -225,7 +225,7 @@ export default function HomePage() {
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
-                  href="/recommandation"
+                  href="/accords"
                   className="inline-flex items-center rounded-full bg-[#e4d5bc] px-6 py-3 text-sm font-medium text-[#1d1712] transition hover:bg-[#ecdec7]"
                 >
                   Obtenir une recommandation
@@ -364,7 +364,7 @@ export default function HomePage() {
                 </Link>
 
                 <Link
-                  href="/recommandation"
+                  href="/accords"
                   className="inline-flex items-center rounded-full border border-[#cfc6b7] px-6 py-3 text-sm font-medium text-[#2a221d] transition hover:bg-[#eee7dc]"
                 >
                   Lancer une recommandation

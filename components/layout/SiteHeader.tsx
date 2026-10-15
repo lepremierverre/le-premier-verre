@@ -16,9 +16,9 @@ const navItemsFr = [
   ["Producteurs", "/producteurs"],
   ["Régions", "/regions"],
   ["Cépages", "/cepages"],
+  ["Accords", "/accords"],
   ["Bonnes adresses", "/bonnes-adresses"],
-  ["Guides", "/guides"],
-  ["Journal", "/blog"],
+  ["À lire", "/guides"],
 ];
 
 const navItemsEn = [
@@ -27,9 +27,9 @@ const navItemsEn = [
   ["Producers", "/en/producers"],
   ["Regions", "/en/regions"],
   ["Grapes", "/en/grapes"],
+  ["Pairings", "/en/pairings"],
   ["Places", "/en/places"],
-  ["Guides", "/en/guides"],
-  ["Journal", "/en/journal"],
+  ["Read", "/en/guides"],
 ];
 
 const bilingualRoutes = [
@@ -176,7 +176,7 @@ export function SiteHeader() {
     <>
       <header className="relative z-[9000] border-b border-[var(--lpv-line)] bg-[var(--lpv-paper)]">
         <div className="lpv-container flex h-[78px] items-center justify-between">
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3 sm:gap-5">
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
@@ -197,8 +197,8 @@ export function SiteHeader() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-5 md:gap-7">
-            <div className="hidden items-center gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.16em] sm:flex">
+          <div className="flex items-center gap-3 sm:gap-5 md:gap-7">
+            <div className="flex items-center gap-1.5 text-[0.56rem] font-semibold uppercase tracking-[0.12em] sm:gap-2 sm:text-[0.62rem] sm:tracking-[0.16em]">
               <Link
                 href={frenchPath}
                 className={
@@ -247,62 +247,58 @@ export function SiteHeader() {
                 </button>
 
                 {accountOpen ? (
-                  <div className="absolute right-0 top-[calc(100%+14px)] w-[280px] border border-[var(--lpv-line)] bg-[var(--lpv-paper-light)] p-5 shadow-[0_18px_50px_rgba(33,29,26,0.10)]">
-                    <div className="border-b border-[var(--lpv-line)] pb-5">
-                      <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                        {isEnglish ? "My account" : "Mon compte"}
-                      </p>
-
-                      <p className="mt-3 truncate text-sm">
+                  <div className="absolute right-0 top-[calc(100%+12px)] w-[250px] border border-[var(--lpv-line)] bg-[var(--lpv-paper)] px-5 py-5">
+                    <div className="pb-5">
+                      <p className="truncate text-[15px] font-medium leading-5 text-[var(--lpv-ink)]">
                         {user.fullName ||
                           user.primaryEmailAddress?.emailAddress}
                       </p>
+
+                      <p className="mt-1.5 text-[0.64rem] text-[var(--lpv-muted)]">
+                        {isEnglish ? "My account" : "Mon compte"}
+                      </p>
                     </div>
 
-                    <nav className="flex flex-col py-3">
+                    <nav className="border-t border-[var(--lpv-line)] py-2">
                       <Link
                         href={isEnglish ? "/en/cellar" : "/ma-cave"}
                         onClick={() => setAccountOpen(false)}
-                        className="group border-b border-[var(--lpv-line)] py-4 transition-opacity hover:opacity-60"
+                        className="group flex items-center justify-between py-3 text-[15px] text-[var(--lpv-ink)] transition-opacity hover:opacity-50"
                       >
-                        <span className="block text-[0.56rem] font-medium uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
-                          {isEnglish ? "My personal space" : "Mon espace personnel"}
-                        </span>
-
-                        <span className="mt-2 flex items-center justify-between">
-                          <span className="lpv-display text-[1.75rem] leading-none">
-                            {isEnglish ? "My cellar" : "Ma cave"}
-                          </span>
-
-                          <span className="text-base transition-transform duration-300 group-hover:translate-x-1">
-                            →
-                          </span>
+                        <span>{isEnglish ? "My cellar" : "Ma cave"}</span>
+                        <span
+                          aria-hidden="true"
+                          className="text-sm transition-transform duration-300 group-hover:translate-x-0.5"
+                        >
+                          →
                         </span>
                       </Link>
 
                       <Link
                         href={isEnglish ? "/en/profile" : "/mon-profil"}
                         onClick={() => setAccountOpen(false)}
-                        className="group flex items-center justify-between border-b border-[var(--lpv-line-light)] py-3 text-sm transition-opacity hover:opacity-50"
+                        className="group flex items-center justify-between py-3 text-[15px] text-[var(--lpv-ink)] transition-opacity hover:opacity-50"
                       >
-                        <span>
-                          {isEnglish
-                            ? "Profile information"
-                            : "Informations du profil"}
+                        <span>{isEnglish ? "Profile" : "Profil"}</span>
+                        <span
+                          aria-hidden="true"
+                          className="text-sm transition-transform duration-300 group-hover:translate-x-0.5"
+                        >
+                          →
                         </span>
-                        <span className="text-xs">→</span>
                       </Link>
                     </nav>
 
-                    <SignOutButton redirectUrl={isEnglish ? "/en" : "/"}>
-                      <button
-                        type="button"
-                        className="mt-3 flex w-full items-center justify-between text-left text-[0.68rem] font-semibold uppercase tracking-[0.17em] text-[var(--lpv-cocoa)] transition-opacity hover:opacity-50"
-                      >
-                        {isEnglish ? "Sign out" : "Se déconnecter"}
-                        <span>→</span>
-                      </button>
-                    </SignOutButton>
+                    <div className="border-t border-[var(--lpv-line)] pt-4">
+                      <SignOutButton redirectUrl={isEnglish ? "/en" : "/"}>
+                        <button
+                          type="button"
+                          className="text-left text-[13px] text-[var(--lpv-muted)] transition-colors hover:text-[var(--lpv-ink)]"
+                        >
+                          {isEnglish ? "Sign out" : "Se déconnecter"}
+                        </button>
+                      </SignOutButton>
+                    </div>
                   </div>
                 ) : null}
               </div>
@@ -327,74 +323,242 @@ export function SiteHeader() {
             className="absolute inset-0 bg-black/32"
           />
 
-          <aside className="lpv-fade-in absolute inset-y-0 left-0 flex w-full max-w-[680px] flex-col overflow-y-auto bg-[var(--lpv-cocoa)] px-6 py-6 text-[var(--lpv-paper-light)] sm:px-10 sm:py-9">
-            <div className="flex items-center justify-between border-b border-white/20 pb-6">
-              <p className="lpv-display text-2xl">
-                Le Premier Verre
-              </p>
+          {isEnglish ? (
+            <aside className="lpv-fade-in absolute inset-y-0 left-0 flex w-full max-w-[680px] flex-col overflow-y-auto bg-[var(--lpv-cocoa)] px-6 py-6 text-[var(--lpv-paper-light)] sm:px-10 sm:py-9">
+              {/* HEADER */}
+              <div className="flex items-center justify-between border-b border-white/20 pb-6">
+                <p className="lpv-display text-2xl">
+                  Le Premier Verre
+                </p>
 
-              <button
-                type="button"
-                onClick={() => setMenuOpen(false)}
-                className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] opacity-70 transition-opacity hover:opacity-100"
-              >
-                {isEnglish ? "Close" : "Fermer"}
-              </button>
-            </div>
-
-            <nav
-              aria-label={isEnglish ? "Main navigation" : "Navigation principale"}
-              className="flex flex-1 flex-col justify-center gap-2 py-12"
-            >
-              {navItems.map(([label, href], index) => (
-                <Link
-                  key={href}
-                  href={href}
+                <button
+                  type="button"
+                  aria-label="Close menu"
                   onClick={() => setMenuOpen(false)}
-                  className="group flex items-baseline gap-5 border-b border-white/18 py-3"
+                  className="flex h-10 w-10 items-center justify-center text-[2rem] font-light leading-none text-white/70 transition-opacity hover:text-white"
                 >
-                  <span className="w-6 text-[0.6rem] tracking-[0.16em] opacity-40">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-
-                  <span className="lpv-display text-[clamp(2.7rem,8vw,5.8rem)] leading-[0.94] transition-transform duration-500 group-hover:translate-x-2">
-                    {label}
-                  </span>
-                </Link>
-              ))}
-            </nav>
-
-              <div className="pt-6">
-                {isSignedIn ? (
-                  <SignOutButton redirectUrl={isEnglish ? "/en" : "/"}>
-                    <button
-                      type="button"
-                      className="text-left text-[0.62rem] uppercase tracking-[0.18em] text-white/50 transition-opacity hover:text-white"
-                    >
-                      {isEnglish ? "Sign out" : "Se déconnecter"} →
-                    </button>
-                  </SignOutButton>
-                ) : (
-                  <div className="flex gap-7">
-                    <Link
-                      href={isEnglish ? "/en/sign-in" : "/connexion"}
-                      onClick={() => setMenuOpen(false)}
-                      className="text-[0.68rem] uppercase tracking-[0.18em] opacity-65 transition-opacity hover:opacity-100"
-                    >
-                      {isEnglish ? "Sign in" : "Connexion"}
-                    </Link>
-
-                    <Link
-                      href={isEnglish ? "/en/sign-up" : "/inscription"}
-                      onClick={() => setMenuOpen(false)}
-                      className="text-[0.68rem] uppercase tracking-[0.18em] opacity-65 transition-opacity hover:opacity-100"
-                    >
-                      {isEnglish ? "Sign up" : "Inscription"}
-                    </Link>
-                  </div>
-                )}
+                  ×
+                </button>
               </div>
-          </aside>
+
+              {/* MAIN NAVIGATION */}
+              <div className="flex flex-1 flex-col justify-center py-10 sm:py-12">
+
+                <nav
+                  aria-label="Main navigation"
+                  className="flex flex-col"
+                >
+                  {[
+                    ["Wines", "/en/wines"],
+                    ["Producers", "/en/producers"],
+                    ["Places", "/en/places"],
+                    ["Pairings", "/en/pairings"],
+                    ["Read", "/en/guides"],
+                  ].map(([label, href], index) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMenuOpen(false)}
+                      className={`group py-2.5 sm:py-3 ${
+                        index === 3 ? "mt-5 sm:mt-7" : ""
+                      }`}
+                    >
+                      <span className="lpv-display block text-[clamp(2.8rem,7vw,4.7rem)] leading-[0.94] tracking-[-0.045em] transition-opacity duration-300 group-hover:opacity-55">
+                        {label}
+                      </span>
+                    </Link>
+                  ))}
+                </nav>
+
+                {/* TONIGHT */}
+                <div className="mt-9 pt-7 sm:mt-11 sm:pt-8">
+                  <Link
+                    href="/en/tonight"
+                    onClick={() => setMenuOpen(false)}
+                    className="group inline-flex items-center gap-5 border border-white/55 px-5 py-3.5 text-white transition-colors duration-300 hover:bg-white hover:text-[var(--lpv-cocoa)]"
+                  >
+                    <span className="text-[0.68rem] font-medium uppercase tracking-[0.16em]">
+                      What are we drinking tonight?
+                    </span>
+
+                    <span className="text-xs transition-transform duration-300 group-hover:translate-x-1">
+                      →
+                    </span>
+                  </Link>
+                </div>
+
+              </div>
+
+              {/* MENU FOOTER */}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/20 pt-5 text-[0.6rem] font-medium uppercase tracking-[0.14em] text-white/50">
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setAccountOpen(true);
+                  }}
+                  className="transition-colors hover:text-white"
+                >
+                  My account
+                </button>
+
+                <span className="text-white/20">·</span>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={frenchPath}
+                    onClick={() => setMenuOpen(false)}
+                    className="transition-colors hover:text-white"
+                  >
+                    FR
+                  </Link>
+
+                  <span className="text-white/25">/</span>
+
+                  <Link
+                    href={englishPath}
+                    onClick={() => setMenuOpen(false)}
+                    className="text-white"
+                  >
+                    EN
+                  </Link>
+                </div>
+
+                <span className="text-white/20">·</span>
+
+                <a
+                  href="https://www.instagram.com/lepremierverre/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-white"
+                >
+                  Instagram
+                </a>
+
+              </div>
+            </aside>
+          ) : (
+            <aside className="lpv-fade-in absolute inset-y-0 left-0 flex w-full max-w-[680px] flex-col overflow-y-auto bg-[var(--lpv-cocoa)] px-6 py-6 text-[var(--lpv-paper-light)] sm:px-10 sm:py-9">
+
+              {/* ENTÊTE */}
+              <div className="flex items-center justify-between border-b border-white/20 pb-6">
+                <p className="lpv-display text-2xl">
+                  Le Premier Verre
+                </p>
+
+                <button
+                  type="button"
+                  aria-label="Fermer le menu"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex h-10 w-10 items-center justify-center text-[2rem] font-light leading-none text-white/70 transition-opacity hover:text-white"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* NAVIGATION PRINCIPALE */}
+              <div className="flex flex-1 flex-col justify-center py-10 sm:py-12">
+
+                <nav
+                  aria-label="Navigation principale"
+                  className="flex flex-col"
+                >
+                  {[
+                    ["Vins", "/vins"],
+                    ["Producteurs", "/producteurs"],
+                    ["Bonnes adresses", "/bonnes-adresses"],
+                    ["Accords", "/accords"],
+                    ["À lire", "/guides"],
+                  ].map(([label, href], index) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMenuOpen(false)}
+                      className={`group py-2.5 sm:py-3 ${
+                        index === 3 ? "mt-5 sm:mt-7" : ""
+                      }`}
+                    >
+                      <span className="lpv-display block text-[clamp(2.8rem,7vw,4.7rem)] leading-[0.94] tracking-[-0.045em] transition-opacity duration-300 group-hover:opacity-55">
+                        {label}
+                      </span>
+                    </Link>
+                  ))}
+                </nav>
+
+                {/* CE SOIR — fonctionnalité signature */}
+                <div className="mt-9 pt-7 sm:mt-11 sm:pt-8">
+                  <Link
+                    href="/ce-soir"
+                    onClick={() => setMenuOpen(false)}
+                    className="group inline-flex items-center gap-5 border border-white/55 px-5 py-3.5 text-white transition-colors duration-300 hover:bg-white hover:text-[var(--lpv-cocoa)]"
+                  >
+                    <span className="text-[0.68rem] font-medium uppercase tracking-[0.16em]">
+                      Ce soir, on boit quoi?
+                    </span>
+
+                    <span
+                      aria-hidden="true"
+                      className="text-xs transition-transform duration-300 group-hover:translate-x-1"
+                    >
+                      →
+                    </span>
+                  </Link>
+                </div>
+
+              </div>
+
+              {/* PIED DU MENU */}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/20 pt-5 text-[0.6rem] font-medium uppercase tracking-[0.14em] text-white/50">
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setAccountOpen(true);
+                  }}
+                  className="transition-colors hover:text-white"
+                >
+                  Mon compte
+                </button>
+
+                <span className="text-white/20">·</span>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={frenchPath}
+                    onClick={() => setMenuOpen(false)}
+                    className="text-white"
+                  >
+                    FR
+                  </Link>
+
+                  <span className="text-white/25">/</span>
+
+                  <Link
+                    href={englishPath}
+                    onClick={() => setMenuOpen(false)}
+                    className="transition-colors hover:text-white"
+                  >
+                    EN
+                  </Link>
+                </div>
+
+                <span className="text-white/20">·</span>
+
+                <a
+                  href="https://www.instagram.com/lepremierverre/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-white"
+                >
+                  Instagram
+                </a>
+
+              </div>
+
+            </aside>
+          )}
         </div>
       ) : null}
     </>

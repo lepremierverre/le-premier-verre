@@ -119,34 +119,34 @@ export default async function GuidePage({
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
       <article className="lpv-container pb-24">
         <div className="guide-screen-only pt-8 md:pt-10">
-          <Link href="/en/guides" className="lpv-text-link">
-            <span>←</span> Back to guides
+          <Link
+            href="/en/guides"
+            className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
+          >
+            <span aria-hidden="true">←</span>
+            <span>Back to guides</span>
           </Link>
         </div>
 
-        <section className="guide-print-hero grid gap-12 border-b border-[var(--lpv-line)] pb-16 pt-10 md:pb-24 md:pt-16 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="lg:sticky lg:top-24 lg:self-start">
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              {formatLabel(guide.guideType) || "Guide"}
-            </p>
-
-            <h1 className="lpv-display mt-5 text-[clamp(4.5rem,8vw,8.5rem)] leading-[0.84] lg:mt-5 lg:text-[clamp(4.5rem,6.2vw,7rem)]">
+        <section className="guide-print-hero grid gap-7 border-b border-[var(--lpv-line)] pb-9 pt-7 md:gap-10 md:pb-12 md:pt-10 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="flex flex-col justify-center pt-1 md:pt-3 lg:pl-6">
+            <h1 className="lpv-display mt-4 max-w-[11ch] text-[clamp(3rem,5.3vw,5.5rem)] leading-[0.94] tracking-[-0.045em] lg:mt-5 lg:text-[clamp(3.8rem,4.8vw,5.6rem)]">
               {guide.titleEn || guide.title}
             </h1>
 
             {guide.excerpt ? (
-              <p className="mt-6 max-w-lg text-lg leading-8 text-[var(--lpv-muted)] lg:mt-5">
+              <p className="mt-5 max-w-md text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-7">
                 {guide.excerptEn || guide.excerpt}
               </p>
             ) : null}
           </div>
 
-          <div className="guide-print-cover-image self-start overflow-hidden bg-[var(--lpv-paper-light)]">
+          <div className="guide-print-cover-image self-start overflow-hidden bg-transparent">
             {imageSrc ? (
               <img
                 src={imageSrc}
                 alt={guide.titleEn || guide.title}
-                className="aspect-[3/2] w-full object-cover"
+                className="aspect-[4/3] w-full object-cover"
               />
             ) : (
               <div className="flex aspect-[3/2] items-center justify-center">
@@ -159,13 +159,9 @@ export default async function GuidePage({
         </section>
 
         {(guide.contentEn || guide.content)?.length ? (
-          <section className="guide-print-content grid gap-10 py-16 md:grid-cols-[0.3fr_0.7fr] md:py-24">
+          <section className="guide-print-content grid gap-6 py-10 md:grid-cols-[0.28fr_0.72fr] md:gap-10 md:py-16">
             <div>
-              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                The guide
-              </p>
-
-              <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-6xl">
+<h2 className="lpv-display mt-0 text-[2.6rem] leading-[0.94] tracking-[-0.04em] md:text-[3.25rem]">
                 What to know.
               </h2>
             </div>
@@ -233,7 +229,7 @@ export default async function GuidePage({
           </section>
         ) : (
           <section className="border-b border-[var(--lpv-line)] py-20 text-center">
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            <p className="text-sm font-medium text-[var(--lpv-ink)]">
               In progress
             </p>
 

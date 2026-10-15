@@ -154,7 +154,7 @@ img {
 }
 
 .lpv-editorial-card img {
-  transition: transform 900ms var(--ease-editorial);
+  transition: transform 1100ms var(--ease-editorial);
 }
 
 .lpv-editorial-card:hover img {
@@ -191,6 +191,15 @@ img {
   .lpv-container-narrow {
     width: min(1440px, calc(100% - 80px));
   }
+}
+
+
+.lpv-luxury-image > img {
+  filter: saturate(0.96) contrast(0.98);
+}
+
+.lpv-luxury-image:hover > img {
+  filter: saturate(1) contrast(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -545,4 +554,1152 @@ img {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+}
+
+/* =========================================================
+   LPV — HOME MOTION
+   Editorial / cinematic / visible
+   ========================================================= */
+
+.lpv-reveal {
+  --lpv-reveal-delay: 0ms;
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity 900ms cubic-bezier(.22,.61,.36,1) var(--lpv-reveal-delay),
+    transform 1100ms cubic-bezier(.22,.61,.36,1) var(--lpv-reveal-delay);
+}
+
+.lpv-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0,0,0);
+}
+
+
+/* ---------------------------------------------------------
+   CE SOIR
+   --------------------------------------------------------- */
+
+.lpv-cinematic-image {
+  opacity: 0;
+  transform: translate3d(0,26px,0) scale(1.03);
+  transition:
+    transform 1200ms cubic-bezier(.22,.61,.36,1) 80ms,
+    opacity 700ms ease 80ms;
+}
+
+.lpv-reveal.is-visible .lpv-cinematic-image {
+  opacity: 1;
+  transform: translate3d(0,0,0) scale(1);
+}
+
+.lpv-cinematic-copy {
+  opacity: 0;
+  transform: translate3d(0,24px,0);
+  transition:
+    opacity 850ms ease 300ms,
+    transform 1150ms cubic-bezier(.22,.61,.36,1) 300ms;
+}
+
+.lpv-reveal.is-visible .lpv-cinematic-copy {
+  opacity: 1;
+  transform: translate3d(0,0,0);
+}
+
+
+/* ---------------------------------------------------------
+   TROIS BOUTEILLES
+   --------------------------------------------------------- */
+
+.lpv-bottle-motion {
+  opacity: 0;
+  transform: translate3d(0,44px,0) scale(.985);
+  transition:
+    opacity 800ms ease,
+    transform 1200ms cubic-bezier(.22,.61,.36,1);
+}
+
+.lpv-reveal.is-visible .lpv-bottle-motion {
+  opacity: 1;
+  transform: translate3d(0,0,0) scale(1);
+}
+
+.lpv-reveal.is-visible .lpv-bottle-motion:nth-child(1) {
+  transition-delay: 100ms;
+}
+
+.lpv-reveal.is-visible .lpv-bottle-motion:nth-child(2) {
+  transition-delay: 280ms;
+}
+
+.lpv-reveal.is-visible .lpv-bottle-motion:nth-child(3) {
+  transition-delay: 460ms;
+}
+
+
+/* ---------------------------------------------------------
+   À DÉCOUVRIR — TITRE
+   --------------------------------------------------------- */
+
+.lpv-discovery-heading {
+  transform: translate3d(0,38px,0);
+}
+
+.lpv-discovery-heading.is-visible {
+  transform: translate3d(0,0,0);
+}
+
+
+/* ---------------------------------------------------------
+   À DÉCOUVRIR — LES 3 RENDEZ-VOUS
+   --------------------------------------------------------- */
+
+.lpv-discovery-row {
+  overflow: hidden;
+}
+
+.lpv-discovery-row .lpv-luxury-image {
+  opacity: 0;
+  transform: translate3d(0,27px,0) scale(1.025);
+  transition:
+    opacity 750ms ease,
+    transform 1200ms cubic-bezier(.22,.61,.36,1);
+}
+
+.lpv-discovery-row .lpv-discovery-copy {
+  opacity: 0;
+  transform: translate3d(0,25px,0);
+  transition:
+    opacity 850ms ease 220ms,
+    transform 1150ms cubic-bezier(.22,.61,.36,1) 220ms;
+}
+
+.lpv-discovery-row.is-visible .lpv-luxury-image {
+  opacity: 1;
+  transform: translate3d(0,0,0) scale(1);
+}
+
+.lpv-discovery-row.is-visible .lpv-discovery-copy {
+  opacity: 1;
+  transform: translate3d(0,0,0);
+}
+
+
+/* ---------------------------------------------------------
+   PHOTOS — HOVER
+   --------------------------------------------------------- */
+
+.lpv-luxury-image > img {
+  transform: scale(1);
+  transition:
+    transform 1100ms cubic-bezier(.22,.61,.36,1),
+    filter 700ms ease;
+}
+
+.lpv-luxury-image:hover > img {
+  transform: scale(1.06);
+}
+
+
+/* ---------------------------------------------------------
+   BOUTONS — HOVER
+   --------------------------------------------------------- */
+
+.lpv-luxury-button {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 350ms cubic-bezier(.22,.61,.36,1),
+    opacity 300ms ease;
+}
+
+.lpv-luxury-button:hover {
+  transform: translateY(-3px);
+  opacity: .88;
+}
+
+.lpv-luxury-button span {
+  display: inline-block;
+  transition: transform 350ms cubic-bezier(.22,.61,.36,1);
+}
+
+.lpv-luxury-button:hover span {
+  transform: translateX(8px);
+}
+
+
+/* ---------------------------------------------------------
+   ACCESSIBILITÉ
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .lpv-reveal,
+  .lpv-discovery-heading,
+  .lpv-cinematic-image,
+  .lpv-cinematic-copy,
+  .lpv-bottle-motion,
+  .lpv-discovery-row .lpv-luxury-image,
+  .lpv-discovery-row .lpv-discovery-copy {
+    opacity: 1 !important;
+    transform: none !important;
+
+    transition: none !important;
+  }
+
+  .lpv-luxury-image > img,
+  .lpv-luxury-image:hover > img,
+  .lpv-luxury-button,
+  .lpv-luxury-button:hover,
+  .lpv-luxury-button span,
+  .lpv-luxury-button:hover span {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+
+/* LPV — LUXURY ALIVE V1 */
+
+/* ---------------------------------------------------------
+   HERO — respiration lente
+   --------------------------------------------------------- */
+
+.lpv-hero-breathe {
+  transform: scale(1.035);
+  animation: lpvHeroBreathe 14s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes lpvHeroBreathe {
+  0% {
+    transform: scale(1.035) translate3d(0,0,0);
+  }
+
+  100% {
+    transform: scale(1.065) translate3d(0, -0.2%, 0);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   CE SOIR — image vivante au hover
+   --------------------------------------------------------- */
+
+.lpv-cinematic-image {
+  overflow: hidden;
+}
+
+.lpv-cinematic-image img {
+  transform: scale(1);
+}
+
+
+/* ---------------------------------------------------------
+   BOUTEILLES — mouvement organique
+   --------------------------------------------------------- */
+
+.lpv-bottle-motion {
+  transition:
+    opacity 800ms ease,
+    transform 1200ms cubic-bezier(.22,.61,.36,1);
+}
+
+/*
+   On anime le contenu intérieur plutôt que le Link,
+   afin de ne pas casser le reveal d'entrée.
+*/
+
+.lpv-bottle-motion > div {
+  will-change: transform;
+}
+
+.lpv-reveal.is-visible .lpv-bottle-motion:nth-child(1) > div {
+  animation: lpvBottleFloatOne 6.8s ease-in-out 1.1s infinite;
+}
+
+.lpv-reveal.is-visible .lpv-bottle-motion:nth-child(2) > div {
+  animation: lpvBottleFloatTwo 7.4s ease-in-out 1.5s infinite;
+}
+
+.lpv-reveal.is-visible .lpv-bottle-motion:nth-child(3) > div {
+  animation: lpvBottleFloatThree 7s ease-in-out 1.9s infinite;
+}
+
+@keyframes lpvBottleFloatOne {
+  0%, 100% {
+    transform: translate3d(0,0,0);
+  }
+
+  50% {
+    transform: translate3d(0,-6px,0);
+  }
+}
+
+@keyframes lpvBottleFloatTwo {
+  0%, 100% {
+    transform: translate3d(0,0,0);
+  }
+
+  50% {
+    transform: translate3d(0,-3px,0);
+  }
+}
+
+@keyframes lpvBottleFloatThree {
+  0%, 100% {
+    transform: translate3d(0,0,0);
+  }
+
+  50% {
+    transform: translate3d(0,-3px,0);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   À DÉCOUVRIR — profondeur
+   --------------------------------------------------------- */
+
+.lpv-discovery-row {
+  transition: transform 700ms cubic-bezier(.16,1,.3,1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+  .lpv-discovery-row:hover {
+    transform: translate3d(0,-1px,0);
+  }
+
+  .lpv-discovery-row .lpv-luxury-image img {
+    transform: scale(1);
+    transition:
+      transform 1650ms cubic-bezier(.16,1,.3,1),
+      filter 1000ms ease;
+  }
+
+  .lpv-discovery-row:hover .lpv-luxury-image img {
+    transform: scale(1.025);
+  }
+
+  .lpv-discovery-row .lpv-discovery-copy {
+    transition:
+      opacity 850ms ease 220ms,
+      transform 1150ms cubic-bezier(.22,.61,.36,1) 220ms;
+  }
+
+  .lpv-discovery-row.is-visible:hover .lpv-discovery-copy {
+    transform: translate3d(0,-3px,0);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   BOUTONS — vraie petite réaction premium
+   --------------------------------------------------------- */
+
+.lpv-luxury-button {
+  transform-origin: center;
+}
+
+.lpv-luxury-button:hover {
+  transform: translate3d(0,-4px,0) scale(1.025);
+}
+
+.lpv-luxury-button:hover span {
+  transform: translateX(9px);
+}
+
+
+/* ---------------------------------------------------------
+   ACCESSIBILITÉ
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .lpv-hero-breathe,
+  .lpv-reveal.is-visible .lpv-bottle-motion:nth-child(1) > div,
+  .lpv-reveal.is-visible .lpv-bottle-motion:nth-child(2) > div,
+  .lpv-reveal.is-visible .lpv-bottle-motion:nth-child(3) > div {
+    animation: none !important;
+  }
+
+  .lpv-hero-breathe,
+  .lpv-cinematic-image img,
+  .lpv-cinematic-image:hover img,
+  .lpv-discovery-row,
+  .lpv-discovery-row:hover,
+  .lpv-discovery-row .lpv-luxury-image img,
+  .lpv-discovery-row:hover .lpv-luxury-image img {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+
+/* =========================================================
+   LPV — HOME MOBILE EDITORIAL V1
+   Strictement téléphone — desktop intact
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+  /* -------------------------------------------------------
+     BASE
+     ------------------------------------------------------- */
+
+  .lpv-home-hero,
+  .lpv-home-tonight,
+  .lpv-home-wines,
+  .lpv-home-discovery,
+  .lpv-home-newsletter {
+    --lpv-mobile-gutter: 18px;
+  }
+
+
+  /* -------------------------------------------------------
+     HERO
+     ------------------------------------------------------- */
+
+  .lpv-home-hero {
+    min-height: calc(100svh - 78px);
+  }
+
+  .lpv-home-hero-inner {
+    min-height: calc(100svh - 78px);
+    padding-top: 48px;
+    padding-bottom: 30px;
+  }
+
+  .lpv-home-hero-kicker {
+    margin-bottom: 20px;
+    font-size: 0.6rem;
+    letter-spacing: 0.24em;
+  }
+
+  .lpv-home-hero-title {
+    max-width: 94%;
+    font-size: clamp(3.85rem, 17vw, 5.15rem);
+    line-height: 0.82;
+    letter-spacing: -0.055em;
+  }
+
+  .lpv-home-hero-bottom {
+    margin-top: 28px;
+    padding-top: 17px;
+  }
+
+  .lpv-home-hero-bottom nav {
+    margin-top: 22px;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+    row-gap: 13px;
+    font-size: 0.58rem;
+    letter-spacing: 0.17em;
+  }
+
+
+  /* -------------------------------------------------------
+     CE SOIR — vraie composition mobile
+     ------------------------------------------------------- */
+
+  .lpv-home-tonight {
+    padding-top: 54px;
+    padding-bottom: 58px;
+  }
+
+  .lpv-home-tonight > div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lpv-home-tonight .lpv-cinematic-image {
+    height: min(58vw, 270px);
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .lpv-home-tonight .lpv-cinematic-copy {
+    min-height: 0;
+    padding-top: 34px;
+    padding-bottom: 0;
+  }
+
+  .lpv-home-tonight .lpv-cinematic-copy .lpv-kicker {
+    font-size: 0.61rem;
+    letter-spacing: 0.22em;
+  }
+
+  .lpv-home-tonight .lpv-cinematic-copy h2 {
+    margin-top: 17px;
+    max-width: 330px;
+    font-size: clamp(3.15rem, 14vw, 4.1rem);
+    line-height: 0.86;
+  }
+
+  .lpv-home-tonight .lpv-cinematic-copy > div {
+    margin-top: 25px;
+  }
+
+
+  /* -------------------------------------------------------
+     TROIS BOUTEILLES — swipe horizontal
+     ------------------------------------------------------- */
+
+  .lpv-home-wines {
+    width: 100%;
+    padding: 42px 0 46px;
+    overflow: hidden;
+  }
+
+  .lpv-home-wines > div:first-child {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .lpv-home-wines > div:first-child h2 {
+    max-width: 310px;
+    font-size: clamp(2.65rem, 12vw, 3.55rem);
+    line-height: 0.9;
+  }
+
+  .lpv-home-wine-rail {
+    display: flex;
+    width: auto;
+    margin-top: 30px;
+    padding-left: 18px;
+    padding-right: 18px;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 18px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .lpv-home-wine-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lpv-home-wine-rail > a {
+    position: relative;
+    flex: 0 0 min(78vw, 310px);
+    min-width: 0;
+    padding: 22px 20px 24px;
+    border: 1px solid rgba(255,255,255,.18) !important;
+    scroll-snap-align: start;
+  }
+
+  .lpv-home-wine-rail > a + a {
+    border-top: 1px solid rgba(255,255,255,.18) !important;
+  }
+
+  .lpv-home-wine-rail .lpv-bottle-motion > div {
+    min-height: 475px;
+  }
+
+  .lpv-home-wine-rail .lpv-bottle-motion [class*="!h-[300px]"] {
+    height: 285px !important;
+  }
+
+  .lpv-home-wine-rail h3 {
+    min-height: 0;
+    font-size: 1.65rem;
+    line-height: 0.96;
+  }
+
+  .lpv-home-wine-rail .lpv-kicker {
+    font-size: 0.59rem;
+  }
+
+  .lpv-home-wine-rail p.absolute {
+    font-size: 1.55rem;
+  }
+
+  /* petit indice visuel qu'on peut swiper */
+  .lpv-home-wines::after {
+    content: "GLISSER →";
+    display: block;
+    margin: 17px 18px 0 auto;
+    width: fit-content;
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,.5);
+  }
+
+
+  /* -------------------------------------------------------
+     À DÉCOUVRIR — rythme éditorial mobile
+     ------------------------------------------------------- */
+
+  .lpv-home-discovery {
+    padding-top: 54px;
+    padding-bottom: 62px;
+  }
+
+  .lpv-home-discovery > div:first-child {
+    margin-bottom: 38px;
+  }
+
+  .lpv-home-discovery .lpv-discovery-heading h2 {
+    max-width: 350px;
+    font-size: clamp(3rem, 13vw, 4rem);
+    line-height: 0.88;
+  }
+
+  .lpv-home-discovery .space-y-7 {
+    display: flex;
+    flex-direction: column;
+    gap: 54px;
+  }
+
+  .lpv-home-discovery .lpv-discovery-row {
+    overflow: visible;
+  }
+
+  .lpv-home-discovery .lpv-discovery-row article {
+    display: block;
+  }
+
+  .lpv-home-discovery .lpv-luxury-image {
+    height: min(64vw, 300px);
+  }
+
+  .lpv-home-discovery .lpv-discovery-copy {
+    min-height: 0;
+    padding-top: 25px;
+    padding-bottom: 0;
+  }
+
+  .lpv-home-discovery .lpv-discovery-copy h3 {
+    max-width: 96%;
+    font-size: clamp(2.15rem, 9.5vw, 2.85rem);
+    line-height: 0.94;
+  }
+
+  .lpv-home-discovery .lpv-discovery-copy h3 + p {
+    margin-top: 13px;
+    font-size: 0.62rem;
+    line-height: 1.55;
+    letter-spacing: 0.075em;
+  }
+
+  .lpv-home-discovery .lpv-discovery-copy h3 + p + p {
+    margin-top: 17px;
+    font-size: 0.94rem;
+    line-height: 1.65;
+  }
+
+  .lpv-home-discovery .lpv-luxury-button {
+    margin-top: 20px;
+    padding: 10px 17px;
+    font-size: 0.78rem;
+  }
+
+
+  /* -------------------------------------------------------
+     NEWSLETTER — compacte et graphique
+     ------------------------------------------------------- */
+
+  .lpv-home-newsletter {
+    padding-top: 18px;
+    padding-bottom: 54px;
+  }
+
+  .lpv-home-newsletter > div:first-child {
+    height: min(61vw, 285px);
+  }
+
+  .lpv-home-newsletter > div:first-child > * {
+    height: 100%;
+  }
+
+  .lpv-home-newsletter > div:nth-child(2) {
+    padding-top: 34px;
+  }
+
+  .lpv-home-newsletter .lpv-kicker {
+    font-size: 0.59rem;
+  }
+
+  .lpv-home-newsletter h2 {
+    margin-top: 18px;
+    max-width: 330px;
+    font-size: clamp(3.5rem, 15vw, 4.65rem);
+    line-height: 0.86;
+  }
+
+  .lpv-home-newsletter h2 br {
+    display: none;
+  }
+
+  .lpv-home-newsletter p:not(.lpv-kicker) {
+    margin-top: 22px;
+    max-width: 330px;
+    font-size: 0.91rem;
+    line-height: 1.65;
+  }
+
+  .lpv-home-newsletter .lpv-text-link {
+    margin-top: 27px;
+  }
+
+
+  /* -------------------------------------------------------
+     MOTION MOBILE — moins hover, plus scroll
+     ------------------------------------------------------- */
+
+  .lpv-luxury-image:hover > img,
+  .lpv-discovery-row:hover .lpv-luxury-image img,
+  .lpv-discovery-row.is-visible:hover .lpv-discovery-copy,
+  .lpv-luxury-button:hover {
+    transform: none;
+  }
+
+  .lpv-discovery-row .lpv-luxury-image {
+    transform: translate3d(0,20px,0) scale(1.015);
+  }
+
+  .lpv-discovery-row .lpv-discovery-copy {
+    transform: translate3d(0,18px,0);
+  }
+
+}
+
+
+/* =========================================================
+   LPV — FOOTER MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+  footer .lpv-container {
+    padding-top: 46px;
+    padding-bottom: 22px;
+  }
+
+  footer .lpv-container > div:first-child {
+    gap: 42px;
+  }
+
+  footer h2 {
+    margin-top: 17px !important;
+    max-width: 330px !important;
+    font-size: clamp(3.35rem, 14vw, 4.25rem) !important;
+    line-height: 0.87 !important;
+  }
+
+  footer h2 + p {
+    margin-top: 20px !important;
+    max-width: 330px;
+    line-height: 1.6;
+  }
+
+  footer nav {
+    margin-top: 20px !important;
+    gap: 7px !important;
+  }
+
+  footer nav a {
+    font-size: 1.35rem !important;
+    line-height: 1.08 !important;
+  }
+
+  footer .lpv-container > div:last-child {
+    margin-top: 38px;
+    padding-top: 16px;
+    gap: 9px;
+  }
+
+  footer .lpv-container > div:last-child p:last-child {
+    font-size: 0.52rem;
+    line-height: 1.5;
+  }
+
+}
+
+
+/* =========================================================
+   LPV — MENU MOBILE
+   Desktop intact
+   ========================================================= */
+
+@media (max-width: 639px) {
+
+  /* Le panneau devient une vraie page mobile */
+  .fixed.inset-0.z-\[10000\] aside {
+    max-width: none;
+    padding: 22px 20px 20px;
+  }
+
+  /* Entête */
+  .fixed.inset-0.z-\[10000\] aside > div:first-child {
+    padding-bottom: 19px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:first-child > p {
+    font-size: 1.45rem;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:first-child > button {
+    width: 34px;
+    height: 34px;
+    font-size: 1.8rem;
+  }
+
+  /*
+   * Zone centrale :
+   * on retire le grand centrage vertical desktop.
+   */
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) {
+    flex: 1;
+    justify-content: flex-start;
+    padding-top: 38px;
+    padding-bottom: 22px;
+  }
+
+  /* Navigation principale */
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a:nth-child(4) {
+    margin-top: 17px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a span {
+    font-size: clamp(2.55rem, 12.5vw, 3.65rem);
+    line-height: .94;
+    letter-spacing: -.045em;
+  }
+
+  /* Ce soir */
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) > div {
+    margin-top: 27px;
+    padding-top: 21px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) > div a {
+    gap: 11px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) > div a span:first-child {
+    font-size: .63rem;
+    letter-spacing: .14em;
+  }
+
+  /*
+   * Pied du menu :
+   * une vraie petite ligne utilitaire plutôt que
+   * plusieurs éléments perdus au bas de l'écran.
+   */
+  .fixed.inset-0.z-\[10000\] aside > div:last-child {
+    flex-wrap: wrap;
+    column-gap: 12px;
+    row-gap: 8px;
+    padding-top: 16px;
+    padding-bottom: max(2px, env(safe-area-inset-bottom));
+    font-size: .55rem;
+    letter-spacing: .12em;
+  }
+
+}
+
+
+/* Téléphones plus courts */
+@media (max-width: 639px) and (max-height: 720px) {
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) {
+    padding-top: 24px;
+    padding-bottom: 16px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a span {
+    font-size: clamp(2.25rem, 11vw, 3rem);
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a:nth-child(4) {
+    margin-top: 11px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) > div {
+    margin-top: 20px;
+    padding-top: 17px;
+  }
+
+}
+
+
+/* =========================================================
+   LPV — MENU MOBILE V2
+   Tiroir éditorial / page visible derrière
+   ========================================================= */
+
+@media (max-width: 639px) {
+
+  /* Le panneau ne couvre plus tout l'écran */
+  .fixed.inset-0.z-\[10000\] aside {
+    width: 82vw;
+    max-width: 430px;
+    padding: 20px 18px 18px;
+    border-radius: 0 0 18px 0;
+    box-shadow: 18px 0 55px rgba(0,0,0,.12);
+  }
+
+  /* Header */
+  .fixed.inset-0.z-\[10000\] aside > div:first-child {
+    padding-bottom: 18px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:first-child > p {
+    font-size: 1.35rem;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:first-child > button {
+    width: 30px;
+    height: 30px;
+    font-size: 1.65rem;
+  }
+
+  /* Zone centrale */
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) {
+    justify-content: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
+
+  /* Navigation */
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a:nth-child(4) {
+    margin-top: 17px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a span {
+    font-size: clamp(2.15rem, 10.5vw, 3rem);
+    line-height: .96;
+    letter-spacing: -.045em;
+  }
+
+  /* Ce soir */
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) > div {
+    margin-top: 27px;
+    padding-top: 20px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) > div a span:first-child {
+    font-size: .57rem;
+    letter-spacing: .13em;
+    white-space: nowrap;
+  }
+
+  /* Bas du menu */
+  .fixed.inset-0.z-\[10000\] aside > div:last-child {
+    column-gap: 9px;
+    row-gap: 7px;
+    padding-top: 14px;
+    padding-bottom: max(2px, env(safe-area-inset-bottom));
+    font-size: .49rem;
+    letter-spacing: .09em;
+  }
+
+}
+
+
+/* Très petits téléphones */
+@media (max-width: 390px) {
+
+  .fixed.inset-0.z-\[10000\] aside {
+    width: 84vw;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a span {
+    font-size: clamp(2rem, 10vw, 2.55rem);
+  }
+
+}
+
+
+/* =========================================================
+   LPV — MENU MOBILE V3
+   Même composition éditoriale que desktop
+   ========================================================= */
+
+@media (max-width: 639px) {
+
+  /*
+   * Le panneau garde la largeur V2 approuvée.
+   * On travaille uniquement la composition verticale.
+   */
+  .fixed.inset-0.z-\[10000\] aside {
+    width: 82vw;
+    max-width: 430px;
+    min-height: 100dvh;
+    padding: 20px 18px 18px;
+  }
+
+
+  /* -------------------------------------------------------
+     HEADER
+     ------------------------------------------------------- */
+
+  .fixed.inset-0.z-\[10000\] aside > div:first-child {
+    flex: 0 0 auto;
+    padding-bottom: 18px;
+  }
+
+
+  /* -------------------------------------------------------
+     CORPS
+     On reproduit le rythme du desktop :
+     espace supérieur + nav + Ce soir,
+     au lieu de centrer tout le bloc.
+     ------------------------------------------------------- */
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: clamp(72px, 13vh, 118px);
+    padding-bottom: 24px;
+  }
+
+
+  /* -------------------------------------------------------
+     6 DESTINATIONS
+     ------------------------------------------------------- */
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a span {
+    font-size: clamp(2.05rem, 9.6vw, 2.85rem);
+    line-height: .98;
+    letter-spacing: -.045em;
+  }
+
+  /*
+   * Même respiration que desktop :
+   * les trois destinations de découverte,
+   * puis le groupe éditorial.
+   */
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a:nth-child(4) {
+    margin-top: 22px;
+  }
+
+
+  /* -------------------------------------------------------
+     CE SOIR
+     ------------------------------------------------------- */
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) > div {
+    margin-top: 29px;
+    padding-top: 21px;
+    border-top: 1px solid rgba(255,255,255,.20);
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) > div a {
+    gap: 11px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) > div a span:first-child {
+    font-size: .56rem;
+    line-height: 1.3;
+    letter-spacing: .13em;
+    white-space: nowrap;
+  }
+
+
+  /* -------------------------------------------------------
+     FOOTER DU MENU
+     reste naturellement au bas du panneau
+     ------------------------------------------------------- */
+
+  .fixed.inset-0.z-\[10000\] aside > div:last-child {
+    flex: 0 0 auto;
+    margin-top: 0;
+    padding-top: 14px;
+    padding-bottom: max(2px, env(safe-area-inset-bottom));
+    column-gap: 9px;
+    row-gap: 7px;
+    font-size: .49rem;
+    letter-spacing: .09em;
+  }
+
+}
+
+
+/* ---------------------------------------------------------
+   TÉLÉPHONES COURTS
+   Même composition, simplement resserrée.
+   --------------------------------------------------------- */
+
+@media (max-width: 639px) and (max-height: 760px) {
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) {
+    padding-top: 38px;
+    padding-bottom: 16px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a span {
+    font-size: clamp(1.9rem, 9vw, 2.5rem);
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a:nth-child(4) {
+    margin-top: 15px;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) > div {
+    margin-top: 20px;
+    padding-top: 17px;
+  }
+
+}
+
+
+/* ---------------------------------------------------------
+   TRÈS PETITS ÉCRANS
+   --------------------------------------------------------- */
+
+@media (max-width: 390px) {
+
+  .fixed.inset-0.z-\[10000\] aside {
+    width: 84vw;
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) {
+    padding-top: clamp(52px, 10vh, 78px);
+  }
+
+  .fixed.inset-0.z-\[10000\] aside > div:nth-child(2) nav a span {
+    font-size: clamp(1.9rem, 9.5vw, 2.4rem);
+  }
+
 }

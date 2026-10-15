@@ -33,6 +33,22 @@ export const producer = defineType({
     }),
 
     defineField({
+      name: "producerType",
+      title: "Type de producteur",
+      type: "string",
+      group: "identity",
+      initialValue: "winery",
+      options: {
+        layout: "radio",
+        list: [
+          { title: "Producteur de vin", value: "winery" },
+          { title: "Cidrerie", value: "cidery" },
+        ],
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
@@ -78,6 +94,22 @@ export const producer = defineType({
       options: { hotspot: true },
       description:
         "Ne sera affichée publiquement que si le statut des droits ci-dessous autorise son utilisation.",
+    }),
+
+    defineField({
+      name: "secondaryImage",
+      title: "Photo secondaire",
+      type: "image",
+      group: "media",
+      options: { hotspot: true },
+      description: "Photo utilisée dans la section consacrée au domaine.",
+    }),
+
+    defineField({
+      name: "secondaryImageCredit",
+      title: "Crédit de la photo secondaire",
+      type: "string",
+      group: "media",
     }),
 
     defineField({
@@ -255,11 +287,30 @@ export const producer = defineType({
 
     defineField({
       name: "signatureGrapes",
-      title: "Ce qu’ils cultivent",
+      title: "Cépages signatures",
       type: "array",
       group: "approach",
       of: [{ type: "reference", to: [{ type: "grape" }] }],
-      validation: (Rule) => Rule.required().min(1),
+      hidden: ({ parent }) => parent?.producerType === "cidery",
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const parent = context.parent as { producerType?: string } | undefined;
+          if (parent?.producerType === "cidery") return true;
+          return Array.isArray(value) && value.length > 0
+            ? true
+            : "Au moins un cépage est requis pour un producteur de vin.";
+        }),
+    }),
+
+    defineField({
+      name: "signatureAppleVarieties",
+      title: "Variétés de pommes signatures",
+      type: "array",
+      group: "approach",
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
+      description: "Variétés de pommes particulièrement associées à la cidrerie.",
+      hidden: ({ parent }) => parent?.producerType !== "cidery",
     }),
 
     defineField({

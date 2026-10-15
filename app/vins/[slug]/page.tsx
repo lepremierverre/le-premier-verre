@@ -5,12 +5,15 @@ import { PortableText } from "@portabletext/react";
 
 import { WineJournalButton } from "@/components/journal/WineJournalButton";
 import FavoriteButton from "@/components/favorites/FavoriteButton";
-import AddToListButton from "@/components/lists/AddToListButton";
+import AnalyticsEvent from "@/components/analytics/AnalyticsEvent";
+import PairingLink from "@/components/analytics/PairingLink";
 import WineHero from "@/components/wine/WineHero";
 import WineRatings from "@/components/wine/WineRatings";
 import { client } from "@/sanity/lib/client";
 import { wineBySlugQuery } from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
 import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
+import WhereToBuyLink from "@/components/analytics/WhereToBuyLink";
 
 export const revalidate = 60;
 
@@ -24,6 +27,13 @@ type Wine = {
   color?: string;
   appleVarieties?: string[];
   bottleImage?: any;
+  editorialImage?: {
+    asset?: any;
+    hotspot?: any;
+    crop?: any;
+    alt?: string;
+    credit?: string;
+  };
 
   producer?: {
     _id?: string;
@@ -33,6 +43,7 @@ type Wine = {
 
   country?: { name?: string };
   region?: { name?: string };
+  isQuebec?: boolean;
   appellation?: { name?: string };
 
   grapes?: {
@@ -114,13 +125,410 @@ export default async function WinePage({
     slug,
   });
 
+  console.log("[LPV DEBUG]", {
+    slug,
+    beverageType: wine?.beverageType,
+    name: wine?.name,
+  });
+
   if (!wine) notFound();
 
   const purchaseLabel = formatPurchaseChannel(wine.purchaseChannel);
   const checkedDate = formatDate(wine.purchaseLastChecked);
 
+  const hasEditorialImage = Boolean(wine.editorialImage?.asset);
+
+  if (hasEditorialImage) {
+    const wineBody = Math.max(1, Math.min(5, wine.body ?? 3));
+    const wineSweetness = Math.max(1, Math.min(5, wine.sweetness ?? 3));
+    const wineRoundness = Math.max(1, Math.min(5, wine.roundness ?? 3));
+
+    const DotScale = ({
+      value,
+      left,
+      right,
+    }: {
+      value: number;
+      left: string;
+      right: string;
+    }) => (
+      <div>
+        <div className="mb-3 flex items-center justify-between text-[0.7rem]">
+          <span>{left}</span>
+          <span>{right}</span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          {[1, 2, 3, 4, 5].map((step) => (
+            <span
+              key={step}
+              className={`block h-2.5 w-2.5 rounded-full border border-[var(--lpv-ink)] ${
+                step <= value ? "bg-[var(--lpv-ink)]" : "bg-transparent"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    );
+
+    return (
+      <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+        <AnalyticsEvent
+          eventName="product_view"
+          data={{ contentId: wine._id }}
+        />
+
+        <article className="mx-auto max-w-[1500px] px-5 pb-0 pt-7 sm:px-8 md:px-10 lg:px-10">
+
+          {/* NAVIGATION + ACTIONS */}
+          <div className="mb-12 flex items-center justify-between gap-6 md:mb-14">
+            <Link
+              href="/vins"
+              className="text-[0.65rem] uppercase tracking-[0.24em] transition-opacity hover:opacity-60"
+            >
+              ← Bouteilles
+            </Link>
+
+            <div className="flex items-center gap-2.5">
+              <FavoriteButton
+                wineId={wine._id}
+                size="sm"
+                variant="detail"
+                className=""
+              />
+
+              <span
+                aria-hidden="true"
+                className="text-[9px] font-light text-[var(--lpv-line)]"
+              >
+                |
+              </span>
+
+              <WineJournalButton
+                wineId={wine._id}
+                variant="detail"
+              />
+            </div>
+          </div>
+
+
+          {/* HERO */}
+          <section className="pb-14 md:pb-20">
+            <div className="grid gap-10 md:grid-cols-[0.46fr_0.54fr] md:gap-14 lg:gap-20">
+
+              {/* IDENTITÉ DU VIN */}
+              <div className="flex md:pl-[58px]">
+
+                <div className="flex w-full flex-col md:min-h-full">
+
+                  <div className="md:pt-[calc(17%+10px)]">
+
+                    <h1 className="lpv-display max-w-[620px] text-[clamp(5.5rem,7.8vw,8.2rem)] leading-[0.84] tracking-[-0.05em]">
+                      {wine.name}
+                    </h1>
+
+                    {wine.oneLiner ? (
+                      <p className="mt-[32px] max-w-[485px] text-[1.3rem] leading-[1.58] md:ml-[36px]">
+                        {wine.oneLiner}
+                      </p>
+                    ) : null}
+
+                    <div className="mt-[110px] w-fit max-w-full border border-[var(--lpv-cocoa)]/20 bg-transparent px-7 py-[18px]">
+
+                      <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+
+                        <span className="lpv-display text-[1.08rem] leading-none">
+                          {wine.beverageType === "cider" ? (wine.alcoholFree ? "Cidre sans alcool" : "Cidre") : wine.color === "white" ? "Blanc" : wine.color === "red" ? "Rouge" : wine.color === "rose" ? "Rosé" : "Vin"}
+                        </span>
+
+                        {wine.vintage ? (
+                          <>
+                            <span className="text-[0.7rem] text-[var(--lpv-muted)]">·</span>
+                            <span className="lpv-display text-[1.08rem] leading-none">
+                              {wine.vintage}
+                            </span>
+                          </>
+                        ) : null}
+
+                        {wine.appellation?.name || wine.country?.name ? (
+                          <>
+                            <span className="text-[0.7rem] text-[var(--lpv-muted)]">·</span>
+                            <span className="lpv-display text-[1.08rem] leading-none">
+                              {wine.appellation?.name || wine.country?.name}
+                            </span>
+                          </>
+                        ) : null}
+
+                        {wine.region?.name ? (
+                          <>
+                            <span className="text-[0.7rem] text-[var(--lpv-muted)]">·</span>
+                            <span className="lpv-display text-[1.08rem] leading-none">
+                              {wine.region.name}
+                            </span>
+                          </>
+                        ) : null}
+
+                      </div>
+
+                    </div>
+
+
+                  </div>
+
+
+                  {/* PRODUCTEUR + DISPONIBILITÉ */}
+                  <div className="mt-14 md:mt-[38px] md:pb-[4px]">
+
+                    {wine.producer?.name ? (
+                      <div>
+
+                        <p className="mb-3 text-[0.62rem] uppercase tracking-[0.22em] text-[var(--lpv-muted)]">
+                          Producteur
+                        </p>
+
+                        {wine.producer?.slug ? (
+                          <Link
+                            href={`/producteurs/${wine.producer.slug}`}
+                            className="lpv-display inline-flex items-baseline gap-3 text-[clamp(2.6rem,3.4vw,3.5rem)] leading-[0.95] tracking-[-0.04em] transition-opacity hover:opacity-55"
+                          >
+                            {wine.producer.name}
+                          </Link>
+                        ) : (
+                          <p className="lpv-display text-[clamp(2.6rem,3.4vw,3.5rem)] leading-[0.95] tracking-[-0.04em]">
+                            {wine.producer.name}
+                          </p>
+                        )}
+
+                      </div>
+                    ) : null}
+
+
+                    {/* DISPONIBILITÉ */}
+                    <div className="mt-5">
+
+                      <p className="mb-2 text-[0.68rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Où le trouver
+                      </p>
+
+                    {wine.purchaseUrl ? (
+                      <WhereToBuyLink
+                        href={wine.purchaseUrl}
+                        wineId={wine._id}
+                        locale="fr"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="lpv-display inline-flex items-baseline gap-2 text-[1.28rem] leading-6 tracking-[-0.02em] transition-opacity hover:opacity-55"
+                      >
+                        {purchaseLabel || "Voir le point de vente"}
+                      </WhereToBuyLink>
+                    ) : purchaseLabel ? (
+                      <p className="lpv-display text-[1.28rem] leading-6 tracking-[-0.02em]">
+                        {purchaseLabel}
+                      </p>
+                    ) : (
+                      <p className="text-[0.95rem] leading-6 text-[var(--lpv-muted)]">
+                        Disponibilité à confirmer
+                      </p>
+                    )}
+
+                    {wine.purchaseChannelDetails ? (
+                      <p className="mt-1 max-w-[420px] text-[0.85rem] leading-5 text-[var(--lpv-muted)]">
+                        {wine.purchaseChannelDetails}
+                      </p>
+                    ) : null}
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+
+              {/* PHOTO */}
+              <div className="flex justify-end">
+                <figure className="w-full max-w-[610px]">
+
+                  <div
+                    className={
+                      wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                        ? "relative h-[560px] overflow-hidden bg-[#9A8778] md:h-[690px]"
+                        : "overflow-hidden"
+                    }
+                  >
+                    <img
+                      src={urlFor(wine.editorialImage!)
+                      .width(1600)
+                      .fit("max")
+                      .url()}
+                      alt={
+                    wine.editorialImage?.alt ||
+                    `${wine.name}${wine.producer?.name ? ` · ${wine.producer.name}` : ""}`
+                  }
+                      className={
+                        wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                          ? "absolute left-1/2 top-1/2 block h-auto w-[245%] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain md:w-[225%]"
+                          : "block h-auto w-full object-cover"
+                      }
+                    />
+                  </div>
+
+                  <figcaption className="mt-2 text-right text-[0.58rem] text-[var(--lpv-muted)]">
+                    {wine.editorialImage?.credit ||
+                  `${wine.name}${wine.producer?.name ? ` · ${wine.producer.name}` : ""}`}
+                  </figcaption>
+
+                </figure>
+              </div>
+
+            </div>
+          </section>
+
+
+        </article>
+
+
+        <article className="mx-auto max-w-[1500px] px-5 pb-0 sm:px-8 md:px-10 lg:px-10">
+
+          {/* REPÈRES */}
+          <section className="pb-16 pt-10 md:pb-20 md:pt-4">
+
+            <h2 className="lpv-display text-[clamp(2.9rem,4.3vw,4.3rem)] leading-none tracking-[-0.04em]">
+              {wine.beverageType === "cider" ? "Le cidre en quelques repères." : "Le vin en quelques repères."}
+            </h2>
+
+
+            <div className="mt-12 grid border-t border-[var(--lpv-line)] md:grid-cols-4">
+
+              {/* 01 */}
+              <div className="border-b border-[var(--lpv-line)] py-8 md:border-b-0 md:border-r md:px-8 md:first:pl-8">
+
+                <h3 className="lpv-display text-[1.8rem] leading-none tracking-[-0.035em]">
+                  Le profil
+                </h3>
+
+                <div className="mt-9 max-w-[290px] space-y-5">
+
+                  <div>
+                    <p className="text-[0.64rem] uppercase tracking-[0.18em] text-[var(--lpv-ink)]/60">
+                      Corps
+                    </p>
+                    <p className="mt-1.5 text-[1.08rem] leading-6 text-[var(--lpv-ink)]">
+                      {wineBody <= 2 ? "Plutôt léger" : wineBody >= 4 ? "Plutôt puissant" : "Équilibré"}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-[0.64rem] uppercase tracking-[0.18em] text-[var(--lpv-ink)]/60">
+                      Sucre
+                    </p>
+                    <p className="mt-1.5 text-[1.08rem] leading-6 text-[var(--lpv-ink)]">
+                      {wineSweetness <= 2 ? "Sec" : wineSweetness >= 4 ? "Plutôt doux" : "Entre sec et doux"}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-[0.64rem] uppercase tracking-[0.18em] text-[var(--lpv-ink)]/60">
+                      Texture
+                    </p>
+                    <p className="mt-1.5 text-[1.08rem] leading-6 text-[var(--lpv-ink)]">
+                      {wineRoundness <= 2 ? "Vif" : wineRoundness >= 4 ? "Rond" : "Entre vif et rond"}
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+
+
+              {/* 02 */}
+              <div className="border-b border-[var(--lpv-line)] py-8 md:border-b-0 md:border-r md:px-8">
+
+                <h3 className="lpv-display text-[1.8rem] leading-none tracking-[-0.035em]">
+                  Dans le verre
+                </h3>
+
+                <p className="mt-9 max-w-[260px] text-[1.05rem] leading-7 text-[var(--lpv-ink)]">
+                  {wine.tastingKeywords?.length
+                    ? wine.tastingKeywords.join(" · ")
+                    : "—"}
+                </p>
+
+              </div>
+
+
+              {/* 03 */}
+              <div className="border-b border-[var(--lpv-line)] py-8 md:border-b-0 md:border-r md:px-8">
+
+                <h3 className="lpv-display text-[1.8rem] leading-none tracking-[-0.035em]">
+                  {wine.beverageType === "cider" ? "Les variétés de pommes" : "Les cépages"}
+                </h3>
+
+                <p className="mt-9 max-w-[260px] text-[1.05rem] leading-7 text-[var(--lpv-ink)]">
+                  {wine.beverageType === "cider"
+                    ? (wine.appleVarieties?.length
+                        ? wine.appleVarieties.join(" · ")
+                        : "—")
+                    : (wine.grapes?.length
+                        ? wine.grapes
+                            .map((grape) => grape.name)
+                            .filter(Boolean)
+                            .join(" · ")
+                        : "—")}
+                </p>
+
+              </div>
+
+
+              {/* 04 */}
+              <div className="py-8 md:px-8">
+
+                <h3 className="lpv-display text-[1.8rem] leading-none tracking-[-0.035em]">
+                  Pour l’apprécier
+                </h3>
+
+                <div className="mt-9 max-w-[280px] space-y-4 text-[1.05rem] leading-[1.55] text-[var(--lpv-ink)]">
+
+                  {wine.servingTemperature ? (
+                    <p>
+                      Servir frais à {wine.servingTemperature}.
+                    </p>
+                  ) : null}
+
+                  <p>
+                    {wine.decant
+                      ? "Un passage en carafe lui fera du bien."
+                      : "Pas besoin de carafe."}
+                  </p>
+
+                  {wine.perfectFor?.length ? (
+                    <p>
+                      Idéal pour {wine.perfectFor.join(", ")}.
+                    </p>
+                  ) : null}
+
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+        </article>
+
+
+
+
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+      <AnalyticsEvent
+        eventName="product_view"
+        data={{
+          contentId: wine._id,
+        }}
+      />
       <article className="mx-auto max-w-[1500px] px-5 pb-24 pt-8 sm:px-8 md:px-12 lg:px-16">
         <div className="flex items-center justify-between gap-6 border-b border-[var(--lpv-line)] pb-5">
           <Link
@@ -130,10 +538,40 @@ export default async function WinePage({
             ← Retour aux bouteilles
           </Link>
 
-          <div className="flex items-center gap-3">
-            <FavoriteButton wineId={wine._id} size="sm" />
-            <AddToListButton wineId={wine._id} />
-            <WineJournalButton wineId={wine._id} />
+          <div className="flex flex-col items-end">
+            <span className="mb-2 text-[0.48rem] uppercase tracking-[0.28em] text-[var(--lpv-muted)]/65">
+              Sauvegarder
+            </span>
+
+            <div className="flex items-center">
+              <div className="flex items-center">
+                <FavoriteButton
+                  wineId={wine._id}
+                  size="sm"
+                  variant="detail"
+                />
+              </div>
+
+              <span
+                aria-hidden="true"
+                className="mx-4 h-3 w-px bg-[var(--lpv-line)]"
+              />
+
+              <div className="flex items-center">
+              </div>
+
+              <span
+                aria-hidden="true"
+                className="mx-4 h-3 w-px bg-[var(--lpv-line)]"
+              />
+
+              <div className="flex items-center">
+                <WineJournalButton
+                  wineId={wine._id}
+                  variant="detail"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -333,15 +771,17 @@ export default async function WinePage({
 
                 {wine.purchaseUrl ? (
                   <div className="border-t border-[var(--lpv-line)] pt-6">
-                    <a
+                    <WhereToBuyLink
                       href={wine.purchaseUrl}
+                      wineId={wine._id}
+                      locale="fr"
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-3 rounded-full bg-[var(--lpv-ink)] px-7 py-4 text-xs font-medium uppercase tracking-[0.2em] !text-white transition hover:opacity-80"
                     >
                       Voir où l’acheter
                       <span>↗</span>
-                    </a>
+                    </WhereToBuyLink>
                   </div>
                 ) : null}
               </div>
@@ -382,9 +822,21 @@ export default async function WinePage({
 
               <div className="grid gap-3 sm:grid-cols-2">
                 {wine.foodPairings.map((pairing) =>
-                  pairing.slug ? (
+                  pairing.slug && pairing._id ? (
+                    <PairingLink
+                      key={pairing._id}
+                      href={`/accords/${pairing.slug}`}
+                      pairingId={pairing._id}
+                      locale="fr"
+                      context="wine_detail"
+                      sourceWineId={wine._id}
+                      className="border-t border-[var(--lpv-line)] py-4 text-lg transition hover:pl-2"
+                    >
+                      {pairing.name} →
+                    </PairingLink>
+                  ) : pairing.slug ? (
                     <Link
-                      key={pairing._id || pairing.slug}
+                      key={pairing.slug}
                       href={`/accords/${pairing.slug}`}
                       className="border-t border-[var(--lpv-line)] py-4 text-lg transition hover:pl-2"
                     >

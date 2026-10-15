@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { buildNewsletterAnalyticsContext } from "@/components/newsletter/trackNewsletterSubscription";
 
 export default function ComingSoonPage() {
   const [email, setEmail] = useState("");
@@ -18,16 +19,24 @@ export default function ComingSoonPage() {
     setStatus("loading");
 
     try {
+      const analytics = buildNewsletterAnalyticsContext("coming_soon_en");
+
       const response = await fetch("/api/newsletter", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          email: email.trim(),
+          language: "en",
+          analytics,
+        }),
       });
 
-      if (!response.ok) {
-        throw new Error("Newsletter signup failed");
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Newsletter signup failed");
       }
 
       setEmail("");

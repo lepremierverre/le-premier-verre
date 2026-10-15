@@ -139,7 +139,7 @@ function ArticleProducerCardView({
   return (
     <Link
       href={`/en/producers/${producer.slug}`}
-      className="group my-10 grid max-w-[46rem] border-y border-[var(--lpv-line)] py-5 md:grid-cols-[150px_1fr] md:gap-7"
+      className="group my-10 grid max-w-[46rem] border-b border-[var(--lpv-line)] py-5 md:grid-cols-[150px_1fr] md:gap-7"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-[var(--lpv-paper-light)]">
         {imageSrc ? (
@@ -294,7 +294,7 @@ function ArticleWineCardView({
   return (
     <Link
       href={`/en/wines/${wine.slug}`}
-      className="group my-12 block max-w-[46rem] border-y border-[var(--lpv-line)] py-6 md:my-16 md:py-8"
+      className="group my-12 block max-w-[46rem] py-6 md:my-16 md:py-8"
     >
       <div className="grid gap-7 sm:grid-cols-[180px_1fr] sm:items-center md:grid-cols-[210px_1fr] md:gap-10">
         <div className="relative">
@@ -491,23 +491,21 @@ export default async function ArticlePage({
           </Link>
         </div>
 
-        <header className="lpv-container grid gap-12 border-b border-[var(--lpv-line)] pb-16 pt-10 md:pb-24 md:pt-16 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="lg:sticky lg:top-24 lg:self-start">
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              {article.categoryEn || article.category || "Article"}
-            </p>
+        <header className="lpv-container grid items-center gap-7 border-b border-[var(--lpv-line)] pb-9 pt-7 md:gap-10 md:pb-12 md:pt-10 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="flex min-w-0 flex-col justify-center lg:pl-8">
 
-            <h1 className="lpv-display mt-7 text-[clamp(3.8rem,6.5vw,7rem)] leading-[0.88]">
+
+            <h1 className="lpv-display mt-0 max-w-[12ch] text-[clamp(3rem,5.2vw,5.4rem)] leading-[0.94] tracking-[-0.045em] lg:ml-3">
               {article.titleEn || article.title}
             </h1>
 
             {article.excerpt ? (
-              <p className="mt-8 max-w-lg text-lg leading-8 text-[var(--lpv-muted)]">
+              <p className="mt-5 max-w-lg text-base leading-7 text-[var(--lpv-muted)] md:mt-6 md:text-lg md:leading-8">
                 {article.excerptEn || article.excerpt}
               </p>
             ) : null}
 
-            <div className="mt-10 flex flex-wrap gap-4 border-t border-[var(--lpv-line)] pt-7 text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+            <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 border-t border-[var(--lpv-line)] pt-4 text-[0.62rem] uppercase tracking-[0.14em] text-[var(--lpv-muted)] md:mt-7 md:pt-5">
               {article.author ? <span>{article.author}</span> : null}
 
               {formatDate(article.publishedAt || article._createdAt) ? (
@@ -518,7 +516,7 @@ export default async function ArticlePage({
             </div>
           </div>
 
-          <div className="relative min-h-[620px] overflow-hidden bg-[var(--lpv-paper-light)] md:min-h-[780px]">
+          <div className="relative aspect-[4/3] w-full self-center overflow-hidden bg-[var(--lpv-paper-light)]">
             {imageSrc ? (
               <img
                 src={imageSrc}
@@ -526,7 +524,7 @@ export default async function ArticlePage({
                 className="absolute inset-0 h-full w-full object-cover"
               />
             ) : (
-              <div className="flex min-h-[620px] items-center justify-center">
+              <div className="flex aspect-[4/3] items-center justify-center">
                 <p className="text-sm text-[var(--lpv-muted)]">
                   Image à ajouter dans Sanity.
                 </p>

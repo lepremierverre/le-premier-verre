@@ -54,11 +54,11 @@ export default function GuideActions({
     <section className="guide-actions border-b border-[var(--lpv-line)] py-10 md:py-12">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+          <p className="text-sm font-semibold text-[var(--lpv-ink)]">
             {isEnglish ? "Keep this guide" : "Garder ce guide"}
           </p>
 
-          <p className="mt-2 max-w-md text-sm leading-6 text-[var(--lpv-muted)]">
+          <p className="mt-2 text-sm font-normal leading-6 text-[var(--lpv-ink)]">
             {isEnglish
               ? "Share it or keep a paper copy close at hand."
               : "Partagez-le ou gardez une copie papier à portée de main."}
@@ -69,7 +69,7 @@ export default function GuideActions({
           <button
             type="button"
             onClick={handleShare}
-            className="lpv-text-link"
+            className="inline-flex items-center gap-3 py-2.5 !text-[0.68rem] !font-medium uppercase !tracking-[0.16em] text-[var(--lpv-ink)] transition-opacity hover:opacity-50"
           >
             {copied
               ? isEnglish
@@ -83,9 +83,10 @@ export default function GuideActions({
           <button
             type="button"
             onClick={handlePrint}
-            className="lpv-text-link"
+            className="inline-flex items-center gap-3 py-2.5 !text-[0.68rem] !font-medium uppercase !tracking-[0.16em] text-[var(--lpv-ink)] transition-opacity hover:opacity-50"
           >
-            {isEnglish ? "Print ↗" : "Imprimer ↗"}
+            {isEnglish ? "Print" : "Imprimer"}
+            <span aria-hidden="true">↗</span>
           </button>
         </div>
       </div>
