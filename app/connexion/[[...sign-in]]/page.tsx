@@ -1,16 +1,38 @@
 import { SignIn } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function ConnexionPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center py-12 px-4">
-      <SignIn
-        appearance={{
-          elements: {
-            rootBox: "mx-auto w-full max-w-md",
-            card: "shadow-none border-0 bg-transparent",
-          },
-        }}
-      />
-    </main>
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-[#F7F4EE]">
+      <div className="p-8 md:p-16 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#E5DFD5]">
+        <div>
+          <Link href="/" className="inline-block text-xs uppercase tracking-widest text-[#5C5549] hover:text-black mb-12">
+            ← RETOUR À L'ACCUEIL
+          </Link>
+          <span className="block text-xs uppercase tracking-widest text-[#8C8273] mb-4">ESPACE PERSONNEL</span>
+          <h1 className="text-5xl md:text-6xl font-serif text-[#1C1A17] mb-6">Bon retour.</h1>
+          <p className="text-lg text-[#5C5549] max-w-md font-light leading-relaxed">
+            Retrouve ton carnet, tes favoris et les bouteilles gardées sous la main.
+          </p>
+        </div>
+        <div className="pt-12 border-t border-[#E5DFD5]">
+          <p className="text-xs text-[#8C8273] uppercase tracking-widest mb-2">Pas encore de compte ?</p>
+          <Link href="/inscription" className="inline-block text-xs font-semibold uppercase tracking-widest text-[#1C1A17] hover:underline">
+            CRÉER UN COMPTE →
+          </Link>
+        </div>
+      </div>
+
+      <div className="p-8 md:p-16 flex items-center justify-center">
+        <SignIn
+          appearance={{
+            elements: {
+              rootBox: "w-full max-w-md",
+              card: "shadow-none border-0 bg-transparent p-0",
+            },
+          }}
+        />
+      </div>
+    </div>
   );
 }

@@ -7,10 +7,14 @@ interface ClerkLocaleProviderProps {
   lang?: string;
 }
 
-export default function ClerkLocaleProvider({ children, lang = "fr" }: ClerkLocaleProviderProps) {
+export function ClerkLocaleProvider({ children, lang = "fr" }: ClerkLocaleProviderProps) {
+  const localization = lang === "en" ? enUS : frFR;
+
   return (
-    <ClerkProvider localization={lang === "en" ? enUS : frFR}>
+    <ClerkProvider localization={localization} proxyUrl="/__clerk">
       {children}
     </ClerkProvider>
   );
 }
+
+export default ClerkLocaleProvider;
