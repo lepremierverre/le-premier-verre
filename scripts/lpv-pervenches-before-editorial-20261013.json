@@ -1,0 +1,153 @@
+{
+  "_createdAt": "2026-09-01T12:30:43Z",
+  "_id": "producer-les-pervenches",
+  "_rev": "2XkmCdGQ6999xnagT3tR1I",
+  "_system": {
+    "base": {
+      "id": "producer-les-pervenches",
+      "rev": "JIsNkcnpzYc9iihVFBZ6BM"
+    }
+  },
+  "_type": "producer",
+  "_updatedAt": "2026-10-13T21:33:03Z",
+  "address": "150, chemin Boulais, Farnham, Québec J2N 2P9",
+  "approach": [
+    {
+      "_key": "pervenches-terroir",
+      "_type": "producerApproach",
+      "text": "Chaque cuvée part d’une lecture précise de la parcelle, de l’âge des vignes et des sols, avec plusieurs vinifications permettant de préserver leurs différences.",
+      "title": "Parcelles et sols"
+    },
+    {
+      "_key": "pervenches-biodynamie",
+      "_type": "producerApproach",
+      "text": "Le domaine travaille en agriculture biologique et biodynamique, avec une attention particulière portée à la vie des sols et à l’équilibre de la vigne.",
+      "title": "Bio et biodynamie"
+    },
+    {
+      "_key": "pervenches-cave",
+      "_type": "producerApproach",
+      "text": "Vendanges manuelles, levures spontanées, élevages sur lies et mises sans filtration ou sans sulfite ajouté sur plusieurs cuvées définissent une approche peu interventionniste.",
+      "title": "Peu d’intervention"
+    }
+  ],
+  "approachEn": [
+    {
+      "_key": "pervenches-terroir",
+      "_type": "producerApproach",
+      "text": "Each cuvée starts from a careful reading of the parcel, the vines' age and the soils, with multiple vinifications that preserve their differences.",
+      "title": "Parcels and soils"
+    },
+    {
+      "_key": "pervenches-biodynamie",
+      "_type": "producerApproach",
+      "text": "The estate farms organically and biodynamically, paying particular attention to soil life and the balance of the vine.",
+      "title": "Organic and biodynamic"
+    },
+    {
+      "_key": "pervenches-cave",
+      "_type": "producerApproach",
+      "text": "Hand harvesting, spontaneous fermentations, ageing on the lees, and bottlings without filtration or without added sulphite on several cuvées define a minimal-intervention approach.",
+      "title": "Minimal intervention"
+    }
+  ],
+  "bio": [
+    {
+      "_key": "pervenches-bio-fr",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "pervenches-bio-fr-span",
+          "_type": "span",
+          "marks": [],
+          "text": "Fondé en 1991, le vignoble est repris en 2000 par Véronique Hupin et Michael Marler. À Farnham, ils travaillent un peu plus de quatre hectares de vignes et ont contribué à faire de la biodynamie une référence importante dans le paysage viticole québécois. Leur approche privilégie les vendanges manuelles, les fermentations spontanées et des élevages patients, avec très peu d’intervention à la cave."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "bioEn": [
+    {
+      "_key": "pervenches-bio-fr",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "pervenches-bio-fr-span",
+          "_type": "span",
+          "marks": [],
+          "text": "Founded in 1991, the vineyard was taken over in 2000 by Véronique Hupin and Michael Marler. In Farnham, they farm a little over four hectares of vines and have helped make biodynamics an important reference in Quebec's wine landscape. Their approach favors hand harvesting, spontaneous fermentations and patient ageing, with very little cellar intervention."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "country": {
+    "_ref": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+    "_type": "reference"
+  },
+  "heroImage": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-969234d724508e750e37e29fc295a39d3256c131-900x600-webp",
+      "_type": "reference"
+    }
+  },
+  "latitude": 45.2481333,
+  "longitude": -72.936371,
+  "lpvPartner": true,
+  "mediaCredit": "Les Pervenches",
+  "mediaPermissionStatus": "authorized_by_producer",
+  "municipality": "Farnham",
+  "name": "Les Pervenches",
+  "oneLiner": "À Farnham, Les Pervenches cultivent un peu plus de quatre hectares en bio et biodynamie et signent des vins précis, vivants et profondément liés à leurs parcelles.",
+  "oneLinerEn": "In Farnham, Les Pervenches farm just over four hectares organically and biodynamically, crafting precise, lively wines deeply connected to their parcels.",
+  "openToVisitors": false,
+  "producerType": "winery",
+  "published": true,
+  "region": {
+    "_ref": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+    "_type": "reference"
+  },
+  "secondaryImage": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-6a7eda173d975765cec92ba124d28ae16aa9cfd3-720x480-webp",
+      "_type": "reference"
+    }
+  },
+  "secondaryImageCredit": "Les Pervenches",
+  "signatureGrapes": [
+    {
+      "_key": "perv-chardonnay",
+      "_ref": "grape-chardonnay",
+      "_type": "reference"
+    },
+    {
+      "_key": "perv-pinot",
+      "_ref": "grape-pinot-noir",
+      "_type": "reference"
+    },
+    {
+      "_key": "perv-seyval",
+      "_ref": "grape-seyval",
+      "_type": "reference"
+    },
+    {
+      "_key": "perv-gewurz",
+      "_ref": "grape-gewurztraminer",
+      "_type": "reference"
+    }
+  ],
+  "slug": {
+    "_type": "slug",
+    "current": "les-pervenches"
+  },
+  "translationSourceHash": "790c6290e74ab7e9859d7a7643cf417df2979ee20cd8da2a751f1f9990a2783e",
+  "visitDetails": "Le vignoble n’est actuellement pas ouvert au public pour les visites ou les dégustations.",
+  "visitDetailsEn": "The vineyard is currently not open to the public for visits or tastings.",
+  "website": "https://lespervenches.com/",
+  "whyWeFollow": "Parce que Les Pervenches font partie des domaines qui permettent de comprendre le changement de niveau du vin québécois : travail parcellaire, viticulture exigeante, vinifications précises et identité forte sans chercher à imiter ailleurs.",
+  "whyWeFollowEn": "Because Les Pervenches are among the domaines that help explain how Quebec wine has moved up a level: parcel-by-parcel work, exacting viticulture, precise winemaking and a strong identity that doesn't try to imitate elsewhere."
+}

@@ -1,0 +1,908 @@
+import Link from "next/link";
+import type { SanityImageSource } from "@sanity/image-url";
+
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import { producersQuery } from "@/sanity/lib/queries";
+import ProducerFilters from "@/components/producers/ProducerFilters";
+
+export const revalidate = 60;
+
+type Producer = {
+  _id: string;
+  name: string;
+  slug: string;
+  municipality?: string;
+  oneLiner?: string;
+  shortBio?: string;
+  logo?: SanityImageSource;
+  photo?: SanityImageSource;
+  heroImage?: SanityImageSource;
+  lpvPartner?: boolean;
+  producerType?: "winery" | "cidery";
+  mediaPermissionStatus?:
+    | "none"
+    | "provided_by_producer"
+    | "authorized_by_producer"
+    | "lpv_original"
+    | "licensed";
+  mediaCredit?: string;
+  country?: {
+    name?: string;
+    slug?: string;
+  };
+  region?: {
+    name?: string;
+    slug?: string;
+  };
+};
+
+type ProducersPageProps = {
+  searchParams?: Promise<{
+    pays?: string;
+    region?: string;
+    type?: string;
+    origine?: string;
+    page?: string;
+  }>;
+};
+
+const PRODUCERS_PER_PAGE = 9;
+
+const AUTHORIZED_MEDIA_STATUSES = [
+  "provided_by_producer",
+  "authorized_by_producer",
+  "lpv_original",
+  "licensed",
+];
+
+function getAuthorizedImage(producer: Producer) {
+  const hasAuthorizedMedia = AUTHORIZED_MEDIA_STATUSES.includes(
+    producer.mediaPermissionStatus || ""
+  );
+
+  if (!hasAuthorizedMedia) return null;
+
+  return producer.heroImage || producer.photo || producer.logo || null;
+}
+
+function getLocation(producer: Producer) {
+  return [
+    producer.municipality,
+    producer.region?.name,
+    producer.country?.name,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+function weeklyProducerScore(id: string, week: number) {
+  const input = `${week}:${id}`;
+  let hash = 2166136261;
+
+  for (let i = 0; i < input.length; i += 1) {
+    hash ^= input.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
+function weeklyProducerOrder<T extends { _id: string }>(
+  items: T[],
+  week: number
+) {
+  return [...items].sort((a, b) => {
+    const aScore = weeklyProducerScore(a._id, week);
+    const bScore = weeklyProducerScore(b._id, week);
+
+    return aScore === bScore
+      ? a._id.localeCompare(b._id)
+      : aScore - bScore;
+  });
+}
+
+export default async function ProducersPage({
+  searchParams,
+}: ProducersPageProps) {
+  const params = (await searchParams) || {};
+  const producers = await client.fetch<Producer[]>(producersQuery);
+
+  const participatingProducers = producers.filter(
+    (producer) => producer.lpvPartner === true
+  );
+
+  // Rotation déterministe chaque lundi :
+  // mêmes producteurs toute la semaine, ordre différent la semaine suivante.
+  const weekIndex = Math.floor(
+    (Date.now() + 3 * 24 * 60 * 60 * 1000) /
+      (7 * 24 * 60 * 60 * 1000)
+  );
+
+  const featuredProducers = weeklyProducerOrder(
+    participatingProducers,
+    weekIndex
+  );
+
+  // La page Producteurs met le Québec au premier plan.
+  // Les producteurs "Avec nous" restent aussi présents dans le répertoire.
+  const directoryProducers = producers.filter((producer) => {
+    const country = producer.country?.name?.toLowerCase().trim();
+    const countrySlug = producer.country?.slug?.toLowerCase().trim();
+
+    return country === "canada" || countrySlug === "canada";
+  });
+
+  const producerFilter =
+    params.type === "vignobles" || params.type === "cidreries"
+      ? params.type
+      : "tous";
+
+  const isWinery = (producer: Producer) =>
+    producer.producerType === "winery";
+
+  const isCidery = (producer: Producer) =>
+    producer.producerType === "cidery";
+
+  const wineryCount = directoryProducers.filter(isWinery).length;
+  const cideryCount = directoryProducers.filter(isCidery).length;
+
+  const showInternational = params.origine === "ailleurs";
+
+  const internationalProducers = producers.filter((producer) => {
+    const country = producer.country?.name?.toLowerCase().trim();
+    const countrySlug = producer.country?.slug?.toLowerCase().trim();
+
+    return country !== "canada" && countrySlug !== "canada";
+  });
+
+  const weeklyDirectoryProducers = weeklyProducerOrder(
+    directoryProducers,
+    weekIndex
+  );
+
+  const typedDirectoryProducers = weeklyDirectoryProducers.filter((producer) => {
+    if (producerFilter === "vignobles") return isWinery(producer);
+    if (producerFilter === "cidreries") return isCidery(producer);
+    return true;
+  });
+
+  const countries = Array.from(
+    new Map(
+      producers
+        .filter((producer) => producer.country?.slug && producer.country?.name)
+        .map((producer) => [
+          producer.country!.slug!,
+          {
+            slug: producer.country!.slug!,
+            name: producer.country!.name!,
+          },
+        ])
+    ).values()
+  ).sort((a, b) => a.name.localeCompare(b.name, "fr"));
+
+  const regions = Array.from(
+    new Map(
+      directoryProducers
+        .filter((producer) => producer.region?.slug && producer.region?.name)
+        .map((producer) => [
+          producer.region!.slug!,
+          {
+            slug: producer.region!.slug!,
+            name: producer.region!.name!,
+          },
+        ])
+    ).values()
+  ).sort((a, b) => a.name.localeCompare(b.name, "fr"));
+
+  const selectedCountry = params.pays || "";
+  const selectedRegion = params.region || "";
+
+  const baseDirectoryProducers = showInternational
+    ? internationalProducers
+    : typedDirectoryProducers;
+
+  const filteredDirectoryProducers = baseDirectoryProducers.filter((producer) => {
+    const countryMatches =
+      !selectedCountry || producer.country?.slug === selectedCountry;
+
+    const regionMatches =
+      showInternational ||
+      !selectedRegion ||
+      producer.region?.slug === selectedRegion;
+
+    return countryMatches && regionMatches;
+  });
+
+  const requestedPage = Number.parseInt(params.page || "1", 10);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredDirectoryProducers.length / PRODUCERS_PER_PAGE)
+  );
+
+  const currentPage = Number.isFinite(requestedPage)
+    ? Math.min(Math.max(requestedPage, 1), totalPages)
+    : 1;
+
+  const startIndex = (currentPage - 1) * PRODUCERS_PER_PAGE;
+
+  const visibleDirectoryProducers = filteredDirectoryProducers.slice(
+    startIndex,
+    startIndex + PRODUCERS_PER_PAGE
+  );
+
+  function buildDirectoryUrl({
+    pays = selectedCountry,
+    region = selectedRegion,
+    type = producerFilter,
+    origine = showInternational ? "ailleurs" : "",
+    page = 1,
+  }: {
+    pays?: string;
+    region?: string;
+    type?: string;
+    origine?: string;
+    page?: number;
+  }) {
+    const query = new URLSearchParams();
+
+    if (origine) query.set("origine", origine);
+    if (pays) query.set("pays", pays);
+    if (region && !origine) query.set("region", region);
+    if (type && type !== "tous" && !origine) query.set("type", type);
+    if (page > 1) query.set("page", String(page));
+
+    const qs = query.toString();
+
+    return qs
+      ? `/producteurs?${qs}#repertoire-desktop`
+      : "/producteurs#repertoire-desktop";
+  }
+
+  return (
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+      {/* HERO */}
+
+      {/* MOBILE — preserved for later */}
+      <section className="border-b border-[var(--lpv-line)] md:hidden">
+        <div className="lpv-container py-10">
+          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            Répertoire
+          </p>
+
+          <h1 className="lpv-display mt-5 text-[clamp(3.8rem,15vw,4.8rem)] leading-[0.84]">
+            Ceux qui
+            <br />
+            font le vin.
+          </h1>
+
+          <div className="mt-7 border-t border-[var(--lpv-line)] pt-5">
+            <p className="max-w-md text-[0.95rem] leading-7 text-[var(--lpv-muted)]">
+              Des personnes, des gestes, des lieux et des façons de travailler
+              qui donnent une identité aux bouteilles.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* DESKTOP — new LPV direction */}
+      <section className="hidden border-b border-[var(--lpv-line)] md:block">
+        <div className="lpv-container pb-16 pt-16 lg:pb-18 lg:pt-20">
+          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            Producteurs
+          </p>
+
+          <h1 className="lpv-display mt-7 max-w-[1180px] text-[clamp(5.7rem,8.6vw,9.7rem)] leading-[0.88] tracking-[-0.05em]">
+            Ceux qui font
+            <br />
+            le vin d’ici.
+          </h1>
+
+
+        </div>
+      </section>
+
+      {/* AVEC NOUS */}
+      {featuredProducers.length > 0 ? (
+        <>
+          {/* MOBILE — preserved for later */}
+          <section className="lpv-container py-10 md:hidden">
+            <div className="border-b border-[var(--lpv-line)] pb-5">
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Avec nous
+              </p>
+
+              <h2 className="lpv-display mt-3 text-[2.8rem] leading-[0.95]">
+                Ceux qu’on connaît de plus près.
+              </h2>
+            </div>
+
+            <div>
+              {featuredProducers.map((producer) => {
+                const image = getAuthorizedImage(producer);
+
+                const imageSrc = image
+                  ? urlFor(image)
+                      .width(1200)
+                      .height(900)
+                      .fit("crop")
+                      .url()
+                  : null;
+
+                const location = getLocation(producer);
+
+                return (
+                  <article
+                    key={producer._id}
+                    className="group border-b border-[var(--lpv-line)] py-7"
+                  >
+                    <Link
+                      href={`/producteurs/${producer.slug}`}
+                      className="block"
+                    >
+                      {imageSrc ? (
+                        <div className="h-[280px] overflow-hidden bg-[var(--lpv-paper-light)]">
+                          <img
+                            src={imageSrc}
+                            alt={producer.name}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      ) : null}
+                    </Link>
+
+                    <div className="pt-5">
+                      <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                        Avec nous
+                      </p>
+
+                      <Link href={`/producteurs/${producer.slug}`}>
+                        <h3 className="lpv-display mt-3 text-[2.65rem] leading-[0.9] tracking-[-0.035em]">
+                          {producer.name}
+                        </h3>
+                      </Link>
+
+                      {location ? (
+                        <p className="mt-3 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--lpv-muted)]">
+                          {location}
+                        </p>
+                      ) : null}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* DESKTOP — AVEC NOUS / horizontal rail */}
+          <section className="hidden overflow-hidden bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)] md:block">
+            <div className="lpv-container py-16 lg:py-18">
+
+              <div className="flex items-end justify-between gap-12">
+                <div>
+                  <p className="lpv-kicker text-white/50">
+                    Avec nous
+                  </p>
+
+                  <h2 className="lpv-display mt-4 text-[clamp(4.2rem,5.7vw,6.4rem)] leading-[0.86] tracking-[-0.045em]">
+                    De plus près.
+                  </h2>
+                </div>
+
+                <div className="max-w-sm pb-1">
+                  <p className="text-sm leading-6 text-white/60">
+                    Des fiches réalisées avec les producteurs et des informations
+                    validées directement avec eux.
+                  </p>
+
+                </div>
+              </div>
+
+              <div className="mt-9 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex w-max gap-4 pr-12">
+                  {featuredProducers.map((producer) => {
+                    const image = getAuthorizedImage(producer);
+
+                    const imageSrc = image
+                      ? urlFor(image)
+                          .width(1000)
+                          .height(760)
+                          .fit("crop")
+                          .url()
+                      : null;
+
+                    const location = [
+                      producer.municipality,
+                      producer.region?.name,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ");
+
+                    return (
+                      <article
+                        key={producer._id}
+                        className="group w-[365px] shrink-0 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]"
+                      >
+                        <Link
+                          href={`/producteurs/${producer.slug}`}
+                          className="flex h-full flex-col"
+                        >
+                          <div className="relative aspect-[4/3] overflow-hidden bg-[var(--lpv-paper-light)]">
+                            {imageSrc ? (
+                              <img
+                                src={imageSrc}
+                                alt={producer.name}
+                                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.012]"
+                              />
+                            ) : (
+                              <div className="flex h-full items-center justify-center px-8 text-center">
+                                <span className="lpv-kicker text-[var(--lpv-muted)]/45">
+                                  {producer.name}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex min-h-[180px] flex-col px-6 pb-6 pt-5">
+                            <p className="text-[0.56rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                              Avec nous
+                            </p>
+
+                            <h3 className="lpv-display mt-3 text-[2.5rem] leading-[0.9] tracking-[-0.035em]">
+                              {producer.name}
+                            </h3>
+
+                            {location ? (
+                              <p className="mt-auto border-t border-[var(--lpv-line)] pt-4 text-[0.58rem] uppercase tracking-[0.15em] text-[var(--lpv-muted)]">
+                                {location}
+                              </p>
+                            ) : null}
+                          </div>
+                        </Link>
+                      </article>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between">
+                <p className="text-[0.58rem] uppercase tracking-[0.18em] text-white/35">
+                  {featuredProducers.length} avec nous
+                </p>
+
+                <p className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-white/55">
+                  Glisser →
+                </p>
+              </div>
+
+            </div>
+          </section>
+        </>
+      ) : null}
+
+      {/* RÉPERTOIRE */}
+
+      {/* MOBILE — ancien répertoire conservé pour notre passe mobile */}
+      {directoryProducers.length > 0 ? (
+        <section
+          id="repertoire"
+          className="scroll-mt-24 md:hidden"
+        >
+          <div className="lpv-container py-10">
+            <div className="pb-6">
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Le répertoire
+              </p>
+
+              <h2 className="lpv-display mt-3 text-[clamp(3.1rem,13vw,4rem)] leading-[0.86]">
+                Tous les
+                <br />
+                producteurs.
+              </h2>
+            </div>
+
+            <div className="border-t border-[var(--lpv-line)]">
+              {visibleDirectoryProducers.map((producer, index) => {
+                const location = getLocation(producer);
+
+                return (
+                  <article
+                    key={producer._id}
+                    className="group border-b border-[var(--lpv-line)]"
+                  >
+                    <Link
+                      href={`/producteurs/${producer.slug}`}
+                      className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 py-4"
+                    >
+                      <div>
+                        <span className="text-[0.6rem] tracking-[0.16em] text-[var(--lpv-muted)]">
+                          {String(startIndex + index + 1).padStart(2, "0")}
+                        </span>
+
+                        <h3 className="lpv-display mt-2 text-[clamp(1.8rem,7.5vw,2.2rem)] leading-[0.94] tracking-[-0.035em]">
+                          {producer.name}
+                        </h3>
+
+                        {location ? (
+                          <p className="mt-2 text-[0.6rem] uppercase leading-5 tracking-[0.13em] text-[var(--lpv-muted)]">
+                            {location}
+                          </p>
+                        ) : null}
+                      </div>
+
+                      <span aria-hidden="true" className="self-center text-lg">
+                        →
+                      </span>
+                    </Link>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* DESKTOP — LPV producer directory */}
+      {(showInternational
+        ? internationalProducers.length > 0
+        : directoryProducers.length > 0) ? (
+        <section
+          id="repertoire-desktop"
+          className="hidden scroll-mt-24 bg-[var(--lpv-paper)] md:block"
+        >
+          <div className="lpv-container pb-8 pt-20 lg:pb-10 lg:pt-24">
+
+            <div className="grid grid-cols-[0.72fr_0.28fr] items-end gap-12 pb-9">
+              <div>
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  {showInternational ? "Ailleurs" : "Le répertoire"}
+                </p>
+
+                <h2 className="lpv-display mt-5 text-[clamp(4.1rem,6.4vw,7.1rem)] leading-[0.86] tracking-[-0.045em]">
+                  {showInternational ? (
+                    <>
+                      Le monde,
+                      <br />
+                      domaine par domaine.
+                    </>
+                  ) : (
+                    <>
+                      Le Québec,
+                      <br />
+                      domaine par domaine.
+                    </>
+                  )}
+                </h2>
+              </div>
+
+              <div className="justify-self-end pb-2">
+                <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                  {filteredDirectoryProducers.length} producteur
+                  {filteredDirectoryProducers.length > 1 ? "s" : ""}
+                </p>
+
+                <p className="mt-4 max-w-xs text-sm leading-6 text-[var(--lpv-muted)]">
+                  {showInternational
+                    ? "Les domaines d’ailleurs présents dans la bibliothèque LPV."
+                    : "Vignobles, cidreries et domaines à découvrir partout au Québec."}
+                </p>
+              </div>
+            </div>
+
+            {!showInternational ? (
+              <nav
+                aria-label="Filtrer le répertoire"
+                className="mb-8 flex items-center gap-7 border-t border-[var(--lpv-line)] pt-5"
+              >
+                <span className="text-[0.55rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                  Afficher
+                </span>
+
+                <Link
+                  href={buildDirectoryUrl({
+                    type: "tous",
+                    pays: "",
+                    region: "",
+                    origine: "",
+                    page: 1,
+                  })}
+                  className={`relative pb-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em] transition-opacity hover:opacity-55 ${
+                    producerFilter === "tous"
+                      ? "text-[var(--lpv-cocoa)]"
+                      : "text-[var(--lpv-muted)]"
+                  }`}
+                >
+                  Tous
+                  {producerFilter === "tous" ? (
+                    <span className="absolute inset-x-0 -bottom-[2px] h-px bg-[var(--lpv-cocoa)]" />
+                  ) : null}
+                </Link>
+
+                <Link
+                  href={buildDirectoryUrl({
+                    type: "vignobles",
+                    pays: "",
+                    region: "",
+                    origine: "",
+                    page: 1,
+                  })}
+                  className={`relative pb-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em] transition-opacity hover:opacity-55 ${
+                    producerFilter === "vignobles"
+                      ? "text-[var(--lpv-cocoa)]"
+                      : "text-[var(--lpv-muted)]"
+                  }`}
+                >
+                  Vignobles
+                  {producerFilter === "vignobles" ? (
+                    <span className="absolute inset-x-0 -bottom-[2px] h-px bg-[var(--lpv-cocoa)]" />
+                  ) : null}
+                </Link>
+
+                <Link
+                  href={buildDirectoryUrl({
+                    type: "cidreries",
+                    pays: "",
+                    region: "",
+                    origine: "",
+                    page: 1,
+                  })}
+                  className={`relative pb-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em] transition-opacity hover:opacity-55 ${
+                    producerFilter === "cidreries"
+                      ? "text-[var(--lpv-cocoa)]"
+                      : "text-[var(--lpv-muted)]"
+                  }`}
+                >
+                  Cidreries
+                  {producerFilter === "cidreries" ? (
+                    <span className="absolute inset-x-0 -bottom-[2px] h-px bg-[var(--lpv-cocoa)]" />
+                  ) : null}
+                </Link>
+              </nav>
+            ) : (
+              <div className="mb-8 flex items-center justify-between border-t border-[var(--lpv-line)] pt-5">
+                <p className="text-[0.56rem] uppercase tracking-[0.17em] text-[var(--lpv-muted)]">
+                  Hors Québec
+                </p>
+
+                <Link
+                  href="/producteurs#repertoire-desktop"
+                  className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--lpv-cocoa)] transition-opacity hover:opacity-55"
+                >
+                  ← Revenir au Québec
+                </Link>
+              </div>
+            )}
+
+            {visibleDirectoryProducers.length > 0 ? (
+              <>
+                <div className="grid grid-cols-3 gap-[10px]">
+                  {visibleDirectoryProducers.map((producer, index) => {
+                    const region =
+                      producer.region?.name ||
+                      producer.municipality ||
+                      producer.country?.name ||
+                      "Québec";
+
+                    const municipality =
+                      producer.municipality &&
+                      producer.municipality !== region
+                        ? producer.municipality
+                        : null;
+
+                    const cardNumber =
+                      String(startIndex + index + 1).padStart(2, "0");
+
+                    return (
+                      <article
+                        key={producer._id}
+                        className="group min-w-0"
+                      >
+                        <Link
+                          href={`/producteurs/${producer.slug}`}
+                          className="relative flex min-h-[280px] flex-col overflow-hidden bg-[var(--lpv-paper-light)] px-8 pb-7 pt-7 transition-[transform,background-color] duration-300 hover:-translate-y-[2px]"
+                        >
+                          <div className="flex items-start justify-between gap-5">
+                            <div>
+                              {producer.lpvPartner && !showInternational ? (
+                                <p className="inline-flex items-center bg-[var(--lpv-cocoa)] px-2.5 py-1.5 text-[0.52rem] font-semibold uppercase tracking-[0.17em] text-[var(--lpv-paper-light)]">
+                                  Avec nous
+                                </p>
+                              ) : (
+                                <p className="text-[0.55rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                                  {region}
+                                </p>
+                              )}
+                            </div>
+
+                            <span className="text-[0.6rem] tracking-[0.16em] text-[var(--lpv-muted)] opacity-55">
+                              {cardNumber}
+                            </span>
+                          </div>
+
+                          <div className="mt-auto">
+                            <h3 className="lpv-display max-w-[94%] text-[clamp(2.25rem,2.7vw,3.2rem)] leading-[0.9] tracking-[-0.04em]">
+                              {producer.name}
+                            </h3>
+
+                            <div className="mt-6 flex items-end justify-between gap-5 border-t border-[var(--lpv-line)] pt-4">
+                              <p className="text-[0.56rem] uppercase leading-5 tracking-[0.15em] text-[var(--lpv-muted)]">
+                                {showInternational
+                                  ? [municipality, region, producer.country?.name]
+                                      .filter(Boolean)
+                                      .join(" · ")
+                                  : producer.lpvPartner
+                                    ? [municipality, region]
+                                        .filter(Boolean)
+                                        .join(" · ")
+                                    : municipality || region}
+                              </p>
+
+
+                            </div>
+                          </div>
+                        </Link>
+                      </article>
+                    );
+                  })}
+                </div>
+
+                {totalPages > 1 ? (
+                  <nav
+                    aria-label="Pagination des producteurs"
+                    className="mt-8 flex items-center justify-between gap-3 pt-2 md:mt-10 md:flex-wrap md:gap-6 md:pt-6"
+                  >
+                    <div>
+                      {currentPage > 1 ? (
+                        <Link
+                          href={buildDirectoryUrl({
+                            page: currentPage - 1,
+                          })}
+                          className="lpv-text-link"
+                        >
+                          ← Précédent
+                        </Link>
+                      ) : (
+                        <span className="text-sm text-[var(--lpv-muted)]/40">
+                          ← Précédent
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {Array.from(
+                        { length: totalPages },
+                        (_, i) => i + 1
+                      ).map((page) => {
+                        const nearCurrent =
+                          Math.abs(page - currentPage) <= 1;
+
+                        return (
+                          <Link
+                            key={page}
+                            href={buildDirectoryUrl({ page })}
+                            aria-current={
+                              page === currentPage ? "page" : undefined
+                            }
+                            className={`h-9 min-w-9 items-center justify-center border px-2 text-xs transition-opacity hover:opacity-60 md:flex md:h-10 md:min-w-10 md:px-3 md:text-sm ${
+                              nearCurrent ? "flex" : "hidden"
+                            } ${
+                              page === currentPage
+                                ? "border-[var(--lpv-ink)] text-[var(--lpv-ink)]"
+                                : "border-[var(--lpv-line)] text-[var(--lpv-muted)]"
+                            }`}
+                          >
+                            {page}
+                          </Link>
+                        );
+                      })}
+                    </div>
+
+                    <div>
+                      {currentPage < totalPages ? (
+                        <Link
+                          href={buildDirectoryUrl({
+                            page: currentPage + 1,
+                          })}
+                          className="lpv-text-link"
+                        >
+                          Suivant →
+                        </Link>
+                      ) : (
+                        <span className="text-sm text-[var(--lpv-muted)]/40">
+                          Suivant →
+                        </span>
+                      )}
+                    </div>
+                  </nav>
+                ) : null}
+              </>
+            ) : (
+              <div className="border-y border-[var(--lpv-line)] py-16">
+                <p className="lpv-display text-4xl">
+                  Aucun producteur dans cette sélection.
+                </p>
+
+                {!showInternational ? (
+                  <Link
+                    href="/producteurs#repertoire-desktop"
+                    className="mt-5 inline-flex text-sm text-[var(--lpv-cocoa)]"
+                  >
+                    Voir tous les producteurs →
+                  </Link>
+                ) : null}
+              </div>
+            )}
+
+          </div>
+        </section>
+      ) : null}
+
+      {/* AILLEURS — DESKTOP */}
+      {!showInternational && internationalProducers.length > 0 ? (
+        <section className="hidden bg-[var(--lpv-paper)] md:block">
+          <div className="lpv-container pb-9 pt-2 lg:pb-10 lg:pt-3">
+
+            <div className="grid grid-cols-[0.64fr_0.36fr] items-end gap-16 border-t border-[var(--lpv-line)] pt-10">
+
+              <div>
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  Et ailleurs
+                </p>
+
+                <h2 className="lpv-display mt-4 max-w-[760px] text-[clamp(3.6rem,5.2vw,5.8rem)] leading-[0.86] tracking-[-0.05em]">
+                  Le reste du monde,
+                  <br />
+                  aussi.
+                </h2>
+              </div>
+
+              <div className="justify-self-end pb-1">
+                <p className="max-w-sm text-sm leading-6 text-[var(--lpv-muted)]">
+                  Les domaines d’ailleurs restent dans LPV, reliés à leurs
+                  régions et à leurs bouteilles.
+                </p>
+
+                <Link
+                  href="/producteurs?origine=ailleurs#repertoire-desktop"
+                  className="group mt-6 inline-flex items-center gap-4 text-sm font-medium text-[var(--lpv-cocoa)]"
+                >
+                  Tous les producteurs d’ailleurs
+                  <span
+                    aria-hidden="true"
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
+                </Link>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+      ) : null}
+
+      {producers.length === 0 ? (
+        <section className="lpv-container py-24 text-center">
+          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            Bientôt
+          </p>
+
+          <h2 className="lpv-display mt-6 text-5xl md:text-7xl">
+            Les portraits arrivent.
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-[var(--lpv-muted)]">
+            Les premiers producteurs seront ajoutés au fil des rencontres et
+            des bouteilles découvertes.
+          </p>
+
+          <Link href="/vins" className="lpv-button mt-9">
+            Explorer les vins
+          </Link>
+        </section>
+      ) : null}
+    </main>
+  );
+}

@@ -1,0 +1,388 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
+
+type Entry = {
+  _id?: string;
+  tastedAt: string;
+  appreciation: "liked" | "average" | "disliked";
+  note: string;
+  buyAgain: boolean;
+};
+
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export function WineJournalButton({
+  wineId,
+  variant = "default",
+  locale = "fr",
+}: {
+  wineId: string;
+  variant?: "default" | "detail";
+  locale?: "fr" | "en";
+}) {
+  const { isSignedIn } = useUser();
+
+  const labels =
+    locale === "en"
+      ? {
+          button: "Notebook",
+          active: "In my notebook",
+          add: "Add to notebook",
+          title: "My notebook",
+          intro: "Keep track of the bottles you've actually tasted.",
+          close: "Close",
+          loading: "Loading…",
+          date: "Date",
+          appreciation: "Rating",
+          liked: "Liked",
+          average: "Average",
+          disliked: "Didn't like",
+          note: "Note",
+          placeholder: "Ex. Great with mushroom pasta.",
+          buyAgain: "Buy again",
+          yes: "Yes",
+          no: "No",
+          remove: "Remove",
+          saving: "Saving…",
+          save: "Save",
+          removeConfirm: "Remove this wine from your notebook?",
+          saveError: "Unable to save this entry.",
+          removeError: "Unable to remove this entry.",
+        }
+      : {
+          button: "Carnet",
+          active: "Dans mon carnet",
+          add: "Ajouter au carnet",
+          title: "{labels.title}",
+          intro: "{labels.intro}",
+          close: "Fermer",
+          loading: "{labels.loading}",
+          date: "Date",
+          appreciation: "{labels.appreciation}",
+          liked: "Aimé",
+          average: "Moyen",
+          disliked: "Pas aimé",
+          note: "Note",
+          placeholder: "Ex. Super avec les pâtes aux champignons.",
+          buyAgain: "{labels.buyAgain}",
+          yes: "Oui",
+          no: "Non",
+          remove: "Retirer",
+          saving: "Enregistrement…",
+          save: "Enregistrer",
+          removeConfirm: "Retirer ce vin de ton carnet?",
+          saveError: "Impossible d’enregistrer cette entrée.",
+          removeError: "Impossible de retirer cette entrée.",
+        };
+
+  const [entry, setEntry] = useState<Entry | null>(null);
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const [tastedAt, setTastedAt] = useState(today());
+  const [appreciation, setAppreciation] =
+    useState<Entry["appreciation"]>("liked");
+  const [note, setNote] = useState("");
+  const [buyAgain, setBuyAgain] = useState(true);
+
+  useEffect(() => {
+    if (!isSignedIn) return;
+
+    setLoading(true);
+
+    fetch(`/api/journal/${wineId}`)
+      .then(async (res) => {
+        if (!res.ok) return null;
+        return res.json();
+      })
+      .then((data) => {
+        const current = data?.entry ?? null;
+
+        setEntry(current);
+
+        if (current) {
+          setTastedAt(current.tastedAt || today());
+          setAppreciation(current.appreciation || "liked");
+          setNote(current.note || "");
+          setBuyAgain(Boolean(current.buyAgain));
+        }
+      })
+      .catch(() => null)
+      .finally(() => setLoading(false));
+  }, [isSignedIn, wineId]);
+
+  async function save() {
+    if (!isSignedIn) {
+      window.location.href = "/connexion";
+      return;
+    }
+
+    setSaving(true);
+    setError("");
+
+    try {
+      const res = await fetch(`/api/journal/${wineId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tastedAt,
+          appreciation,
+          note,
+          buyAgain,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data?.error || labels.saveError);
+        return;
+      }
+
+      setEntry(data.entry);
+      setOpen(false);
+    } catch {
+      setError(labels.saveError);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function remove() {
+    if (!entry) return;
+
+    const confirmed = window.confirm(
+      labels.removeConfirm
+    );
+
+    if (!confirmed) return;
+
+    setSaving(true);
+    setError("");
+
+    try {
+      const res = await fetch(`/api/journal/${wineId}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        setError(labels.removeError);
+        return;
+      }
+
+      setEntry(null);
+      setTastedAt(today());
+      setAppreciation("liked");
+      setNote("");
+      setBuyAgain(true);
+      setOpen(false);
+    } catch {
+      setError(labels.removeError);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function toggleOpen() {
+    if (!isSignedIn) {
+      window.location.href = "/connexion";
+      return;
+    }
+
+    setOpen((value) => !value);
+  }
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={toggleOpen}
+        className={
+          variant === "detail"
+            ? `inline-flex h-8 items-center whitespace-nowrap text-[0.61rem] uppercase tracking-[0.22em] transition-opacity hover:opacity-50 ${
+                entry
+                  ? "text-[var(--lpv-ink)]"
+                  : "text-[var(--lpv-muted)]"
+              }`
+            : "border-b border-[var(--lpv-ink)] pb-1 text-xs uppercase tracking-[0.2em] text-[var(--lpv-ink)] transition hover:opacity-55"
+        }
+      >
+        {variant === "detail" ? (
+          <span>{labels.button}</span>
+        ) : (
+          <>
+            {entry ? labels.active : labels.add} →
+          </>
+        )}
+      </button>
+
+      {open ? (
+        <div className="absolute right-0 z-50 mt-5 w-[min(360px,calc(100vw-2rem))] border border-[var(--lpv-line)] bg-[var(--lpv-paper)] p-6 text-[var(--lpv-ink)] shadow-[0_18px_50px_rgba(0,0,0,0.08)]">
+          <div className="flex items-start justify-between gap-6">
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                {labels.title}
+              </p>
+
+              <p className="mt-3 text-sm leading-6 text-[var(--lpv-muted)]">
+                {labels.intro}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="text-lg text-[var(--lpv-muted)] transition hover:text-[var(--lpv-ink)]"
+              aria-label={labels.close}
+            >
+              ×
+            </button>
+          </div>
+
+          {loading ? (
+            <p className="mt-8 text-sm text-[var(--lpv-muted)]">
+              {labels.loading}
+            </p>
+          ) : (
+            <div className="mt-8 space-y-7">
+              <div>
+                <label className="lpv-kicker block text-[var(--lpv-cocoa)]">
+                  Date
+                </label>
+
+                <input
+                  type="date"
+                  value={tastedAt}
+                  onChange={(event) => setTastedAt(event.target.value)}
+                  className="mt-3 w-full border border-[var(--lpv-line)] bg-transparent px-4 py-3 text-sm outline-none transition focus:border-[var(--lpv-ink)]"
+                />
+              </div>
+
+              <div>
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  {labels.appreciation}
+                </p>
+
+                <div className="mt-3 grid grid-cols-3 border border-[var(--lpv-line)]">
+                  {[
+                    ["liked", "Aimé"],
+                    ["average", "Moyen"],
+                    ["disliked", "Pas aimé"],
+                  ].map(([value, label], index) => {
+                    const active = appreciation === value;
+
+                    return (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() =>
+                          setAppreciation(
+                            value as Entry["appreciation"]
+                          )
+                        }
+                        className={`px-3 py-3 text-xs uppercase tracking-[0.12em] transition ${
+                          index < 2
+                            ? "border-r border-[var(--lpv-line)]"
+                            : ""
+                        } ${
+                          active
+                            ? "bg-[var(--lpv-ink)] text-[var(--lpv-paper)]"
+                            : "text-[var(--lpv-muted)] hover:text-[var(--lpv-ink)]"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <label className="lpv-kicker block text-[var(--lpv-cocoa)]">
+                  Note
+                </label>
+
+                <textarea
+                  value={note}
+                  onChange={(event) => setNote(event.target.value)}
+                  rows={4}
+                  placeholder={labels.placeholder}
+                  className="mt-3 w-full resize-none border border-[var(--lpv-line)] bg-transparent px-4 py-3 text-sm leading-6 outline-none transition placeholder:text-[var(--lpv-muted)] focus:border-[var(--lpv-ink)]"
+                />
+              </div>
+
+              <div>
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  {labels.buyAgain}
+                </p>
+
+                <div className="mt-3 grid grid-cols-2 border border-[var(--lpv-line)]">
+                  {[true, false].map((value, index) => (
+                    <button
+                      key={String(value)}
+                      type="button"
+                      onClick={() => setBuyAgain(value)}
+                      className={`px-4 py-3 text-xs uppercase tracking-[0.14em] transition ${
+                        index === 0
+                          ? "border-r border-[var(--lpv-line)]"
+                          : ""
+                      } ${
+                        buyAgain === value
+                          ? "bg-[var(--lpv-ink)] text-[var(--lpv-paper)]"
+                          : "text-[var(--lpv-muted)] hover:text-[var(--lpv-ink)]"
+                      }`}
+                    >
+                      {value ? labels.yes : labels.no}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {error ? (
+                <p className="text-sm text-red-700">
+                  {error}
+                </p>
+              ) : null}
+
+              <div className="flex items-center justify-between gap-4 border-t border-[var(--lpv-line)] pt-5">
+                {entry ? (
+                  <button
+                    type="button"
+                    onClick={remove}
+                    disabled={saving}
+                    className="text-xs uppercase tracking-[0.15em] text-[var(--lpv-muted)] transition hover:text-[var(--lpv-ink)] disabled:opacity-40"
+                  >
+                    Retirer
+                  </button>
+                ) : (
+                  <span />
+                )}
+
+                <button
+                  type="button"
+                  onClick={save}
+                  disabled={saving || !tastedAt}
+                  className="lpv-button lpv-button-dark"
+                >
+                  {saving
+                    ? labels.saving
+                    : entry
+                      ? labels.save
+                      : labels.add}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+}

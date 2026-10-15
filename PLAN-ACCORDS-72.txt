@@ -1,0 +1,719 @@
+01. Alain Lorieux Chinon Expression
+ID: wine-alain-lorieux-chinon-expression-2023
+Type: — | Couleur: red
+Style: Rouge frais, fruité et structuré
+Cépages: Cabernet Franc
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 3
+Producteur: Pascal et Alain Lorieux
+Région: Vallée de la Loire | Appellation: Chinon
+Accords actuels: Agneau [reference] | Champignons [reference] | Saucisses [reference] | Lasagne [reference] | Tourtière [reference]
+
+02. Albert Bichot Bourgogne Aligoté
+ID: wine-albert-bichot-bourgogne-aligote
+Type: — | Couleur: white
+Style: Blanc sec, vif, frais et léger
+Cépages: Aligoté
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Albert Bichot
+Région: Bourgogne | Appellation: Bourgogne
+Accords actuels: Pâtes crémeuses [reference] | Poulet frit [reference] | Pesto [reference] | Salade & fromage de chèvre [reference] | Brunch & œufs bénédictine [reference] | Fruits & dessert léger [reference]
+
+03. Alto Moncayo Garnacha
+ID: wine-alto-moncayo-garnacha-2023
+Type: — | Couleur: red
+Style: Rouge puissant, concentré et boisé
+Cépages: Garnacha
+Corps: 5 | Sucre: 1 | Acidité: 2 | Tanins: 4
+Producteur: Bodegas Alto Moncayo
+Région: Vallée de l'Ebre | Appellation: Campo de Borja
+Accords actuels: Steak et grillades [reference]
+
+04. Amourette
+ID: wine-domaine-bergeville-amourette-2025
+Type: wine | Couleur: red
+Style: Rouge pétillant brut nature
+Cépages: Frontenac noir, Frontenac blanc, Marquette, Acadie blanc, Vidal
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Domaine Bergeville
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Aucun
+
+05. Bise d’Automne
+ID: wine-domaine-du-ridge-bise-d-automne
+Type: wine | Couleur: white
+Style: Vin doux de vendange tardive, riche et frais
+Cépages: Vidal
+Corps: 4 | Sucre: 5 | Acidité: 4 | Tanins: 1
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Crème brûlée [reference] | Fromages [reference] | Fruits & dessert léger [reference]
+
+06. Blanc – Domaine du Ridge
+ID: wine-domaine-du-ridge-blanc-domaine-du-ridge
+Type: wine | Couleur: white
+Style: Blanc sec, vif et citronné
+Cépages: Seyval blanc
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Sushis [reference] | Huîtres [reference] | Pâtes crémeuses [reference]
+
+07. Campo Viejo Tempranillo Rioja
+ID: wine-campo-viejo-tempranillo-rioja
+Type: — | Couleur: red
+Style: Rouge sec, fruité, épicé et boisé
+Cépages: Tempranillo
+Corps: 3 | Sucre: 1 | Acidité: 3 | Tanins: 3
+Producteur: Campo Viejo
+Région: Vallée de l'Ebre | Appellation: Rioja
+Accords actuels: Burger [reference]
+
+08. Canonique
+ID: wine-domaine-bergeville-canonique-2024
+Type: wine | Couleur: rose
+Style: Mousseux rosé brut nature
+Cépages: Vidal, Marquette, Frontenac gris, Gamay, Frontenac noir, Riesling, Acadie blanc
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Domaine Bergeville
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Aucun
+
+09. Casa Ferreirinha Papa Figos Douro
+ID: wine-casa-ferreirinha-papa-figos-douro-2024
+Type: — | Couleur: red
+Style: Rouge sec, généreux, fruité et souple
+Cépages: Tinta Roriz, Tinta Barroca, Touriga Franca, Touriga Nacional
+Corps: 3 | Sucre: 1 | Acidité: 3 | Tanins: 3
+Producteur: Casa Ferreirinha
+Région: Porto/Douro | Appellation: Douro
+Accords actuels: Burger [reference] | BBQ & côtes levées [reference]
+
+10. Casillero del Diablo Cabernet Sauvignon
+ID: wine-casillero-del-diablo-cabernet-sauvignon
+Type: — | Couleur: red
+Style: Rouge fruité et structuré
+Cépages: Cabernet Sauvignon
+Corps: 4 | Sucre: 1 | Acidité: 3 | Tanins: 4
+Producteur: Viña Concha y Toro
+Région: Valle Central | Appellation: Valle Central
+Accords actuels: Steak et grillades [reference]
+
+11. Champs de Florence
+ID: wine-domaine-du-ridge-champs-de-florence
+Type: wine | Couleur: rose
+Style: Rosé sec, frais et fruité
+Cépages: Seyval noir
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Tartare de saumon [reference] | Huîtres [reference] | Saumon [reference]
+
+12. Christophe Pacalet Beaujolais Les Marcellins
+ID: wine-christophe-pacalet-beaujolais-les-marcellins-2024
+Type: — | Couleur: red
+Style: Rouge léger, juteux et fruité
+Cépages: Gamay
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 2
+Producteur: Christophe Pacalet
+Région: Beaujolais | Appellation: Beaujolais
+Accords actuels: Pizza [TYPE MANQUANT] | Poulet rôti [reference] | Tartare de bœuf [reference]
+
+13. Colfo
+ID: wine-domaine-bergeville-colfo-2025
+Type: wine | Couleur: sparkling
+Style: Pétillant sur lies brut nature
+Cépages: Frontenac blanc, Acadie blanc, Geisenheim, La Crescent, Vidal, Frontenac gris, Seyval
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Domaine Bergeville
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Aucun
+
+14. Delinquente Tuff Nutt Bianco Pet Nat
+ID: wine-delinquente-tuff-nutt-bianco-pet-nat-2024
+Type: — | Couleur: sparkling
+Style: Pétillant naturel sec, léger et vif
+Cépages: Bianco d'Alessano
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Delinquente Wine Co.
+Région: Riverland | Appellation: Riverland
+Accords actuels: Crabe [reference]
+
+15. Devil's Corner Pinot Noir
+ID: wine-devils-corner-pinot-noir-2024
+Type: — | Couleur: red
+Style: Rouge frais, fruité et délicat
+Cépages: Pinot noir
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 2
+Producteur: Devil's Corner
+Région: Tasmanie | Appellation: Tasmania
+Accords actuels: Poulet rôti [TYPE MANQUANT] | Fromages [TYPE MANQUANT] | Saumon [reference] | Tacos [reference] | Risotto [reference] | Canard [reference] | Porc [reference] | Veau [reference]
+
+16. Domaine Saint-Basile Frontenac
+ID: wine-domaine-saint-basile-frontenac-2023
+Type: — | Couleur: red
+Style: Rouge frais et fruité
+Cépages: Frontenac
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 2
+Producteur: Domaine Saint-Basile
+Région: Montérégie | Appellation: Vin du Québec
+Accords actuels: Planche & charcuteries [TYPE MANQUANT] | Pâtes sauce tomate [reference] | Tacos [reference] | Risotto [reference] | Canard [reference] | Porc [reference] | Raclette [reference] | Poutine [reference] | Tartare de bœuf [reference] | Thon [reference] | Veau [reference] | Saucisses [reference] | Lasagne [reference] | Légumes grillés [reference] | Ramen [reference] | Tourtière [reference]
+
+17. Domaine du Nival Ces petits imprévus
+ID: wine-domaine-du-nival-ces-petits-imprevus-2025
+Type: wine | Couleur: sparkling
+Style: Pétillant naturel, fruité, vif et léger
+Cépages: Vidal
+Corps: 2 | Sucre: 2 | Acidité: 4 | Tanins: —
+Producteur: Domaine du Nival
+Région: Montérégie | Appellation: IGP Vin du Québec
+Accords actuels: Curry [reference] | Cuisine asiatique sucrée-salée [reference] | Tarte aux fruits [reference] | Gâteau & dessert à la vanille [reference] | Fruits & dessert léger [reference]
+
+18. Domaine du Nival Matière à discussion
+ID: wine-domaine-du-nival-matiere-a-discussion-2025
+Type: wine | Couleur: white
+Style: Blanc sec, frais, précis et légèrement texturé
+Cépages: Vidal
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: —
+Producteur: Domaine du Nival
+Région: Montérégie | Appellation: IGP Vin du Québec
+Accords actuels: Cuisine asiatique sucrée-salée [reference]
+
+19. Domaine du Ridge Le Litre du Ridge Rosé
+ID: wine-domaine-du-ridge-le-litre-du-ridge-rose
+Type: — | Couleur: rose
+Style: Rosé sec, léger, fruité et généreux
+Cépages: Seyval noir, Seyval blanc, Vidal, Lucie Kuhlmann
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: —
+Producteur: Domaine du Ridge
+Région: Montérégie | Appellation: IGP Vin du Québec
+Accords actuels: Cuisine épicée [TYPE MANQUANT] | Planche & charcuteries [reference]
+
+20. Domaine du Ridge Lucy K.
+ID: wine-domaine-du-ridge-lucy-k
+Type: — | Couleur: red
+Style: Rouge sec, léger, frais et délicat
+Cépages: Lucie Kuhlmann, Sabrevois, Frontenac noir, Chancellor
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 2
+Producteur: Domaine du Ridge
+Région: Montérégie | Appellation: IGP Vin du Québec
+Accords actuels: Cuisine épicée [TYPE MANQUANT] | Cuisine végétarienne [reference] | Tartare de bœuf [reference] | Légumes grillés [reference]
+
+21. Domäne Wachau Grüner Veltliner Selection
+ID: wine-domane-wachau-gruner-veltliner-selection
+Type: — | Couleur: white
+Style: Blanc sec, léger, vif et minéral
+Cépages: Grüner Veltliner
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: —
+Producteur: Domäne Wachau
+Région: Basse-Autriche (Niederösterreich) | Appellation: Wachau
+Accords actuels: Sushis [reference] | Crevettes [reference] | Raclette [reference] | Fondue au fromage [reference] | Moules [reference] | Poutine [reference] | Tartare de saumon [reference] | Pesto [reference] | Salade & fromage de chèvre [reference]
+
+22. Dr. Loosen Riesling Mosel
+ID: wine-dr-loosen-riesling-mosel-2025
+Type: — | Couleur: white
+Style: Blanc fruité, doux, léger et vif
+Cépages: Riesling
+Corps: 2 | Sucre: 4 | Acidité: 5 | Tanins: —
+Producteur: Dr. Loosen
+Région: Mosel | Appellation: Mosel
+Accords actuels: Cuisine épicée [reference] | Tarte aux fruits [reference] | Crème brûlée [reference] | Gâteau & dessert à la vanille [reference] | Fruits & dessert léger [reference]
+
+23. Fado
+ID: wine-domaine-du-ridge-fado
+Type: wine | Couleur: red
+Style: Vin rouge muté, doux et boisé
+Cépages: Maréchal Foch
+Corps: 5 | Sucre: 4 | Acidité: 2 | Tanins: 3
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Chocolat [reference] | Fromages [reference]
+
+24. Famille Perrin Côtes du Rhône Signature
+ID: wine-famille-perrin-cotes-du-rhone-signature-2023
+Type: — | Couleur: red
+Style: Rouge sec, fruité, épicé et souple
+Cépages: Grenache, Syrah
+Corps: 3 | Sucre: 1 | Acidité: 3 | Tanins: 3
+Producteur: Famille Perrin
+Région: Vallée du Rhône | Appellation: Côtes du Rhône
+Accords actuels: Pâtes sauce tomate [TYPE MANQUANT] | Burger [reference]
+
+25. Ferraton Père & Fils Syrah
+ID: wine-ferraton-pere-et-fils-syrah
+Type: — | Couleur: red
+Style: Rouge frais, fruité et épicé
+Cépages: Syrah
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 3
+Producteur: Ferraton Père & Fils
+Région: Vallée du Rhône | Appellation: Collines Rhodaniennes
+Accords actuels: Steak et grillades [reference] | Agneau [reference] | Champignons [reference] | Saucisses [reference] | Lasagne [reference] | Tourtière [reference]
+
+26. Georges Duboeuf Brouilly
+ID: wine-georges-duboeuf-brouilly
+Type: — | Couleur: red
+Style: Rouge sec, fruité, léger et souple
+Cépages: Gamay
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 2
+Producteur: Georges Duboeuf
+Région: Beaujolais | Appellation: Brouilly
+Accords actuels: Planche & charcuteries [TYPE MANQUANT] | Burger [reference] | Curry [reference] | Tartare de bœuf [reference]
+
+27. John Doe
+ID: wine-john-doe-2025
+Type: — | Couleur: red
+Style: —
+Cépages: Frontenac noir, Radisson, Frontenac gris, Petite Perle, Marquette
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 2
+Producteur: Pinard et Filles
+Région: Lanaudière | Appellation: Vin du Québec
+Accords actuels: Aucun
+
+28. Kendall-Jackson Vintner's Reserve Chardonnay
+ID: wine-kendall-jackson-vintners-reserve-chardonnay
+Type: — | Couleur: white
+Style: Blanc sec, riche, rond et boisé
+Cépages: Chardonnay
+Corps: 4 | Sucre: 2 | Acidité: 3 | Tanins: 1
+Producteur: Kendall-Jackson Vineyards & Winery
+Région: Californie | Appellation: California
+Accords actuels: Poulet rôti [TYPE MANQUANT] | Pâtes crémeuses [reference] | Chocolat [reference]
+
+29. L'Orpailleur Blanc
+ID: wine-lorpailleur-blanc-2025
+Type: — | Couleur: white
+Style: Blanc sec, frais et fruité
+Cépages: Seyval blanc, Frontenac blanc, Vidal, Cayuga
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Vignoble de l'Orpailleur
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Poisson & fruits de mer [reference]
+
+30. L'Orpailleur Brut
+ID: wine-l-orpailleur-brut
+Type: — | Couleur: sparkling
+Style: Vin effervescent brut, frais et équilibré
+Cépages: Seyval, Vidal
+Corps: 2 | Sucre: 2 | Acidité: 4 | Tanins: 1
+Producteur: Vignoble de l'Orpailleur
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Fromages [reference] | Crabe [reference] | Ramen [reference] | Tarte aux fruits [reference] | Crème brûlée [reference] | Gâteau & dessert à la vanille [reference]
+
+31. La Chablisienne Chablis La Sereine
+ID: wine-la-chablisienne-chablis-la-sereine
+Type: — | Couleur: white
+Style: Blanc sec, frais et minéral
+Cépages: Chardonnay
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: La Chablisienne
+Région: Bourgogne | Appellation: Chablis
+Accords actuels: Fromages [TYPE MANQUANT] | Saumon [reference] | Huîtres [reference] | Crevettes [reference] | Fondue au fromage [reference] | Pétoncles [reference] | Moules [reference] | Poulet frit [reference] | Tartare de saumon [reference] | Pesto [reference] | Salade & fromage de chèvre [reference] | Brunch & œufs bénédictine [reference]
+
+32. La Sablette Muscadet-Sèvre et Maine sur Lie
+ID: wine-la-sablette-muscadet-sevre-et-maine-sur-lie
+Type: — | Couleur: white
+Style: Blanc sec, léger et vif
+Cépages: Melon de Bourgogne
+Corps: 1 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Marcel Martin
+Région: Vallée de la Loire | Appellation: Muscadet-Sèvre et Maine
+Accords actuels: Poisson & fruits de mer [reference] | Huîtres [reference]
+
+33. Le Blanc
+ID: wine-domaine-bergeville-le-blanc-2024
+Type: wine | Couleur: sparkling
+Style: Mousseux blanc brut
+Cépages: Vidal, Frontenac gris, Acadie blanc, Seyval, Frontenac blanc, Riesling
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Domaine Bergeville
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Aucun
+
+34. Le Bâtonnier
+ID: wine-domaine-du-ridge-le-batonnier
+Type: wine | Couleur: red
+Style: Rouge souple, rond et légèrement boisé
+Cépages: Maréchal Foch
+Corps: 4 | Sucre: 1 | Acidité: 3 | Tanins: 3
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Steak et grillades [reference] | Agneau [reference] | Tourtière [reference]
+
+35. Le Rosé
+ID: wine-domaine-bergeville-le-rose-2024
+Type: wine | Couleur: rose
+Style: Mousseux rosé brut
+Cépages: Vidal, Marquette, Frontenac gris, Gamay, Frontenac noir, Riesling, Acadie blanc
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Domaine Bergeville
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Aucun
+
+36. Le Stanbridge
+ID: wine-domaine-du-ridge-le-stanbridge
+Type: wine | Couleur: white
+Style: Blanc sec, généreux et légèrement boisé
+Cépages: Vidal
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Thon [reference] | Poulet rôti [reference] | Poisson grillé [reference]
+
+37. Le soleil s’en est mêlé
+ID: wine-domaine-bergeville-le-soleil-s-en-est-mele-2025
+Type: wine | Couleur: red
+Style: Rouge léger et sec
+Cépages: Gamay, Marquette, Riesling, Frontenac noir
+Corps: 2 | Sucre: 1 | Acidité: 3 | Tanins: 2
+Producteur: Domaine Bergeville
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Aucun
+
+38. Les Petites Cuvées – Seyval/Vidal
+ID: wine-domaine-du-ridge-seyval-vidal
+Type: wine | Couleur: white
+Style: Blanc fruité, frais et expressif
+Cépages: Seyval blanc, Vidal
+Corps: 3 | Sucre: 2 | Acidité: 4 | Tanins: 1
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Sushis [reference] | Salade & fromage de chèvre [reference] | Cuisine asiatique sucrée-salée [reference]
+
+39. Les Petites Cuvées – Vidal Brut
+ID: wine-domaine-du-ridge-les-petites-cuvees-vidal-brut
+Type: wine | Couleur: white
+Style: Effervescent brut, vif, citronné et minéral
+Cépages: Vidal
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Crabe [reference] | Huîtres [reference] | Poisson & fruits de mer [reference]
+
+40. Les Rosiers 2024
+ID: wine-les-pervenches-les-rosiers-2024
+Type: wine | Couleur: white
+Style: Chardonnay texturé, généreux et aromatique
+Cépages: Chardonnay
+Corps: 4 | Sucre: 1 | Acidité: 4 | Tanins: 2
+Producteur: Les Pervenches
+Région: Cantons-de-l'Est | Appellation: Vin du Québec
+Accords actuels: Poulet rôti [reference] | Curry [reference] | Fromages [reference]
+
+41. Lois Grüner Veltliner
+ID: wine-loimer-lois-gruner-veltliner-2023
+Type: — | Couleur: white
+Style: Blanc sec, vif, minéral et fruité
+Cépages: Grüner Veltliner
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Weingut Loimer
+Région: Basse-Autriche (Niederösterreich) | Appellation: Kamptal DAC
+Accords actuels: Cuisine végétarienne [reference] | Homard [reference] | Pétoncles [reference] | Poisson grillé [reference] | Thon [reference]
+
+42. Louis Jadot Bourgogne Couvent des Jacobins
+ID: wine-louis-jadot-bourgogne-couvent-des-jacobins-2023
+Type: — | Couleur: red
+Style: Rouge sec, délicat, fruité et légèrement boisé
+Cépages: Pinot noir
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 2
+Producteur: Louis Jadot
+Région: Bourgogne | Appellation: Bourgogne
+Accords actuels: Canard [reference] | Porc [reference] | Veau [reference]
+
+43. L’Espérance 2025
+ID: wine-les-pervenches-lesperance-2025
+Type: wine | Couleur: white
+Style: Gewurztraminer sec, exotique, ample et frais
+Cépages: Gewurztraminer
+Corps: 4 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Les Pervenches
+Région: Cantons-de-l'Est | Appellation: Vin du Québec
+Accords actuels: Cuisine asiatique sucrée-salée [reference] | Curry [reference] | Fromages [reference]
+
+44. L’Honorable 1 litre
+ID: wine-domaine-du-ridge-l-honorable-1-litre
+Type: wine | Couleur: red
+Style: Rouge puissant, boisé et harmonieux
+Cépages: Maréchal Foch, Lucie Kuhlmann
+Corps: 5 | Sucre: 1 | Acidité: 3 | Tanins: 4
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Steak et grillades [reference] | Canard [reference] | Agneau [reference]
+
+45. L’Intégrale
+ID: wine-domaine-bergeville-l-integrale
+Type: wine | Couleur: sparkling
+Style: Mousseux blanc brut nature
+Cépages: Saint-Pépin, Frontenac blanc, Acadie blanc, Frontenac gris
+Corps: 3 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Domaine Bergeville
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Aucun
+
+46. Macpel PGG 2024
+ID: wine-les-pervenches-macpel-pgg-2024
+Type: wine | Couleur: white
+Style: Blanc de macération rond, juteux et légèrement tannique
+Cépages: Pinot gris, Gewurztraminer
+Corps: 4 | Sucre: 1 | Acidité: 3 | Tanins: 3
+Producteur: Les Pervenches
+Région: Cantons-de-l'Est | Appellation: Vin du Québec
+Accords actuels: Cuisine épicée [reference] | Fromages [reference] | Cuisine végétarienne [reference]
+
+47. Mapu Cabernet-Sauvignon/Carmenère
+ID: wine-mapu-cabernet-sauvignon-carmenere
+Type: — | Couleur: red
+Style: Rouge sec, mi-corsé, souple et généreux
+Cépages: Cabernet Sauvignon, Carmenère
+Corps: 3 | Sucre: 1 | Acidité: 3 | Tanins: 3
+Producteur: Baron Philippe de Rothschild
+Région: Valle del Maule | Appellation: Valle del Maule
+Accords actuels: Aucun
+
+48. Martín Códax Albariño Rías Baixas
+ID: wine-martin-codax-albarino-rias-baixas-2025
+Type: — | Couleur: white
+Style: Blanc sec, vif, aromatique et frais
+Cépages: Albariño
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: —
+Producteur: Martín Códax
+Région: L'Espagne Verte | Appellation: Rías Baixas
+Accords actuels: Sushis [TYPE MANQUANT] | Poisson & fruits de mer [reference] | Homard [reference] | Curry [reference] | Cuisine asiatique sucrée-salée [reference]
+
+49. Masi Campofiorin Verona
+ID: wine-masi-campofiorin-verona
+Type: — | Couleur: red
+Style: Rouge sec, généreux, fruité et épicé
+Cépages: Corvina, Rondinella, Molinara
+Corps: 4 | Sucre: 1 | Acidité: 3 | Tanins: 3
+Producteur: Masi
+Région: Vénétie | Appellation: Rosso Verona IGT
+Accords actuels: Agneau [reference] | BBQ & côtes levées [reference] | Chocolat [reference]
+
+50. Mazzei Fonterutoli Chianti Classico
+ID: wine-mazzei-fonterutoli-chianti-classico-2023
+Type: — | Couleur: red
+Style: Rouge frais, structuré et gastronomique
+Cépages: Sangiovese, Malvasia Nera, Colorino
+Corps: 4 | Sucre: 1 | Acidité: 4 | Tanins: 4
+Producteur: Castello di Fonterutoli — Mazzei
+Région: Toscane | Appellation: Chianti Classico
+Accords actuels: Agneau [reference]
+
+51. Meinklang Kontakt
+ID: wine-meinklang-kontakt-2024
+Type: — | Couleur: orange
+Style: Blanc de macération sec, frais, texturé et légèrement tannique
+Cépages: Welschriesling, Pinot gris, Traminer
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 2
+Producteur: Meinklang
+Région: Burgenland | Appellation: Burgenland
+Accords actuels: Cuisine végétarienne [reference] | Risotto [reference] | Champignons [reference] | Légumes grillés [reference] | Ramen [reference]
+
+52. Morgon
+ID: wine-marcel-lapierre-morgon-2025
+Type: — | Couleur: red
+Style: —
+Cépages: Gamay
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 2
+Producteur: Domaine Marcel Lapierre
+Région: Beaujolais | Appellation: Morgon
+Accords actuels: Aucun
+
+53. Mouton Cadet Bordeaux Rouge
+ID: wine-mouton-cadet-bordeaux-rouge
+Type: — | Couleur: red
+Style: Rouge sec, mi-corsé, souple et légèrement boisé
+Cépages: Merlot, Cabernet Sauvignon, Cabernet Franc
+Corps: 3 | Sucre: 1 | Acidité: 3 | Tanins: 3
+Producteur: Baron Philippe de Rothschild
+Région: Bordeaux | Appellation: Bordeaux
+Accords actuels: Aucun
+
+54. Parés Baltà Cava Brut
+ID: wine-pares-balta-cava-brut
+Type: — | Couleur: sparkling
+Style: Mousseux sec, frais et vif
+Cépages: Parellada, Macabeo, Xarel·lo
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Parés Baltà
+Région: Catalogne | Appellation: Cava
+Accords actuels: Pizza [reference] | Homard [reference] | Poutine [reference]
+
+55. Pieropan Soave Classico
+ID: wine-pieropan-soave-classico
+Type: — | Couleur: white
+Style: Blanc sec, frais, floral et minéral
+Cépages: Garganega, Trebbiano di Soave
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: —
+Producteur: Pieropan
+Région: Vénétie | Appellation: Soave
+Accords actuels: Poulet rôti [TYPE MANQUANT] | Cuisine végétarienne [reference] | Homard [reference] | Pétoncles [reference]
+
+56. Pinot Zweigelt 2025
+ID: wine-les-pervenches-pinot-zweigelt-2025
+Type: wine | Couleur: red
+Style: Rouge léger, sapide, fruité et finement tannique
+Cépages: Pinot noir, Zweigelt
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 3
+Producteur: Les Pervenches
+Région: Cantons-de-l'Est | Appellation: Vin du Québec
+Accords actuels: Canard [reference] | Champignons [reference] | Planche & charcuteries [reference]
+
+57. Plus Petit Que
+ID: wine-domaine-bergeville-plus-petit-que-2025
+Type: wine | Couleur: sparkling
+Style: Pétillant sur lies brut nature
+Cépages: Frontenac blanc, Acadie blanc, Geisenheim, La Crescent, Vidal, Frontenac gris, Seyval
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Domaine Bergeville
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Aucun
+
+58. Pur Pinot 2025
+ID: wine-les-pervenches-pur-pinot-2025
+Type: wine | Couleur: red
+Style: Pinot noir souple, épicé et soyeux
+Cépages: Pinot noir
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 3
+Producteur: Les Pervenches
+Région: Cantons-de-l'Est | Appellation: Vin du Québec
+Accords actuels: Canard [reference] | Champignons [reference] | Saumon [reference]
+
+59. Riesling
+ID: wine-trimbach-riesling-2023
+Type: — | Couleur: white
+Style: —
+Cépages: Riesling
+Corps: 3 | Sucre: 1 | Acidité: 5 | Tanins: —
+Producteur: Trimbach
+Région: Alsace | Appellation: Alsace
+Accords actuels: Aucun
+
+60. Rosé
+ID: wine-domaine-du-ridge-rose-domaine-du-ridge
+Type: wine | Couleur: rose
+Style: Rosé sec, léger et frais
+Cépages: Seyval blanc, Seyval noir, De Chaunac, Maréchal Foch, Frontenac blanc, Frontenac noir, Sabrevois
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Saumon [reference] | Salade & fromage de chèvre [reference] | Poulet rôti [reference]
+
+61. Rouge 
+ID: wine-domaine-du-ridge-rouge-domaine-du-ridge
+Type: wine | Couleur: red
+Style: Rouge fruité, frais et accessible
+Cépages: Maréchal Foch, Frontenac noir, Sabrevois
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 3
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Tartare de bœuf [reference] | Lasagne [reference] | Raclette [reference]
+
+62. Ruffino Chianti
+ID: wine-ruffino-chianti
+Type: — | Couleur: red
+Style: Rouge sec, fruité, frais et mi-corsé
+Cépages: Sangiovese
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 3
+Producteur: Ruffino
+Région: Toscane | Appellation: Chianti
+Accords actuels: Pizza [TYPE MANQUANT] | Pâtes sauce tomate [reference] | Tacos [reference] | Lasagne [reference] | Tourtière [reference]
+
+63. Saint-Martin
+ID: wine-domaine-du-ridge-saint-martin
+Type: wine | Couleur: white
+Style: Vin doux naturel, riche et boisé
+Cépages: Frontenac blanc
+Corps: 4 | Sucre: 5 | Acidité: 2 | Tanins: 1
+Producteur: Domaine du Ridge
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Fromages [reference] | Fruits & dessert léger [reference]
+
+64. Schieferkopf Riesling Trocken Sec
+ID: wine-schieferkopf-riesling-trocken-sec-2023
+Type: — | Couleur: white
+Style: Blanc sec, vif et minéral
+Cépages: Riesling
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Schieferkopf
+Région: Baden | Appellation: Baden
+Accords actuels: Sushis [reference] | Poulet frit [reference] | Tartare de saumon [reference] | Salade & fromage de chèvre [reference] | Brunch & œufs bénédictine [reference]
+
+65. Segura Viudas Brut Organic
+ID: wine-segura-viudas-brut-organic
+Type: — | Couleur: sparkling
+Style: Mousseux sec, frais, vif et minéral
+Cépages: Macabeo, Parellada, Xarel·lo
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: —
+Producteur: Segura Viudas
+Région: Catalogne | Appellation: Cava
+Accords actuels: Planche & charcuteries [reference] | Huîtres [reference] | Crevettes [reference] | Pétoncles [reference] | Moules [reference] | Poulet frit [reference] | Tartare de saumon [reference] | Crabe [reference] | Brunch & œufs bénédictine [reference]
+
+66. Seyval Chardo 2025
+ID: wine-les-pervenches-seyval-chardo-2025
+Type: wine | Couleur: white
+Style: Blanc mûr, texturé, tendu et expressif
+Cépages: Seyval, Chardonnay
+Corps: 3 | Sucre: 1 | Acidité: 5 | Tanins: 1
+Producteur: Les Pervenches
+Région: Cantons-de-l'Est | Appellation: IGP Vin du Québec
+Accords actuels: Poisson grillé [reference] | Sushis [reference] | Poulet rôti [reference]
+
+67. Torres Las Pisadas Rioja
+ID: wine-torres-las-pisadas-rioja
+Type: — | Couleur: red
+Style: Rouge sec, fruité, structuré et épicé avec un élevage en bois perceptible
+Cépages: Tempranillo
+Corps: 4 | Sucre: 1 | Acidité: 3 | Tanins: 3
+Producteur: Familia Torres
+Région: Vallée de l'Ebre | Appellation: Rioja
+Accords actuels: Steak et grillades [reference] | BBQ & côtes levées [reference] | Chocolat [reference]
+
+68. Trop Content Chenin Blanc
+ID: wine-trop-content-chenin-blanc-2025
+Type: — | Couleur: white
+Style: Blanc sec, frais, fruité et texturé
+Cépages: Chenin blanc
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Krüger & Roux
+Région: Swartland | Appellation: Swartland
+Accords actuels: Fromages [TYPE MANQUANT] | Saumon [TYPE MANQUANT] | Pâtes crémeuses [reference] | Poisson grillé [reference] | Crème brûlée [reference]
+
+69. Vidal-Fleury Côtes-du-Rhône
+ID: wine-vidal-fleury-cotes-du-rhone
+Type: — | Couleur: red
+Style: Rouge sec, corsé, chaleureux et épicé
+Cépages: Grenache, Carignan
+Corps: 4 | Sucre: 1 | Acidité: 3 | Tanins: 3
+Producteur: Vidal-Fleury
+Région: Vallée du Rhône | Appellation: Côtes du Rhône
+Accords actuels: BBQ & côtes levées [reference] | Chocolat [reference]
+
+70. Whispering Angel Côtes de Provence
+ID: wine-whispering-angel-cotes-de-provence-2025
+Type: — | Couleur: rose
+Style: Rosé sec, pâle, frais et délicat
+Cépages: Grenache, Cinsault, Vermentino, Syrah
+Corps: 2 | Sucre: 1 | Acidité: 4 | Tanins: 1
+Producteur: Château d'Esclans
+Région: Provence | Appellation: Côtes de Provence
+Accords actuels: Saumon [reference] | Curry [reference] | Poisson grillé [reference] | Thon [reference] | Cuisine asiatique sucrée-salée [reference] | Tarte aux fruits [reference]
+
+71. William Fèvre Chablis Les Champs Royaux
+ID: wine-william-fevre-chablis-les-champs-royaux-2023
+Type: — | Couleur: white
+Style: Blanc sec, vif, minéral et précis
+Cépages: Chardonnay
+Corps: 2 | Sucre: 1 | Acidité: 5 | Tanins: —
+Producteur: William Fèvre
+Région: Bourgogne | Appellation: Chablis
+Accords actuels: Sushis [reference] | Huîtres [reference] | Crevettes [reference] | Fondue au fromage [reference] | Moules [reference] | Pesto [reference]
+
+72. Zenato Valpolicella Superiore
+ID: wine-zenato-valpolicella-superiore
+Type: — | Couleur: red
+Style: Rouge sec, frais, fruité et velouté
+Cépages: Corvina Veronese, Rondinella, Corvinone
+Corps: 3 | Sucre: 1 | Acidité: 4 | Tanins: 3
+Producteur: Zenato
+Région: Vénétie | Appellation: Valpolicella
+Accords actuels: Pizza [TYPE MANQUANT] | Pâtes sauce tomate [reference] | Canard [reference]

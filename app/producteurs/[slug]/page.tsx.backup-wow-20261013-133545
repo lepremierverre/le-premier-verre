@@ -1,0 +1,762 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { PortableText } from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/types";
+import type { SanityImageSource } from "@sanity/image-url";
+
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import { producerBySlugQuery } from "@/sanity/lib/queries";
+import BottleStage from "@/components/wine/BottleStage";
+import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
+import AnalyticsEvent from "@/components/analytics/AnalyticsEvent";
+import ProducerWebsiteLink from "@/components/analytics/ProducerWebsiteLink";
+
+export const revalidate = 60;
+
+type Producer = {
+  _id: string;
+  name: string;
+  slug: string;
+
+  municipality?: string;
+
+  country?: {
+    name?: string;
+    slug?: string;
+  };
+
+  region?: {
+    name?: string;
+    slug?: string;
+  };
+
+  appellation?: {
+    name?: string;
+    slug?: string;
+  };
+
+  logo?: SanityImageSource;
+  photo?: SanityImageSource;
+  heroImage?: SanityImageSource;
+
+  mediaPermissionStatus?:
+    | "none"
+    | "provided_by_producer"
+    | "authorized_by_producer"
+    | "lpv_original"
+    | "licensed";
+  mediaCredit?: string;
+  mediaPermissionDate?: string;
+  mediaPermissionNote?: string;
+
+  oneLiner?: string;
+  shortBio?: string;
+  bio?: PortableTextBlock[];
+
+  approach?: {
+    _key?: string;
+    title?: string;
+    text?: string;
+  }[];
+
+  signatureGrapes?: {
+    _id?: string;
+    name?: string;
+    slug?: string;
+  }[];
+
+  whyWeFollow?: string;
+
+  openToVisitors?: boolean;
+  visitDetails?: string;
+  address?: string;
+  reservationRequired?: boolean;
+  website?: string;
+
+  instagram?: string;
+  facebook?: string;
+
+  wines?: {
+    _id: string;
+    name: string;
+    slug: string;
+    vintage?: number;
+    color?: string;
+    bottleImage?: SanityImageSource;
+    approxPrice?: number;
+  }[];
+
+  articles?: {
+    _id: string;
+    title: string;
+    slug: string;
+    excerpt?: string;
+  }[];
+
+  guides?: {
+    _id: string;
+    title: string;
+    slug: string;
+    excerpt?: string;
+  }[];
+};
+
+function formatPrice(value?: number) {
+  if (typeof value !== "number") return null;
+
+  return new Intl.NumberFormat("fr-CA", {
+    style: "currency",
+    currency: "CAD",
+  }).format(value);
+}
+
+function formatColor(value?: string) {
+  if (!value) return null;
+
+  const labels: Record<string, string> = {
+    red: "Rouge",
+    white: "Blanc",
+    rose: "Rosé",
+    orange: "Orange",
+    sparkling: "Effervescent",
+    fortified: "Fortifié",
+  };
+
+  return labels[value] || value;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return buildDynamicMetadata({
+    entity: "producer",
+    slug,
+    locale: "fr",
+  });
+}
+
+export default async function ProducerPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  const producer = await client.fetch<Producer | null>(
+    producerBySlugQuery,
+    { slug }
+  );
+
+  if (!producer) notFound();
+
+  const authorizedMediaStatuses = new Set([
+    "provided_by_producer",
+    "authorized_by_producer",
+    "lpv_original",
+    "licensed",
+  ]);
+
+  const hasAuthorizedMedia =
+    !!producer.mediaPermissionStatus &&
+    authorizedMediaStatuses.has(producer.mediaPermissionStatus);
+
+  const authorizedImage =
+    hasAuthorizedMedia
+      ? producer.heroImage || producer.photo || producer.logo
+      : null;
+
+  const authorizedImageSrc = authorizedImage
+    ? urlFor(authorizedImage)
+        .width(1600)
+        .fit("max")
+        .url()
+    : null;
+
+  const location = [
+    producer.municipality,
+    producer.region?.name,
+    producer.country?.name,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  const hasVisitInformation =
+    producer.openToVisitors !== undefined ||
+    Boolean(producer.address) ||
+    Boolean(producer.visitDetails) ||
+    Boolean(producer.website);
+
+  return (
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+      <AnalyticsEvent
+        eventName="producer_view"
+        data={{
+          producerId: producer._id,
+        }}
+      />
+      <article className="lpv-container pb-24">
+
+        <div className="pt-8 md:pt-10">
+          <Link href="/producteurs" className="lpv-text-link">
+            <span>←</span> Retour aux producteurs
+          </Link>
+        </div>
+
+        {/* HERO */}
+
+        <section className="border-b border-[var(--lpv-line)] pb-16 pt-16 md:pb-24 md:pt-24">
+
+          <div className="flex items-start justify-between gap-8">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Producteur
+            </p>
+
+            {location ? (
+              <p className="max-w-md text-right text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+                {location}
+              </p>
+            ) : null}
+          </div>
+
+          <div className="mt-12 md:mt-16">
+            <h1
+              className={`lpv-display tracking-[-0.055em] ${
+                producer.name.length > 18
+                  ? "max-w-[15ch] text-[clamp(4.5rem,9.5vw,9.5rem)] leading-[0.86]"
+                  : "max-w-[12ch] text-[clamp(5rem,11vw,11rem)] leading-[0.78]"
+              }`}
+            >
+              {producer.name}
+            </h1>
+          </div>
+
+          {authorizedImageSrc ? (
+            <div className="mt-14 border-t border-[var(--lpv-line)] pt-8 md:mt-20 md:pt-10">
+              <div className="w-full">
+                <div className="aspect-[3/2] overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src={authorizedImageSrc}
+                    alt={producer.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <div className="mt-3 flex items-center justify-between gap-6">
+                  <p className="text-[0.6rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                    Visuel autorisé
+                  </p>
+
+                  {producer.mediaCredit ? (
+                    <p className="text-xs text-[var(--lpv-muted)]">
+                      © {producer.mediaCredit}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          <div className={`grid gap-12 border-t border-[var(--lpv-line)] pt-8 md:grid-cols-[0.34fr_0.66fr] md:pt-10 ${
+            authorizedImageSrc ? "mt-10 md:mt-14" : "mt-14 md:mt-20"
+          }`}>
+
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                En quelques mots
+              </p>
+            </div>
+
+            <div>
+              {producer.oneLiner ? (
+                <p className="max-w-4xl text-[clamp(1.8rem,3.5vw,3.4rem)] font-medium leading-[1.04] tracking-[-0.035em]">
+                  {producer.oneLiner}
+                </p>
+              ) : producer.shortBio ? (
+                <p className="max-w-3xl text-xl leading-9 text-[var(--lpv-muted)]">
+                  {producer.shortBio}
+                </p>
+              ) : (
+                <p className="text-lg text-[var(--lpv-muted)]">
+                  Un domaine à découvrir.
+                </p>
+              )}
+            </div>
+
+          </div>
+
+          <div className="mt-16 grid gap-8 border-t border-[var(--lpv-line)] pt-7 md:grid-cols-3 md:gap-12">
+
+            <div>
+              <p className="text-[0.65rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                Origine
+              </p>
+
+              <p className="mt-3 text-lg">
+                {[producer.region?.name, producer.country?.name]
+                  .filter(Boolean)
+                  .join(" · ") || "—"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[0.65rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                Appellation
+              </p>
+
+              <p className="mt-3 text-lg">
+                {producer.appellation?.name || "Plusieurs appellations"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[0.65rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+                Cépages
+              </p>
+
+              <p className="mt-3 text-lg">
+                {producer.signatureGrapes?.length
+                  ? producer.signatureGrapes
+                      .map((grape) => grape.name)
+                      .filter(Boolean)
+                      .join(" · ")
+                  : "—"}
+              </p>
+            </div>
+
+          </div>
+
+          {producer.website || producer.instagram ? (
+            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4">
+
+              {producer.website ? (
+                <ProducerWebsiteLink
+                  href={producer.website}
+                  producerId={producer._id}
+                  locale="fr"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="lpv-text-link"
+                >
+                  Site officiel <span>↗</span>
+                </ProducerWebsiteLink>
+              ) : null}
+
+              {producer.instagram ? (
+                <a
+                  href={producer.instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="lpv-text-link"
+                >
+                  Instagram <span>↗</span>
+                </a>
+              ) : null}
+
+            </div>
+          ) : null}
+
+        </section>
+
+        {/* QUI SONT-ILS */}
+
+        {producer.bio?.length ? (
+          <section className="grid gap-12 border-b border-[var(--lpv-line)] py-16 md:grid-cols-[0.34fr_0.66fr] md:py-24">
+
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Le domaine
+              </p>
+
+              <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-7xl">
+                Qui sont-ils?
+              </h2>
+            </div>
+
+            <div className="lpv-prose max-w-3xl text-lg leading-9">
+              <PortableText value={producer.bio} />
+            </div>
+
+          </section>
+        ) : null}
+
+        {/* APPROCHE */}
+
+        {producer.approach?.length ? (
+          <section className="border-b border-[var(--lpv-line)] py-16 md:py-24">
+
+            <div className="border-b border-[var(--lpv-line)] pb-7">
+
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Leur approche
+              </p>
+
+              <h2 className="lpv-display mt-5 text-5xl leading-none md:text-7xl">
+                Ce qui les distingue.
+              </h2>
+
+            </div>
+
+            <div className="grid md:grid-cols-3">
+
+              {producer.approach.map((item, index) => (
+                <div
+                  key={item._key || `${item.title}-${index}`}
+                  className={`py-10 md:py-14 ${
+                    index < producer.approach!.length - 1
+                      ? "border-b border-[var(--lpv-line)] md:border-b-0 md:border-r md:pr-10"
+                      : ""
+                  } ${
+                    index > 0 ? "md:pl-10" : ""
+                  }`}
+                >
+                  <span className="text-[0.65rem] tracking-[0.18em] text-[var(--lpv-muted)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  {item.title ? (
+                    <h3 className="mt-7 text-xl font-medium">
+                      {item.title}
+                    </h3>
+                  ) : null}
+
+                  {item.text ? (
+                    <p className="mt-5 max-w-md text-sm leading-7 text-[var(--lpv-muted)]">
+                      {item.text}
+                    </p>
+                  ) : null}
+                </div>
+              ))}
+
+            </div>
+          </section>
+        ) : null}
+
+        {/* CÉPAGES */}
+
+        {producer.signatureGrapes?.length ? (
+          <section className="grid gap-12 border-b border-[var(--lpv-line)] py-16 md:grid-cols-[0.34fr_0.66fr] md:py-20">
+
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Dans les vignes
+              </p>
+
+              <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-6xl">
+                Ce qu’ils cultivent.
+              </h2>
+            </div>
+
+            <div className="border-b border-[var(--lpv-line)]">
+
+              {producer.signatureGrapes.map((grape) =>
+                grape.slug ? (
+                  <Link
+                    key={grape._id || grape.name}
+                    href={`/cepages/${grape.slug}`}
+                    className="group/grape flex items-center justify-between border-t border-[var(--lpv-line)] py-5 text-xl transition-opacity hover:opacity-60"
+                  >
+                    <span>{grape.name}</span>
+                    <span className="text-sm transition-transform duration-300 group-hover/grape:translate-x-1">
+                      →
+                    </span>
+                  </Link>
+                ) : (
+                  <div
+                    key={grape._id || grape.name}
+                    className="border-t border-[var(--lpv-line)] py-5 text-xl"
+                  >
+                    {grape.name}
+                  </div>
+                )
+              )}
+
+            </div>
+          </section>
+        ) : null}
+
+        {/* POURQUOI ON LES SUIT */}
+
+        {producer.whyWeFollow ? (
+          <section className="grid gap-12 border-b border-[var(--lpv-line)] py-16 md:grid-cols-[0.34fr_0.66fr] md:py-24">
+
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Le Premier Verre
+              </p>
+
+              <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-7xl">
+                Pourquoi on les suit.
+              </h2>
+            </div>
+
+            <p className="max-w-3xl text-[clamp(1.5rem,2.5vw,2.3rem)] leading-[1.3] tracking-[-0.025em]">
+              {producer.whyWeFollow}
+            </p>
+
+          </section>
+        ) : null}
+
+        {/* À DÉCOUVRIR */}
+
+        {producer.wines?.length ? (
+          <section className="border-b border-[var(--lpv-line)] py-16 md:py-24">
+
+            <div className="flex items-end justify-between border-b border-[var(--lpv-line)] pb-7">
+
+              <div>
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  À découvrir
+                </p>
+
+                <h2 className="lpv-display mt-5 text-5xl leading-none md:text-7xl">
+                  Leurs vins.
+                </h2>
+              </div>
+
+              <Link href="/vins" className="lpv-text-link hidden sm:inline-flex">
+                Tous les vins <span>→</span>
+              </Link>
+
+            </div>
+
+            <div className="grid gap-x-8 md:grid-cols-2 xl:grid-cols-3 xl:gap-x-12">
+
+              {producer.wines.map((wine, index) => {
+const price = formatPrice(wine.approxPrice);
+
+                return (
+                  <article
+                    key={wine._id}
+                    className="group flex min-w-0 flex-col border-b border-[var(--lpv-line)] pt-10 pb-4"
+                  >
+
+                    <Link
+                      href={`/vins/${wine.slug}`}
+                      className="block w-full"
+                    >
+                      <BottleStage
+                        image={wine.bottleImage}
+                        alt={wine.name ?? "Bouteille de vin"}
+                        color={wine.color ?? undefined}
+                        variant="card"
+                        className="transition duration-700 group-hover:scale-[1.025]"
+                      />
+                    </Link>
+
+                    <div className="pt-7">
+
+                      <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                        {[formatColor(wine.color), wine.vintage]
+                          .filter(Boolean)
+                          .join(" · ") || "Vin"}
+                      </p>
+
+                      <Link href={`/vins/${wine.slug}`}>
+                        <h3 className="lpv-display mt-5 text-4xl leading-[0.92] transition-opacity group-hover:opacity-60 md:text-5xl">
+                          {wine.name}
+                        </h3>
+                      </Link>
+
+                      <div className="mt-4 flex items-center justify-between gap-6 border-t border-[var(--lpv-line)] pt-3">
+
+                        {price ? (
+                          <p className="text-sm">
+                            {price}
+                          </p>
+                        ) : (
+                          <span />
+                        )}
+
+                        <Link
+                          href={`/vins/${wine.slug}`}
+                          className="lpv-text-link"
+                        >
+                          Voir <span>→</span>
+                        </Link>
+
+                      </div>
+                    </div>
+
+                  </article>
+                );
+              })}
+
+            </div>
+          </section>
+        ) : null}
+
+        {/* VISITER */}
+
+        {hasVisitInformation ? (
+          <section className="grid gap-12 border-b border-[var(--lpv-line)] py-16 md:grid-cols-[0.34fr_0.66fr] md:py-24">
+
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Sur place
+              </p>
+
+              <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-7xl">
+                Visiter.
+              </h2>
+            </div>
+
+            <div className="border-b border-[var(--lpv-line)]">
+
+              <div className="grid gap-3 border-t border-[var(--lpv-line)] py-5 sm:grid-cols-[190px_1fr]">
+                <p className="text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+                  Visites
+                </p>
+
+                <p>
+                  {producer.openToVisitors
+                    ? "Oui"
+                    : "Non ouvert au public"}
+                </p>
+              </div>
+
+              {producer.address ? (
+                <div className="grid gap-3 border-t border-[var(--lpv-line)] py-5 sm:grid-cols-[190px_1fr]">
+                  <p className="text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+                    Adresse
+                  </p>
+
+                  <p>{producer.address}</p>
+                </div>
+              ) : null}
+
+              {producer.openToVisitors &&
+              producer.reservationRequired !== undefined ? (
+                <div className="grid gap-3 border-t border-[var(--lpv-line)] py-5 sm:grid-cols-[190px_1fr]">
+                  <p className="text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+                    Réservation
+                  </p>
+
+                  <p>
+                    {producer.reservationRequired
+                      ? "Requise"
+                      : "Non requise"}
+                  </p>
+                </div>
+              ) : null}
+
+              {producer.visitDetails ? (
+                <div className="grid gap-3 border-t border-[var(--lpv-line)] py-5 sm:grid-cols-[190px_1fr]">
+                  <p className="text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+                    À savoir
+                  </p>
+
+                  <p className="max-w-xl leading-7 text-[var(--lpv-muted)]">
+                    {producer.visitDetails}
+                  </p>
+                </div>
+              ) : null}
+
+              {producer.website ? (
+                <div className="grid gap-3 border-t border-[var(--lpv-line)] py-5 sm:grid-cols-[190px_1fr]">
+                  <p className="text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+                    En ligne
+                  </p>
+
+                  <ProducerWebsiteLink
+                    href={producer.website}
+                    producerId={producer._id}
+                    locale="fr"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="lpv-text-link w-fit"
+                  >
+                    Site officiel <span>↗</span>
+                  </ProducerWebsiteLink>
+                </div>
+              ) : null}
+
+            </div>
+          </section>
+        ) : null}
+
+        {/* CONTENU ASSOCIÉ */}
+
+        {producer.articles?.length || producer.guides?.length ? (
+          <section className="py-16 md:py-24">
+
+            <div className="border-b border-[var(--lpv-line)] pb-6">
+
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Pour aller plus loin
+              </p>
+
+              <h2 className="lpv-display mt-5 text-5xl leading-none md:text-7xl">
+                À lire.
+              </h2>
+
+            </div>
+
+            <div className="grid md:grid-cols-2">
+
+              {producer.articles?.map((article, index) => (
+                <Link
+                  key={article._id}
+                  href={`/blog/${article.slug}`}
+                  className={`group border-b border-[var(--lpv-line)] py-10 ${
+                    index % 2 === 0
+                      ? "md:border-r md:pr-10"
+                      : "md:pl-10"
+                  }`}
+                >
+                  <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                    Article
+                  </p>
+
+                  <h3 className="lpv-display mt-5 text-4xl leading-[0.92]">
+                    {article.title}
+                  </h3>
+
+                  {article.excerpt ? (
+                    <p className="mt-5 max-w-xl text-sm leading-7 text-[var(--lpv-muted)]">
+                      {article.excerpt}
+                    </p>
+                  ) : null}
+
+                  <span className="lpv-text-link mt-7">
+                    Lire <span>→</span>
+                  </span>
+                </Link>
+              ))}
+
+              {producer.guides?.map((guide, index) => (
+                <Link
+                  key={guide._id}
+                  href={`/guides/${guide.slug}`}
+                  className={`group border-b border-[var(--lpv-line)] py-10 ${
+                    index % 2 === 0
+                      ? "md:border-r md:pr-10"
+                      : "md:pl-10"
+                  }`}
+                >
+                  <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                    Guide
+                  </p>
+
+                  <h3 className="lpv-display mt-5 text-4xl leading-[0.92]">
+                    {guide.title}
+                  </h3>
+
+                  <span className="lpv-text-link mt-7">
+                    Lire <span>→</span>
+                  </span>
+                </Link>
+              ))}
+
+            </div>
+          </section>
+        ) : null}
+
+      </article>
+    </main>
+  );
+}

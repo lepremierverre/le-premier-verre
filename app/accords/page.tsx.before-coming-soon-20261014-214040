@@ -1,0 +1,175 @@
+import Link from "next/link";
+
+import { VIBE_PROFILES } from "@/lib/vibes/profiles";
+
+export const revalidate = 60;
+
+type SearchParams = Promise<{
+  q?: string;
+}>;
+
+function normalize(value?: string) {
+  return value
+    ?.normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLocaleLowerCase("fr-CA") ?? "";
+}
+
+export default async function AccordsPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const params = await searchParams;
+  const query = normalize(params.q);
+
+  const vibes = VIBE_PROFILES.filter((vibe) => {
+    if (!query) return true;
+
+    return normalize(
+      [
+        vibe.title,
+        vibe.description,
+        vibe.slug,
+      ]
+        .filter(Boolean)
+        .join(" ")
+    ).includes(query);
+  });
+
+  return (
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+
+      {/* HERO */}
+      <section className="border-b border-[var(--lpv-line)]">
+        <div className="lpv-container py-16 md:py-24">
+          <div className="grid gap-12 md:grid-cols-[0.72fr_0.28fr] md:items-end">
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Accords
+              </p>
+
+              <h1 className="lpv-display mt-7 max-w-5xl text-[clamp(5.2rem,10vw,10rem)] leading-[0.8] tracking-[-0.045em]">
+                C’est quoi
+                <br />
+                le mood?
+              </h1>
+            </div>
+
+            <div className="md:pb-2">
+              <p className="max-w-sm text-lg leading-8 text-[var(--lpv-muted)]">
+                Pas besoin de savoir ce qu’on mange.
+                <br />
+                Dis-nous juste où on en est.
+              </p>
+
+              <p className="mt-7 text-[0.65rem] uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                {VIBE_PROFILES.length} moments
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* RECHERCHE */}
+      <section className="border-b border-[var(--lpv-line)]">
+        <form method="GET" className="lpv-container py-10 md:py-14">
+          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            Trouver un moment
+          </p>
+
+          <div className="mt-5 flex items-end gap-5 border-b border-[var(--lpv-ink)] pb-4">
+            <input
+              type="search"
+              name="q"
+              defaultValue={params.q ?? ""}
+              placeholder="Piscine, chalet, dimanche, huîtres…"
+              className="min-w-0 flex-1 border-0 bg-transparent p-0 text-xl outline-none placeholder:text-[var(--lpv-muted)]/45 md:text-3xl"
+            />
+
+            <button
+              type="submit"
+              aria-label="Rechercher"
+              className="shrink-0 text-2xl transition-transform hover:translate-x-1"
+            >
+              →
+            </button>
+          </div>
+
+          {query ? (
+            <div className="mt-4 flex items-center gap-4 text-sm text-[var(--lpv-muted)]">
+              <span>
+                {vibes.length} résultat{vibes.length === 1 ? "" : "s"} pour
+                {" "}« {params.q} »
+              </span>
+
+              <Link
+                href="/accords"
+                className="border-b border-[var(--lpv-muted)]"
+              >
+                Effacer
+              </Link>
+            </div>
+          ) : null}
+        </form>
+      </section>
+
+      {/* INDEX DES MOMENTS */}
+      <section>
+        <div className="lpv-container py-14 md:py-20">
+
+          <div className="mb-12 grid gap-6 md:grid-cols-[0.3fr_0.7fr] md:items-end">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Les moments
+            </p>
+
+            <p className="max-w-xl text-lg leading-8 text-[var(--lpv-muted)]">
+              Une scène, une envie, une bouteille.
+              Le reste se joue dans le verre.
+            </p>
+          </div>
+
+          {vibes.length ? (
+            <div className="border-t border-[var(--lpv-line)]">
+              {vibes.map((vibe, index) => (
+                <Link
+                  key={vibe.id}
+                  href={`/accords/${vibe.slug}`}
+                  className="group grid gap-5 border-b border-[var(--lpv-line)] py-7 transition md:grid-cols-[0.08fr_0.62fr_0.25fr_0.05fr] md:items-center md:py-9"
+                >
+                  <span className="text-[0.65rem] tracking-[0.16em] text-[var(--lpv-muted)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <h2 className="lpv-display text-4xl leading-[0.95] tracking-[-0.025em] transition-transform group-hover:translate-x-2 md:text-5xl">
+                    {vibe.title}
+                  </h2>
+
+                  <p className="max-w-md text-sm leading-7 text-[var(--lpv-muted)]">
+                    {vibe.description}
+                  </p>
+
+                  <span className="text-right text-2xl transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="border-t border-[var(--lpv-line)] py-16">
+              <p className="lpv-display text-4xl">
+                Rien pour ce mood-là.
+              </p>
+
+              <p className="mt-4 text-[var(--lpv-muted)]">
+                Essaie autrement — les moments sont parfois plus précis
+                qu’on pense.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
+  );
+}

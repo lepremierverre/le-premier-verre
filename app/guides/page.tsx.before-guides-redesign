@@ -1,0 +1,188 @@
+import Link from "next/link";
+import type { SanityImageSource } from "@sanity/image-url";
+
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import { guidesQuery } from "@/sanity/lib/queries";
+
+export const revalidate = 60;
+
+type Guide = {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  coverImage?: SanityImageSource;
+  guideType?: string;
+  difficulty?: string;
+  estimatedReadingTime?: string;
+};
+
+function formatLabel(value?: string) {
+  if (!value) return null;
+
+  const labels: Record<string, string> = {
+    beginner: "Débutant",
+    practical: "Guide pratique",
+    buying: "Guide d’achat",
+    region: "Régional",
+    grape: "Cépage",
+    pairing: "Accords",
+    tasting: "Dégustation",
+    travel: "Voyage",
+    intermediate: "Intermédiaire",
+    advanced: "Avancé",
+  };
+
+  return labels[value] || value.replace(/[-_]/g, " ");
+}
+
+export default async function GuidesPage() {
+  const guides = await client.fetch<Guide[]>(guidesQuery);
+
+  return (
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+      <section className="border-b border-[var(--lpv-line)]">
+        <div className="lpv-container grid gap-6 py-10 md:grid-cols-[0.68fr_0.32fr] md:items-end md:gap-10 md:py-24">
+          <div>
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Comprendre
+            </p>
+
+            <h1 className="lpv-display mt-4 max-w-5xl text-[clamp(3.9rem,15vw,4.8rem)] leading-[0.84] md:mt-7 md:text-[clamp(4.8rem,10vw,10rem)] md:leading-[0.82]">
+              Les guides.
+            </h1>
+          </div>
+
+          <div className="border-t border-[var(--lpv-line)] pt-4 md:border-t-0 md:pb-2 md:pt-6">
+            <p className="max-w-md text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
+              Des repères simples pour mieux choisir, mieux goûter et mieux
+              comprendre ce qu’il y a dans le verre.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="lpv-container py-12 md:py-24">
+        <div className="pb-8 md:pb-12">
+          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            À lire
+          </p>
+
+          <h2 className="lpv-display mt-3 text-[2.8rem] leading-[0.95] md:mt-5 md:text-7xl md:leading-none">
+            Pour aller plus loin.
+          </h2>
+        </div>
+
+        {guides.length > 0 ? (
+          <div className="border-t border-[var(--lpv-line)]">
+            {guides.map((guide, index) => {
+              const imageSrc = guide.coverImage
+                ? urlFor(guide.coverImage)
+                    .width(1600)
+                    .height(1050)
+                    .fit("crop")
+                    .url()
+                : null;
+
+              return (
+                <article
+                  key={guide._id}
+                  className="group border-b border-[var(--lpv-line)] py-10 md:py-14 lg:py-16"
+                >
+                  <div className="grid items-start gap-10 lg:grid-cols-[1.18fr_0.82fr] lg:gap-20 xl:gap-28">
+                    <div className="lg:py-2">
+                      <div className="flex items-center justify-between border-b border-[var(--lpv-line)] pb-5">
+                        <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                          {String(index + 1).padStart(2, "0")}
+                          <span className="mx-3 text-[var(--lpv-line)]">—</span>
+                          {formatLabel(guide.guideType) || "Guide"}
+                        </p>
+
+                        <span className="hidden text-[0.65rem] uppercase tracking-[0.16em] text-[var(--lpv-muted)] sm:block">
+                          Le Premier Verre
+                        </span>
+                      </div>
+
+                      <Link
+                        href={`/guides/${guide.slug}`}
+                        className="block"
+                      >
+                        <h3 className="lpv-display mt-7 max-w-[720px] text-[clamp(3rem,4.8vw,5.2rem)] leading-[0.9] tracking-[-0.04em] transition-opacity duration-300 group-hover:opacity-60 lg:mt-9">
+                          {guide.title}
+                        </h3>
+                      </Link>
+
+                      <div className="mt-7 flex flex-wrap items-center gap-3 text-[0.68rem] uppercase tracking-[0.16em] text-[var(--lpv-muted)] lg:mt-9">
+                        {guide.difficulty ? (
+                          <span>{formatLabel(guide.difficulty)}</span>
+                        ) : null}
+
+                        {guide.difficulty && guide.estimatedReadingTime ? (
+                          <span>·</span>
+                        ) : null}
+
+                        {guide.estimatedReadingTime ? (
+                          <span>{guide.estimatedReadingTime}</span>
+                        ) : null}
+                      </div>
+
+                      {guide.excerpt ? (
+                        <p className="mt-6 max-w-xl text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
+                          {guide.excerpt}
+                        </p>
+                      ) : null}
+
+                      <div className="mt-8 lg:mt-10">
+                        <Link
+                          href={`/guides/${guide.slug}`}
+                          className="lpv-text-link"
+                        >
+                          Lire le guide <span>→</span>
+                        </Link>
+                      </div>
+                    </div>
+
+                    <Link
+                      href={`/guides/${guide.slug}`}
+                      className="block self-start overflow-hidden bg-[var(--lpv-paper-light)]"
+                    >
+                      {imageSrc ? (
+                        <img
+                          src={imageSrc}
+                          alt={guide.title}
+                          className="aspect-[4/3] w-full object-cover object-center transition duration-700 group-hover:scale-[1.015]"
+                        />
+                      ) : (
+                        <div className="flex aspect-[4/3] items-center justify-center">
+                          <p className="lpv-kicker text-[var(--lpv-muted)]">
+                            Image à venir
+                          </p>
+                        </div>
+                      )}
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="border-t border-[var(--lpv-line)] py-16 md:py-24">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Bientôt
+            </p>
+
+            <h2 className="lpv-display mt-5 max-w-3xl text-[3.5rem] leading-[0.9] md:text-7xl">
+              Les premiers guides arrivent.
+            </h2>
+
+            <p className="mt-6 max-w-xl text-base leading-8 text-[var(--lpv-muted)]">
+              Les régions, les cépages, les accords et les bases du vin seront
+              ajoutés progressivement.
+            </p>
+          </div>
+        )}
+      </section>
+    </main>
+  );
+}

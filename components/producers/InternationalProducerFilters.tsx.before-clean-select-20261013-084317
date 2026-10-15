@@ -1,0 +1,112 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
+type FilterOption = {
+  slug: string;
+  name: string;
+};
+
+type InternationalProducerFiltersProps = {
+  countries: FilterOption[];
+  regions: FilterOption[];
+  selectedCountry: string;
+  selectedRegion: string;
+  anchor?: string;
+  mobile?: boolean;
+};
+
+export default function InternationalProducerFilters({
+  countries,
+  regions,
+  selectedCountry,
+  selectedRegion,
+  anchor = "repertoire-desktop",
+}: InternationalProducerFiltersProps) {
+  const router = useRouter();
+
+  function go(country: string, region: string) {
+    const query = new URLSearchParams();
+
+    query.set("origine", "ailleurs");
+
+    if (country) query.set("pays", country);
+    if (region) query.set("region", region);
+
+    router.push(`/producteurs?${query.toString()}#${anchor}`);
+  }
+
+  const activeCountry =
+    countries.find((country) => country.slug === selectedCountry)?.name ||
+    "Pays";
+
+  const activeRegion =
+    regions.find((region) => region.slug === selectedRegion)?.name ||
+    "Région";
+
+  return (
+    <div className="flex items-center gap-7">
+      {/* PAYS */}
+      <label className="relative">
+        <span className="sr-only">Filtrer par pays</span>
+
+        <select
+          value={selectedCountry}
+          onChange={(event) => go(event.target.value, "")}
+          aria-label="Filtrer par pays"
+          className={`cursor-pointer appearance-none border-0 bg-transparent pb-1 pr-4 text-[0.55rem] font-semibold uppercase tracking-[0.16em] outline-none ${
+            selectedCountry
+              ? "border-b border-[var(--lpv-ink)] text-[var(--lpv-ink)]"
+              : "text-[var(--lpv-ink)]"
+          }`}
+        >
+          <option value="">Tous les pays</option>
+
+          {countries.map((country) => (
+            <option key={country.slug} value={country.slug}>
+              {country.name}
+            </option>
+          ))}
+        </select>
+
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute left-0 top-0 text-[0.55rem] font-semibold uppercase tracking-[0.16em] text-[var(--lpv-ink)]"
+        >
+          {activeCountry}
+        </span>
+      </label>
+
+      {/* RÉGION */}
+      <label className="relative">
+        <span className="sr-only">Filtrer par région</span>
+
+        <select
+          value={selectedRegion}
+          onChange={(event) => go(selectedCountry, event.target.value)}
+          aria-label="Filtrer par région"
+          className={`cursor-pointer appearance-none border-0 bg-transparent pb-1 pr-4 text-[0.55rem] font-semibold uppercase tracking-[0.16em] outline-none ${
+            selectedRegion
+              ? "border-b border-[var(--lpv-ink)] text-[var(--lpv-ink)]"
+              : "text-[var(--lpv-ink)]"
+          }`}
+        >
+          <option value="">Toutes les régions</option>
+
+          {regions.map((region) => (
+            <option key={region.slug} value={region.slug}>
+              {region.name}
+            </option>
+          ))}
+        </select>
+
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute left-0 top-0 text-[0.55rem] font-semibold uppercase tracking-[0.16em] text-[var(--lpv-ink)]"
+        >
+          {activeRegion}
+        </span>
+      </label>
+    </div>
+  );
+}

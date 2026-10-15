@@ -1,0 +1,426 @@
+import Link from "next/link";
+import PairingLink from "@/components/analytics/PairingLink";
+
+import { client } from "@/sanity/lib/client";
+import { foodsQuery } from "@/sanity/lib/queries";
+
+export const revalidate = 60;
+
+type FoodCard = {
+  _id: string;
+  name: string;
+  slug: string;
+  category?: string;
+  oneLiner?: string;
+  wineStyles?: string[];
+};
+
+type SearchParams = Promise<{
+  q?: string;
+  category?: string;
+  page?: string;
+}>;
+
+const categoryGroups = [
+  {
+    value: "",
+    label: "Tout",
+  },
+  {
+    value: "aperitif",
+    label: "Apéro",
+    categories: ["aperitif"],
+  },
+  {
+    value: "meat",
+    label: "Viandes",
+    categories: ["red-meat", "poultry"],
+  },
+  {
+    value: "sea",
+    label: "Poissons & mer",
+    categories: ["fish", "seafood"],
+  },
+  {
+    value: "vegetarian",
+    label: "Végé",
+    categories: ["vegetarian"],
+  },
+  {
+    value: "cheese",
+    label: "Fromages & charcuteries",
+    categories: ["cheese", "charcuterie"],
+  },
+  {
+    value: "dessert",
+    label: "Desserts",
+    categories: ["dessert"],
+  },
+  {
+    value: "other",
+    label: "Autres",
+    categories: ["other"],
+  },
+];
+
+function normalize(value?: string) {
+  return value?.trim().toLocaleLowerCase("fr-CA") ?? "";
+}
+
+function categoryLabel(category?: string) {
+  const labels: Record<string, string> = {
+    aperitif: "Apéritif",
+    "red-meat": "Viande",
+    poultry: "Volaille",
+    fish: "Poisson",
+    seafood: "Fruits de mer",
+    vegetarian: "Végétarien",
+    cheese: "Fromage",
+    charcuterie: "Charcuterie",
+    dessert: "Dessert",
+    other: "À table",
+  };
+
+  return category ? labels[category] ?? category : "Accord";
+}
+
+export default async function AccordsPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const params = await searchParams;
+  const foods = await client.fetch<FoodCard[]>(foodsQuery);
+
+  const query = normalize(params.q);
+  const selectedCategory = params.category ?? "";
+
+  const selectedGroup = categoryGroups.find(
+    (group) => group.value === selectedCategory
+  );
+
+  const filteredFoods = foods.filter((food) => {
+    const searchableText = normalize(
+      [
+        food.name,
+        food.oneLiner,
+        food.category,
+        ...(food.wineStyles ?? []),
+      ]
+        .filter(Boolean)
+        .join(" ")
+    );
+
+    const matchesSearch = !query || searchableText.includes(query);
+
+    const matchesCategory =
+      !selectedCategory ||
+      Boolean(selectedGroup?.categories?.includes(food.category ?? ""));
+
+    return matchesSearch && matchesCategory;
+  });
+
+  const requestedPage = Math.max(
+    1,
+    Number.parseInt(params.page ?? "1", 10) || 1
+  );
+
+  const foodsPerPage = 20;
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredFoods.length / foodsPerPage)
+  );
+
+  const currentPage = Math.min(requestedPage, totalPages);
+  const startIndex = (currentPage - 1) * foodsPerPage;
+
+  const paginatedFoods = filteredFoods.slice(
+    startIndex,
+    startIndex + foodsPerPage
+  );
+
+  const hasFilters = Boolean(query || selectedCategory);
+
+  function pageHref(page: number) {
+    const nextParams = new URLSearchParams();
+
+    if (params.q) nextParams.set("q", params.q);
+    if (selectedCategory) nextParams.set("category", selectedCategory);
+    if (page > 1) nextParams.set("page", String(page));
+
+    const queryString = nextParams.toString();
+
+    return queryString ? `/accords?${queryString}` : "/accords";
+  }
+
+  return (
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+
+      {/* HERO */}
+      <section className="border-b border-[var(--lpv-line)]">
+        <div className="lpv-container py-16 md:py-24">
+          <div className="grid gap-12 md:grid-cols-[0.72fr_0.28fr] md:items-end">
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Accords
+              </p>
+
+              <h1 className="lpv-display mt-7 max-w-5xl text-[clamp(5.2rem,10vw,10rem)] leading-[0.8] tracking-[-0.045em]">
+                Qu’est-ce
+                <br />
+                qu’on mange?
+              </h1>
+            </div>
+
+            <div className="md:pb-2">
+              <p className="max-w-sm text-lg leading-8 text-[var(--lpv-muted)]">
+                Pars de l’assiette.
+                <br />
+                On s’occupe du verre.
+              </p>
+
+              <p className="mt-7 text-[0.65rem] uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                {foods.length} accords
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* RECHERCHE */}
+      <section className="border-b border-[var(--lpv-line)]">
+        <form method="GET" className="lpv-container py-10 md:py-14">
+          {selectedCategory ? (
+            <input
+              type="hidden"
+              name="category"
+              value={selectedCategory}
+            />
+          ) : null}
+
+          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            Chercher un plat
+          </p>
+
+          <div className="mt-5 flex items-end gap-5 border-b border-[var(--lpv-ink)] pb-4">
+            <input
+              type="search"
+              name="q"
+              defaultValue={params.q ?? ""}
+              placeholder="Pizza, huîtres, poulet rôti, raclette…"
+              className="min-w-0 flex-1 border-0 bg-transparent p-0 text-xl outline-none placeholder:text-[var(--lpv-muted)]/45 md:text-3xl"
+            />
+
+            <button
+              type="submit"
+              aria-label="Rechercher"
+              className="shrink-0 text-2xl transition-transform hover:translate-x-1"
+            >
+              →
+            </button>
+          </div>
+
+          {query ? (
+            <p className="mt-4 text-sm text-[var(--lpv-muted)]">
+              Recherche : « {params.q} »
+            </p>
+          ) : null}
+        </form>
+      </section>
+
+      {/* UNIVERS */}
+      <section className="border-b border-[var(--lpv-line)]">
+        <div className="lpv-container py-7">
+          <div className="flex flex-wrap gap-x-8 gap-y-4">
+            {categoryGroups.map((group) => {
+              const active = selectedCategory === group.value;
+
+              return (
+                <Link
+                  key={group.value || "all"}
+                  href={
+                    group.value
+                      ? `/accords?category=${group.value}`
+                      : "/accords"
+                  }
+                  className={`text-[0.68rem] uppercase tracking-[0.16em] transition-opacity hover:opacity-50 ${
+                    active
+                      ? "text-[var(--lpv-ink)] underline underline-offset-8"
+                      : "text-[var(--lpv-muted)]"
+                  }`}
+                >
+                  {group.label}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* INDEX */}
+      <section className="lpv-container py-16 md:py-24">
+        <div className="grid gap-8 border-b border-[var(--lpv-line)] pb-8 md:grid-cols-[0.7fr_0.3fr] md:items-end">
+          <div>
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Le répertoire
+            </p>
+
+            <h2 className="lpv-display mt-5 text-5xl leading-[0.9] md:text-7xl">
+              À chaque assiette,
+              <br />
+              son verre.
+            </h2>
+          </div>
+
+          <div className="md:text-right">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
+              {filteredFoods.length} résultat
+              {filteredFoods.length !== 1 ? "s" : ""}
+            </p>
+
+            {hasFilters ? (
+              <Link
+                href="/accords"
+                className="lpv-text-link mt-4 inline-block"
+              >
+                Tout afficher
+              </Link>
+            ) : null}
+          </div>
+        </div>
+
+        {filteredFoods.length > 0 ? (
+          <>
+            <div className="grid md:grid-cols-2 md:gap-x-14 xl:gap-x-20">
+              {paginatedFoods.map((food, index) => {
+                const number = String(startIndex + index + 1).padStart(
+                  2,
+                  "0"
+                );
+
+                return (
+                  <PairingLink
+                    key={food._id}
+                    href={`/accords/${food.slug}`}
+                    pairingId={food._id}
+                    locale="fr"
+                    context="directory"
+                    className="group grid grid-cols-[2.5rem_1fr_auto] items-start gap-4 border-b border-[var(--lpv-line)] py-8 md:py-10"
+                  >
+                    <span className="pt-1 text-[0.58rem] tracking-[0.16em] text-[var(--lpv-muted)]">
+                      {number}
+                    </span>
+
+                    <div className="min-w-0">
+                      <p className="text-[0.62rem] uppercase tracking-[0.17em] text-[var(--lpv-cocoa)]">
+                        {categoryLabel(food.category)}
+                      </p>
+
+                      <h3 className="lpv-display mt-3 text-[clamp(2.2rem,3.2vw,3.8rem)] leading-[0.9] tracking-[-0.03em] transition-opacity group-hover:opacity-55">
+                        {food.name}
+                      </h3>
+
+                      {food.wineStyles?.length ? (
+                        <p className="mt-4 max-w-md text-xs leading-6 text-[var(--lpv-muted)]">
+                          {food.wineStyles.slice(0, 3).join(" · ")}
+                        </p>
+                      ) : food.oneLiner ? (
+                        <p className="mt-4 max-w-md text-sm leading-6 text-[var(--lpv-muted)]">
+                          {food.oneLiner}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <span className="pt-6 text-lg transition-transform group-hover:translate-x-1">
+                      →
+                    </span>
+                  </PairingLink>
+                );
+              })}
+            </div>
+
+            {totalPages > 1 ? (
+              <nav
+                aria-label="Pagination des accords"
+                className="mt-14 flex flex-wrap items-center justify-between gap-6 border-t border-[var(--lpv-line)] pt-8"
+              >
+                <div className="min-w-[90px]">
+                  {currentPage > 1 ? (
+                    <Link
+                      href={pageHref(currentPage - 1)}
+                      className="lpv-text-link"
+                    >
+                      ← Précédent
+                    </Link>
+                  ) : (
+                    <span className="text-sm text-[var(--lpv-muted)]/35">
+                      ← Précédent
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {Array.from(
+                    { length: totalPages },
+                    (_, i) => i + 1
+                  ).map((page) => (
+                    <Link
+                      key={page}
+                      href={pageHref(page)}
+                      aria-current={
+                        page === currentPage ? "page" : undefined
+                      }
+                      className={`flex h-10 min-w-10 items-center justify-center border px-3 text-sm transition-opacity hover:opacity-60 ${
+                        page === currentPage
+                          ? "border-[var(--lpv-ink)] text-[var(--lpv-ink)]"
+                          : "border-[var(--lpv-line)] text-[var(--lpv-muted)]"
+                      }`}
+                    >
+                      {page}
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="min-w-[90px] text-right">
+                  {currentPage < totalPages ? (
+                    <Link
+                      href={pageHref(currentPage + 1)}
+                      className="lpv-text-link"
+                    >
+                      Suivant →
+                    </Link>
+                  ) : (
+                    <span className="text-sm text-[var(--lpv-muted)]/35">
+                      Suivant →
+                    </span>
+                  )}
+                </div>
+              </nav>
+            ) : null}
+          </>
+        ) : (
+          <div className="py-24 text-center">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Rien ici
+            </p>
+
+            <h2 className="lpv-display mt-6 text-5xl md:text-6xl">
+              On essaie autre chose?
+            </h2>
+
+            <p className="mx-auto mt-6 max-w-lg text-base leading-8 text-[var(--lpv-muted)]">
+              Essaie un autre plat ou parcours l’ensemble de nos accords.
+            </p>
+
+            <Link
+              href="/accords"
+              className="lpv-button lpv-button-dark mt-8"
+            >
+              Voir tous les accords
+            </Link>
+          </div>
+        )}
+      </section>
+    </main>
+  );
+}

@@ -1,0 +1,4615 @@
+[
+  {
+    "_id": "wine-alain-lorieux-chinon-expression-2023",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-chinon",
+      "name": "Chinon"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-cabernet-franc",
+        "name": "Cabernet Franc"
+      }
+    ],
+    "name": "Alain Lorieux Chinon Expression",
+    "pairingCount": 5,
+    "pairings": [
+      {
+        "_key": "food-agneau-wine-alain-lorieux-chinon-expression-2023",
+        "_ref": "food-agneau",
+        "_type": "reference",
+        "name": "Agneau"
+      },
+      {
+        "_key": "food-champignons-wine-alain-lorieux-chinon-expression-2023",
+        "_ref": "food-champignons",
+        "_type": "reference",
+        "name": "Champignons"
+      },
+      {
+        "_key": "food-saucisses-wine-alain-lorieux-chinon-expression-2023",
+        "_ref": "food-saucisses",
+        "_type": "reference",
+        "name": "Saucisses"
+      },
+      {
+        "_key": "food-lasagne-wine-alain-lorieux-chinon-expression-2023",
+        "_ref": "food-lasagne",
+        "_type": "reference",
+        "name": "Lasagne"
+      },
+      {
+        "_key": "food-tourtiere-wine-alain-lorieux-chinon-expression-2023",
+        "_ref": "food-tourtiere",
+        "_type": "reference",
+        "name": "Tourtière"
+      }
+    ],
+    "producer": {
+      "_id": "producer-pascal-et-alain-lorieux",
+      "name": "Pascal et Alain Lorieux"
+    },
+    "region": {
+      "_id": "region-vallee-de-la-loire",
+      "name": "Vallée de la Loire"
+    },
+    "resolvedFoodCount": 5,
+    "style": "Rouge frais, fruité et structuré",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 5
+  },
+  {
+    "_id": "wine-albert-bichot-bourgogne-aligote",
+    "acidity": 5,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "appellation-bourgogne",
+      "name": "Bourgogne"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-aligote",
+        "name": "Aligoté"
+      }
+    ],
+    "name": "Albert Bichot Bourgogne Aligoté",
+    "pairingCount": 6,
+    "pairings": [
+      {
+        "_key": "food-pates-cremeuses-wine-albert-bichot-bourgogne-aligote",
+        "_ref": "food-pates-cremeuses",
+        "_type": "reference",
+        "name": "Pâtes crémeuses"
+      },
+      {
+        "_key": "food-poulet-frit-wine-albert-bichot-bourgogne-aligote",
+        "_ref": "food-poulet-frit",
+        "_type": "reference",
+        "name": "Poulet frit"
+      },
+      {
+        "_key": "food-pesto-wine-albert-bichot-bourgogne-aligote",
+        "_ref": "food-pesto",
+        "_type": "reference",
+        "name": "Pesto"
+      },
+      {
+        "_key": "food-salade-chevre-wine-albert-bichot-bourgogne-aligote",
+        "_ref": "food-salade-chevre",
+        "_type": "reference",
+        "name": "Salade & fromage de chèvre"
+      },
+      {
+        "_key": "food-brunch-oeufs-benedictine-wine-albert-bichot-bourgogne-aligote",
+        "_ref": "food-brunch-oeufs-benedictine",
+        "_type": "reference",
+        "name": "Brunch & œufs bénédictine"
+      },
+      {
+        "_key": "food-fruits-dessert-leger-wine-albert-bichot-bourgogne-aligote",
+        "_ref": "food-fruits-dessert-leger",
+        "_type": "reference",
+        "name": "Fruits & dessert léger"
+      }
+    ],
+    "producer": {
+      "_id": "producer-albert-bichot",
+      "name": "Albert Bichot"
+    },
+    "region": {
+      "_id": "region-bourgogne",
+      "name": "Bourgogne"
+    },
+    "resolvedFoodCount": 6,
+    "style": "Blanc sec, vif, frais et léger",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 6
+  },
+  {
+    "_id": "wine-alto-moncayo-garnacha-2023",
+    "acidity": 2,
+    "alcohol": 16,
+    "appellation": {
+      "_id": "appellation-campo-de-borja",
+      "name": "Campo de Borja"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 5,
+    "color": "red",
+    "country": {
+      "_id": "country-espagne",
+      "name": "Espagne"
+    },
+    "grapes": [
+      {
+        "_id": "grape-garnacha",
+        "name": "Garnacha"
+      }
+    ],
+    "name": "Alto Moncayo Garnacha",
+    "pairingCount": 1,
+    "pairings": [
+      {
+        "_key": "food-steak-wine-alto-moncayo-garnacha-2023",
+        "_ref": "food-steak-grillades",
+        "_type": "reference",
+        "name": "Steak et grillades"
+      }
+    ],
+    "producer": {
+      "_id": "producer-bodegas-alto-moncayo",
+      "name": "Bodegas Alto Moncayo"
+    },
+    "region": {
+      "_id": "region-vallee-de-l-ebre",
+      "name": "Vallée de l'Ebre"
+    },
+    "resolvedFoodCount": 1,
+    "style": "Rouge puissant, concentré et boisé",
+    "sweetness": 1,
+    "tannins": 4,
+    "validReferenceCount": 1
+  },
+  {
+    "_id": "wine-domaine-bergeville-amourette-2025",
+    "acidity": 5,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-frontenac-noir",
+        "name": "Frontenac noir"
+      },
+      {
+        "_id": "grape-frontenac-blanc",
+        "name": "Frontenac blanc"
+      },
+      {
+        "_id": "grape-marquette",
+        "name": "Marquette"
+      },
+      {
+        "_id": "grape-acadie-blanc",
+        "name": "Acadie blanc"
+      },
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      }
+    ],
+    "name": "Amourette",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-domaine-bergeville",
+      "name": "Domaine Bergeville"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": null,
+    "style": "Rouge pétillant brut nature",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-domaine-du-ridge-bise-d-automne",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 4,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      }
+    ],
+    "name": "Bise d’Automne",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-creme-brulee-0",
+        "_ref": "food-creme-brulee",
+        "_type": "reference",
+        "name": "Crème brûlée"
+      },
+      {
+        "_key": "food-fromages-1",
+        "_ref": "food-fromages",
+        "_type": "reference",
+        "name": "Fromages"
+      },
+      {
+        "_key": "food-fruits-dessert-leger-2",
+        "_ref": "food-fruits-dessert-leger",
+        "_type": "reference",
+        "name": "Fruits & dessert léger"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Vin doux de vendange tardive, riche et frais",
+    "sweetness": 5,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-domaine-du-ridge-blanc-domaine-du-ridge",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-seyval-blanc",
+        "name": "Seyval blanc"
+      }
+    ],
+    "name": "Blanc – Domaine du Ridge",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-sushis-0",
+        "_ref": "food-sushis",
+        "_type": "reference",
+        "name": "Sushis"
+      },
+      {
+        "_key": "food-huitres-1",
+        "_ref": "food-huitres",
+        "_type": "reference",
+        "name": "Huîtres"
+      },
+      {
+        "_key": "food-pates-cremeuses-2",
+        "_ref": "food-pates-cremeuses",
+        "_type": "reference",
+        "name": "Pâtes crémeuses"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Blanc sec, vif et citronné",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-campo-viejo-tempranillo-rioja",
+    "acidity": 3,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-rioja",
+      "name": "Rioja"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-espagne",
+      "name": "Espagne"
+    },
+    "grapes": [
+      {
+        "_id": "grape-tempranillo",
+        "name": "Tempranillo"
+      }
+    ],
+    "name": "Campo Viejo Tempranillo Rioja",
+    "pairingCount": 1,
+    "pairings": [
+      {
+        "_key": "food-burger-wine-campo-viejo-tempranillo-rioja",
+        "_ref": "food-burger",
+        "_type": "reference",
+        "name": "Burger"
+      }
+    ],
+    "producer": {
+      "_id": "producer-campo-viejo",
+      "name": "Campo Viejo"
+    },
+    "region": {
+      "_id": "region-vallee-de-l-ebre",
+      "name": "Vallée de l'Ebre"
+    },
+    "resolvedFoodCount": 1,
+    "style": "Rouge sec, fruité, épicé et boisé",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 1
+  },
+  {
+    "_id": "wine-domaine-bergeville-canonique-2024",
+    "acidity": 5,
+    "alcohol": 13.5,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "rose",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      },
+      {
+        "_id": "grape-marquette",
+        "name": "Marquette"
+      },
+      {
+        "_id": "grape-frontenac-gris",
+        "name": "Frontenac gris"
+      },
+      {
+        "_id": "grape-gamay",
+        "name": "Gamay"
+      },
+      {
+        "_id": "grape-frontenac-noir",
+        "name": "Frontenac noir"
+      },
+      {
+        "_id": "grape-riesling",
+        "name": "Riesling"
+      },
+      {
+        "_id": "grape-acadie-blanc",
+        "name": "Acadie blanc"
+      }
+    ],
+    "name": "Canonique",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-domaine-bergeville",
+      "name": "Domaine Bergeville"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": null,
+    "style": "Mousseux rosé brut nature",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-casa-ferreirinha-papa-figos-douro-2024",
+    "acidity": 3,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-douro",
+      "name": "Douro"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-portugal",
+      "name": "Portugal"
+    },
+    "grapes": [
+      {
+        "_id": "grape-tinta-roriz",
+        "name": "Tinta Roriz"
+      },
+      {
+        "_id": "grape-tinta-barroca",
+        "name": "Tinta Barroca"
+      },
+      {
+        "_id": "grape-touriga-franca",
+        "name": "Touriga Franca"
+      },
+      {
+        "_id": "grape-touriga-nacional",
+        "name": "Touriga Nacional"
+      }
+    ],
+    "name": "Casa Ferreirinha Papa Figos Douro",
+    "pairingCount": 2,
+    "pairings": [
+      {
+        "_key": "food-burger-wine-casa-ferreirinha-papa-figos-douro-2024",
+        "_ref": "food-burger",
+        "_type": "reference",
+        "name": "Burger"
+      },
+      {
+        "_key": "food-bbq-cotes-levees-wine-casa-ferreirinha-papa-figos-douro-2024",
+        "_ref": "food-bbq-cotes-levees",
+        "_type": "reference",
+        "name": "BBQ & côtes levées"
+      }
+    ],
+    "producer": {
+      "_id": "producer-casa-ferreirinha",
+      "name": "Casa Ferreirinha"
+    },
+    "region": {
+      "_id": "region-porto-douro",
+      "name": "Porto/Douro"
+    },
+    "resolvedFoodCount": 2,
+    "style": "Rouge sec, généreux, fruité et souple",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 2
+  },
+  {
+    "_id": "wine-casillero-del-diablo-cabernet-sauvignon",
+    "acidity": 3,
+    "alcohol": 13.5,
+    "appellation": {
+      "_id": "appellation-valle-central",
+      "name": "Valle Central"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 4,
+    "color": "red",
+    "country": {
+      "_id": "country-chili",
+      "name": "Chili"
+    },
+    "grapes": [
+      {
+        "_id": "grape-cabernet-sauvignon",
+        "name": "Cabernet Sauvignon"
+      }
+    ],
+    "name": "Casillero del Diablo Cabernet Sauvignon",
+    "pairingCount": 1,
+    "pairings": [
+      {
+        "_key": "food-steak-wine-casillero-del-diablo-cabernet-sauvignon",
+        "_ref": "food-steak-grillades",
+        "_type": "reference",
+        "name": "Steak et grillades"
+      }
+    ],
+    "producer": {
+      "_id": "producer-vina-concha-y-toro",
+      "name": "Viña Concha y Toro"
+    },
+    "region": {
+      "_id": "region-valle-central",
+      "name": "Valle Central"
+    },
+    "resolvedFoodCount": 1,
+    "style": "Rouge fruité et structuré",
+    "sweetness": 1,
+    "tannins": 4,
+    "validReferenceCount": 1
+  },
+  {
+    "_id": "wine-domaine-du-ridge-champs-de-florence",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "rose",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-seyval-noir",
+        "name": "Seyval noir"
+      }
+    ],
+    "name": "Champs de Florence",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-tartare-saumon-0",
+        "_ref": "food-tartare-saumon",
+        "_type": "reference",
+        "name": "Tartare de saumon"
+      },
+      {
+        "_key": "food-huitres-1",
+        "_ref": "food-huitres",
+        "_type": "reference",
+        "name": "Huîtres"
+      },
+      {
+        "_key": "food-saumon-2",
+        "_ref": "food-saumon",
+        "_type": "reference",
+        "name": "Saumon"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rosé sec, frais et fruité",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-christophe-pacalet-beaujolais-les-marcellins-2024",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-beaujolais",
+      "name": "Beaujolais"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "red",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-gamay",
+        "name": "Gamay"
+      }
+    ],
+    "name": "Christophe Pacalet Beaujolais Les Marcellins",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-pizza-wine-christophe-pacalet-beaujolais-les-marcellins-2024",
+        "_ref": "food-pizza",
+        "_type": null,
+        "name": "Pizza"
+      },
+      {
+        "_key": "food-poulet-wine-christophe-pacalet-beaujolais-les-marcellins-2024",
+        "_ref": "food-poulet-roti",
+        "_type": "reference",
+        "name": "Poulet rôti"
+      },
+      {
+        "_key": "food-tartare-boeuf-wine-christophe-pacalet-beaujolais-les-marcellins-2024",
+        "_ref": "food-tartare-boeuf",
+        "_type": "reference",
+        "name": "Tartare de bœuf"
+      }
+    ],
+    "producer": {
+      "_id": "producer-christophe-pacalet",
+      "name": "Christophe Pacalet"
+    },
+    "region": {
+      "_id": "region-beaujolais",
+      "name": "Beaujolais"
+    },
+    "resolvedFoodCount": 2,
+    "style": "Rouge léger, juteux et fruité",
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": 2
+  },
+  {
+    "_id": "wine-domaine-bergeville-colfo-2025",
+    "acidity": 5,
+    "alcohol": 12.2,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "sparkling",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-frontenac-blanc",
+        "name": "Frontenac blanc"
+      },
+      {
+        "_id": "grape-acadie-blanc",
+        "name": "Acadie blanc"
+      },
+      {
+        "_id": "grape-geisenheim",
+        "name": "Geisenheim"
+      },
+      {
+        "_id": "grape-la-crescent",
+        "name": "La Crescent"
+      },
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      },
+      {
+        "_id": "grape-frontenac-gris",
+        "name": "Frontenac gris"
+      },
+      {
+        "_id": "grape-seyval",
+        "name": "Seyval"
+      }
+    ],
+    "name": "Colfo",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-domaine-bergeville",
+      "name": "Domaine Bergeville"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": null,
+    "style": "Pétillant sur lies brut nature",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-delinquente-tuff-nutt-bianco-pet-nat-2024",
+    "acidity": 4,
+    "alcohol": 9.5,
+    "appellation": {
+      "_id": "appellation-riverland",
+      "name": "Riverland"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "sparkling",
+    "country": {
+      "_id": "country-australie",
+      "name": "Australie"
+    },
+    "grapes": [
+      {
+        "_id": "grape-bianco-dalessano",
+        "name": "Bianco d'Alessano"
+      }
+    ],
+    "name": "Delinquente Tuff Nutt Bianco Pet Nat",
+    "pairingCount": 1,
+    "pairings": [
+      {
+        "_key": "food-crabe-wine-delinquente-tuff-nutt-bianco-pet-nat-2024",
+        "_ref": "food-crabe",
+        "_type": "reference",
+        "name": "Crabe"
+      }
+    ],
+    "producer": {
+      "_id": "producer-delinquente-wine-co",
+      "name": "Delinquente Wine Co."
+    },
+    "region": {
+      "_id": "region-riverland",
+      "name": "Riverland"
+    },
+    "resolvedFoodCount": 1,
+    "style": "Pétillant naturel sec, léger et vif",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 1
+  },
+  {
+    "_id": "wine-devils-corner-pinot-noir-2024",
+    "acidity": 4,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-tasmania",
+      "name": "Tasmania"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-australie",
+      "name": "Australie"
+    },
+    "grapes": [
+      {
+        "_id": "grape-pinot-noir",
+        "name": "Pinot noir"
+      }
+    ],
+    "name": "Devil's Corner Pinot Noir",
+    "pairingCount": 8,
+    "pairings": [
+      {
+        "_key": "food-poulet-wine-devils-corner-pinot-noir-2024",
+        "_ref": "food-poulet-roti",
+        "_type": null,
+        "name": "Poulet rôti"
+      },
+      {
+        "_key": "food-fromages-wine-devils-corner-pinot-noir-2024",
+        "_ref": "food-fromages",
+        "_type": null,
+        "name": "Fromages"
+      },
+      {
+        "_key": "food-saumon-wine-devils-corner-pinot-noir-2024",
+        "_ref": "food-saumon",
+        "_type": "reference",
+        "name": "Saumon"
+      },
+      {
+        "_key": "food-tacos-wine-devils-corner-pinot-noir-2024",
+        "_ref": "food-tacos",
+        "_type": "reference",
+        "name": "Tacos"
+      },
+      {
+        "_key": "food-risotto-wine-devils-corner-pinot-noir-2024",
+        "_ref": "food-risotto",
+        "_type": "reference",
+        "name": "Risotto"
+      },
+      {
+        "_key": "food-canard-wine-devils-corner-pinot-noir-2024",
+        "_ref": "food-canard",
+        "_type": "reference",
+        "name": "Canard"
+      },
+      {
+        "_key": "food-porc-wine-devils-corner-pinot-noir-2024",
+        "_ref": "food-porc",
+        "_type": "reference",
+        "name": "Porc"
+      },
+      {
+        "_key": "food-veau-wine-devils-corner-pinot-noir-2024",
+        "_ref": "food-veau",
+        "_type": "reference",
+        "name": "Veau"
+      }
+    ],
+    "producer": {
+      "_id": "producer-devils-corner",
+      "name": "Devil's Corner"
+    },
+    "region": {
+      "_id": "region-tasmanie",
+      "name": "Tasmanie"
+    },
+    "resolvedFoodCount": 6,
+    "style": "Rouge frais, fruité et délicat",
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": 6
+  },
+  {
+    "_id": "wine-domaine-saint-basile-frontenac-2023",
+    "acidity": 4,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "2acd9265-a02e-4b7c-a803-e702742f10cc",
+      "name": "Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-frontenac",
+        "name": "Frontenac"
+      }
+    ],
+    "name": "Domaine Saint-Basile Frontenac",
+    "pairingCount": 16,
+    "pairings": [
+      {
+        "_key": "food-planche-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-planche-charcuteries",
+        "_type": null,
+        "name": "Planche & charcuteries"
+      },
+      {
+        "_key": "food-pates-tomate-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-pates-sauce-tomate",
+        "_type": "reference",
+        "name": "Pâtes sauce tomate"
+      },
+      {
+        "_key": "food-tacos-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-tacos",
+        "_type": "reference",
+        "name": "Tacos"
+      },
+      {
+        "_key": "food-risotto-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-risotto",
+        "_type": "reference",
+        "name": "Risotto"
+      },
+      {
+        "_key": "food-canard-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-canard",
+        "_type": "reference",
+        "name": "Canard"
+      },
+      {
+        "_key": "food-porc-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-porc",
+        "_type": "reference",
+        "name": "Porc"
+      },
+      {
+        "_key": "food-raclette-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-raclette",
+        "_type": "reference",
+        "name": "Raclette"
+      },
+      {
+        "_key": "food-poutine-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-poutine",
+        "_type": "reference",
+        "name": "Poutine"
+      },
+      {
+        "_key": "food-tartare-boeuf-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-tartare-boeuf",
+        "_type": "reference",
+        "name": "Tartare de bœuf"
+      },
+      {
+        "_key": "food-thon-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-thon",
+        "_type": "reference",
+        "name": "Thon"
+      },
+      {
+        "_key": "food-veau-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-veau",
+        "_type": "reference",
+        "name": "Veau"
+      },
+      {
+        "_key": "food-saucisses-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-saucisses",
+        "_type": "reference",
+        "name": "Saucisses"
+      },
+      {
+        "_key": "food-lasagne-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-lasagne",
+        "_type": "reference",
+        "name": "Lasagne"
+      },
+      {
+        "_key": "food-legumes-grilles-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-legumes-grilles",
+        "_type": "reference",
+        "name": "Légumes grillés"
+      },
+      {
+        "_key": "food-ramen-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-ramen",
+        "_type": "reference",
+        "name": "Ramen"
+      },
+      {
+        "_key": "food-tourtiere-wine-domaine-saint-basile-frontenac-2023",
+        "_ref": "food-tourtiere",
+        "_type": "reference",
+        "name": "Tourtière"
+      }
+    ],
+    "producer": {
+      "_id": "producer-domaine-saint-basile",
+      "name": "Domaine Saint-Basile"
+    },
+    "region": {
+      "_id": "region-monteregie",
+      "name": "Montérégie"
+    },
+    "resolvedFoodCount": 15,
+    "style": "Rouge frais et fruité",
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": 15
+  },
+  {
+    "_id": "wine-domaine-du-nival-ces-petits-imprevus-2025",
+    "acidity": 4,
+    "alcohol": 10.5,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "sparkling",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      }
+    ],
+    "name": "Domaine du Nival Ces petits imprévus",
+    "pairingCount": 5,
+    "pairings": [
+      {
+        "_key": "food-curry-wine-domaine-du-nival-ces-petits-imprevus-2025",
+        "_ref": "food-curry",
+        "_type": "reference",
+        "name": "Curry"
+      },
+      {
+        "_key": "food-cuisine-asiatique-sucree-salee-wine-domaine-du-nival-ces-petits-imprevus-2025",
+        "_ref": "food-cuisine-asiatique-sucree-salee",
+        "_type": "reference",
+        "name": "Cuisine asiatique sucrée-salée"
+      },
+      {
+        "_key": "food-tarte-aux-fruits-wine-domaine-du-nival-ces-petits-imprevus-2025",
+        "_ref": "food-tarte-aux-fruits",
+        "_type": "reference",
+        "name": "Tarte aux fruits"
+      },
+      {
+        "_key": "food-dessert-vanille-wine-domaine-du-nival-ces-petits-imprevus-2025",
+        "_ref": "food-dessert-vanille",
+        "_type": "reference",
+        "name": "Gâteau & dessert à la vanille"
+      },
+      {
+        "_key": "food-fruits-dessert-leger-wine-domaine-du-nival-ces-petits-imprevus-2025",
+        "_ref": "food-fruits-dessert-leger",
+        "_type": "reference",
+        "name": "Fruits & dessert léger"
+      }
+    ],
+    "producer": {
+      "_id": "producer-domaine-du-nival",
+      "name": "Domaine du Nival"
+    },
+    "region": {
+      "_id": "region-monteregie",
+      "name": "Montérégie"
+    },
+    "resolvedFoodCount": 5,
+    "style": "Pétillant naturel, fruité, vif et léger",
+    "sweetness": 2,
+    "tannins": null,
+    "validReferenceCount": 5
+  },
+  {
+    "_id": "wine-domaine-du-nival-matiere-a-discussion-2025",
+    "acidity": 4,
+    "alcohol": 10.6,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      }
+    ],
+    "name": "Domaine du Nival Matière à discussion",
+    "pairingCount": 1,
+    "pairings": [
+      {
+        "_key": "food-cuisine-asiatique-sucree-salee-wine-domaine-du-nival-matiere-a-discussion-2025",
+        "_ref": "food-cuisine-asiatique-sucree-salee",
+        "_type": "reference",
+        "name": "Cuisine asiatique sucrée-salée"
+      }
+    ],
+    "producer": {
+      "_id": "producer-domaine-du-nival",
+      "name": "Domaine du Nival"
+    },
+    "region": {
+      "_id": "region-monteregie",
+      "name": "Montérégie"
+    },
+    "resolvedFoodCount": 1,
+    "style": "Blanc sec, frais, précis et légèrement texturé",
+    "sweetness": 1,
+    "tannins": null,
+    "validReferenceCount": 1
+  },
+  {
+    "_id": "wine-domaine-du-ridge-le-litre-du-ridge-rose",
+    "acidity": 4,
+    "alcohol": 10.3,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "rose",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-seyval-noir",
+        "name": "Seyval noir"
+      },
+      {
+        "_id": "grape-seyval-blanc",
+        "name": "Seyval blanc"
+      },
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      },
+      {
+        "_id": "grape-lucie-kuhlmann",
+        "name": "Lucie Kuhlmann"
+      }
+    ],
+    "name": "Domaine du Ridge Le Litre du Ridge Rosé",
+    "pairingCount": 2,
+    "pairings": [
+      {
+        "_key": "food-epice-wine-domaine-du-ridge-le-litre-du-ridge-rose",
+        "_ref": "food-cuisine-epicee",
+        "_type": null,
+        "name": "Cuisine épicée"
+      },
+      {
+        "_key": "food-planche-wine-domaine-du-ridge-le-litre-du-ridge-rose",
+        "_ref": "food-planche-charcuteries",
+        "_type": "reference",
+        "name": "Planche & charcuteries"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "region-monteregie",
+      "name": "Montérégie"
+    },
+    "resolvedFoodCount": 1,
+    "style": "Rosé sec, léger, fruité et généreux",
+    "sweetness": 1,
+    "tannins": null,
+    "validReferenceCount": 1
+  },
+  {
+    "_id": "wine-domaine-du-ridge-lucy-k",
+    "acidity": 4,
+    "alcohol": 10.6,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-lucie-kuhlmann",
+        "name": "Lucie Kuhlmann"
+      },
+      {
+        "_id": "grape-sabrevois",
+        "name": "Sabrevois"
+      },
+      {
+        "_id": "grape-frontenac-noir",
+        "name": "Frontenac noir"
+      },
+      {
+        "_id": "grape-chancellor",
+        "name": "Chancellor"
+      }
+    ],
+    "name": "Domaine du Ridge Lucy K.",
+    "pairingCount": 4,
+    "pairings": [
+      {
+        "_key": "food-epice-wine-domaine-du-ridge-lucy-k",
+        "_ref": "food-cuisine-epicee",
+        "_type": null,
+        "name": "Cuisine épicée"
+      },
+      {
+        "_key": "food-vegetarien-wine-domaine-du-ridge-lucy-k",
+        "_ref": "food-cuisine-vegetarienne",
+        "_type": "reference",
+        "name": "Cuisine végétarienne"
+      },
+      {
+        "_key": "food-tartare-boeuf-wine-domaine-du-ridge-lucy-k",
+        "_ref": "food-tartare-boeuf",
+        "_type": "reference",
+        "name": "Tartare de bœuf"
+      },
+      {
+        "_key": "food-legumes-grilles-wine-domaine-du-ridge-lucy-k",
+        "_ref": "food-legumes-grilles",
+        "_type": "reference",
+        "name": "Légumes grillés"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "region-monteregie",
+      "name": "Montérégie"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rouge sec, léger, frais et délicat",
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-domane-wachau-gruner-veltliner-selection",
+    "acidity": 5,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "appellation-wachau",
+      "name": "Wachau"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "country-autriche",
+      "name": "Autriche"
+    },
+    "grapes": [
+      {
+        "_id": "grape-gruner-veltliner",
+        "name": "Grüner Veltliner"
+      }
+    ],
+    "name": "Domäne Wachau Grüner Veltliner Selection",
+    "pairingCount": 9,
+    "pairings": [
+      {
+        "_key": "food-sushis-wine-domane-wachau-gruner-veltliner-selection",
+        "_ref": "food-sushis",
+        "_type": "reference",
+        "name": "Sushis"
+      },
+      {
+        "_key": "food-crevettes-wine-domane-wachau-gruner-veltliner-selection",
+        "_ref": "food-crevettes",
+        "_type": "reference",
+        "name": "Crevettes"
+      },
+      {
+        "_key": "food-raclette-wine-domane-wachau-gruner-veltliner-selection",
+        "_ref": "food-raclette",
+        "_type": "reference",
+        "name": "Raclette"
+      },
+      {
+        "_key": "food-fondue-fromage-wine-domane-wachau-gruner-veltliner-selection",
+        "_ref": "food-fondue-fromage",
+        "_type": "reference",
+        "name": "Fondue au fromage"
+      },
+      {
+        "_key": "food-moules-wine-domane-wachau-gruner-veltliner-selection",
+        "_ref": "food-moules",
+        "_type": "reference",
+        "name": "Moules"
+      },
+      {
+        "_key": "food-poutine-wine-domane-wachau-gruner-veltliner-selection",
+        "_ref": "food-poutine",
+        "_type": "reference",
+        "name": "Poutine"
+      },
+      {
+        "_key": "food-tartare-saumon-wine-domane-wachau-gruner-veltliner-selection",
+        "_ref": "food-tartare-saumon",
+        "_type": "reference",
+        "name": "Tartare de saumon"
+      },
+      {
+        "_key": "food-pesto-wine-domane-wachau-gruner-veltliner-selection",
+        "_ref": "food-pesto",
+        "_type": "reference",
+        "name": "Pesto"
+      },
+      {
+        "_key": "food-salade-chevre-wine-domane-wachau-gruner-veltliner-selection",
+        "_ref": "food-salade-chevre",
+        "_type": "reference",
+        "name": "Salade & fromage de chèvre"
+      }
+    ],
+    "producer": {
+      "_id": "producer-domane-wachau",
+      "name": "Domäne Wachau"
+    },
+    "region": {
+      "_id": "region-basse-autriche-niederosterreich",
+      "name": "Basse-Autriche (Niederösterreich)"
+    },
+    "resolvedFoodCount": 9,
+    "style": "Blanc sec, léger, vif et minéral",
+    "sweetness": 1,
+    "tannins": null,
+    "validReferenceCount": 9
+  },
+  {
+    "_id": "wine-dr-loosen-riesling-mosel-2025",
+    "acidity": 5,
+    "alcohol": 8.5,
+    "appellation": {
+      "_id": "appellation-mosel",
+      "name": "Mosel"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "country-allemagne",
+      "name": "Allemagne"
+    },
+    "grapes": [
+      {
+        "_id": "grape-riesling",
+        "name": "Riesling"
+      }
+    ],
+    "name": "Dr. Loosen Riesling Mosel",
+    "pairingCount": 5,
+    "pairings": [
+      {
+        "_key": "food-epice-wine-dr-loosen-riesling-mosel-2025",
+        "_ref": "food-cuisine-epicee",
+        "_type": "reference",
+        "name": "Cuisine épicée"
+      },
+      {
+        "_key": "food-tarte-aux-fruits-wine-dr-loosen-riesling-mosel-2025",
+        "_ref": "food-tarte-aux-fruits",
+        "_type": "reference",
+        "name": "Tarte aux fruits"
+      },
+      {
+        "_key": "food-creme-brulee-wine-dr-loosen-riesling-mosel-2025",
+        "_ref": "food-creme-brulee",
+        "_type": "reference",
+        "name": "Crème brûlée"
+      },
+      {
+        "_key": "food-dessert-vanille-wine-dr-loosen-riesling-mosel-2025",
+        "_ref": "food-dessert-vanille",
+        "_type": "reference",
+        "name": "Gâteau & dessert à la vanille"
+      },
+      {
+        "_key": "food-fruits-dessert-leger-wine-dr-loosen-riesling-mosel-2025",
+        "_ref": "food-fruits-dessert-leger",
+        "_type": "reference",
+        "name": "Fruits & dessert léger"
+      }
+    ],
+    "producer": {
+      "_id": "producer-dr-loosen",
+      "name": "Dr. Loosen"
+    },
+    "region": {
+      "_id": "region-mosel",
+      "name": "Mosel"
+    },
+    "resolvedFoodCount": 5,
+    "style": "Blanc fruité, doux, léger et vif",
+    "sweetness": 4,
+    "tannins": null,
+    "validReferenceCount": 5
+  },
+  {
+    "_id": "wine-domaine-du-ridge-fado",
+    "acidity": 2,
+    "alcohol": 17.5,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 5,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-marechal-foch",
+        "name": "Maréchal Foch"
+      }
+    ],
+    "name": "Fado",
+    "pairingCount": 2,
+    "pairings": [
+      {
+        "_key": "food-chocolat-0",
+        "_ref": "food-chocolat",
+        "_type": "reference",
+        "name": "Chocolat"
+      },
+      {
+        "_key": "food-fromages-1",
+        "_ref": "food-fromages",
+        "_type": "reference",
+        "name": "Fromages"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 2,
+    "style": "Vin rouge muté, doux et boisé",
+    "sweetness": 4,
+    "tannins": 3,
+    "validReferenceCount": 2
+  },
+  {
+    "_id": "wine-famille-perrin-cotes-du-rhone-signature-2023",
+    "acidity": 3,
+    "alcohol": 13.5,
+    "appellation": {
+      "_id": "appellation-cotes-du-rhone",
+      "name": "Côtes du Rhône"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-grenache",
+        "name": "Grenache"
+      },
+      {
+        "_id": "grape-syrah",
+        "name": "Syrah"
+      }
+    ],
+    "name": "Famille Perrin Côtes du Rhône Signature",
+    "pairingCount": 2,
+    "pairings": [
+      {
+        "_key": "food-pates-tomate-wine-famille-perrin-cotes-du-rhone-signature-2023",
+        "_ref": "food-pates-sauce-tomate",
+        "_type": null,
+        "name": "Pâtes sauce tomate"
+      },
+      {
+        "_key": "food-burger-wine-famille-perrin-cotes-du-rhone-signature-2023",
+        "_ref": "food-burger",
+        "_type": "reference",
+        "name": "Burger"
+      }
+    ],
+    "producer": {
+      "_id": "producer-famille-perrin",
+      "name": "Famille Perrin"
+    },
+    "region": {
+      "_id": "region-vallee-du-rhone",
+      "name": "Vallée du Rhône"
+    },
+    "resolvedFoodCount": 1,
+    "style": "Rouge sec, fruité, épicé et souple",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 1
+  },
+  {
+    "_id": "wine-ferraton-pere-et-fils-syrah",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-collines-rhodaniennes",
+      "name": "Collines Rhodaniennes"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-syrah",
+        "name": "Syrah"
+      }
+    ],
+    "name": "Ferraton Père & Fils Syrah",
+    "pairingCount": 6,
+    "pairings": [
+      {
+        "_key": "food-steak-wine-ferraton-pere-et-fils-syrah",
+        "_ref": "food-steak-grillades",
+        "_type": "reference",
+        "name": "Steak et grillades"
+      },
+      {
+        "_key": "food-agneau-wine-ferraton-pere-et-fils-syrah",
+        "_ref": "food-agneau",
+        "_type": "reference",
+        "name": "Agneau"
+      },
+      {
+        "_key": "food-champignons-wine-ferraton-pere-et-fils-syrah",
+        "_ref": "food-champignons",
+        "_type": "reference",
+        "name": "Champignons"
+      },
+      {
+        "_key": "food-saucisses-wine-ferraton-pere-et-fils-syrah",
+        "_ref": "food-saucisses",
+        "_type": "reference",
+        "name": "Saucisses"
+      },
+      {
+        "_key": "food-lasagne-wine-ferraton-pere-et-fils-syrah",
+        "_ref": "food-lasagne",
+        "_type": "reference",
+        "name": "Lasagne"
+      },
+      {
+        "_key": "food-tourtiere-wine-ferraton-pere-et-fils-syrah",
+        "_ref": "food-tourtiere",
+        "_type": "reference",
+        "name": "Tourtière"
+      }
+    ],
+    "producer": {
+      "_id": "producer-ferraton-pere-et-fils",
+      "name": "Ferraton Père & Fils"
+    },
+    "region": {
+      "_id": "region-vallee-du-rhone",
+      "name": "Vallée du Rhône"
+    },
+    "resolvedFoodCount": 6,
+    "style": "Rouge frais, fruité et épicé",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 6
+  },
+  {
+    "_id": "wine-georges-duboeuf-brouilly",
+    "acidity": 4,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-brouilly",
+      "name": "Brouilly"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "red",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-gamay",
+        "name": "Gamay"
+      }
+    ],
+    "name": "Georges Duboeuf Brouilly",
+    "pairingCount": 4,
+    "pairings": [
+      {
+        "_key": "food-planche-wine-georges-duboeuf-brouilly",
+        "_ref": "food-planche-charcuteries",
+        "_type": null,
+        "name": "Planche & charcuteries"
+      },
+      {
+        "_key": "food-burger-wine-georges-duboeuf-brouilly",
+        "_ref": "food-burger",
+        "_type": "reference",
+        "name": "Burger"
+      },
+      {
+        "_key": "food-curry-wine-georges-duboeuf-brouilly",
+        "_ref": "food-curry",
+        "_type": "reference",
+        "name": "Curry"
+      },
+      {
+        "_key": "food-tartare-boeuf-wine-georges-duboeuf-brouilly",
+        "_ref": "food-tartare-boeuf",
+        "_type": "reference",
+        "name": "Tartare de bœuf"
+      }
+    ],
+    "producer": {
+      "_id": "producer-georges-duboeuf",
+      "name": "Georges Duboeuf"
+    },
+    "region": {
+      "_id": "region-beaujolais",
+      "name": "Beaujolais"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rouge sec, fruité, léger et souple",
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-john-doe-2025",
+    "acidity": 4,
+    "alcohol": 11.5,
+    "appellation": {
+      "_id": "2acd9265-a02e-4b7c-a803-e702742f10cc",
+      "name": "Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-frontenac-noir",
+        "name": "Frontenac noir"
+      },
+      {
+        "_id": "grape-radisson",
+        "name": "Radisson"
+      },
+      {
+        "_id": "grape-frontenac-gris",
+        "name": "Frontenac gris"
+      },
+      {
+        "_id": "grape-petite-perle",
+        "name": "Petite Perle"
+      },
+      {
+        "_id": "grape-marquette",
+        "name": "Marquette"
+      }
+    ],
+    "name": "John Doe",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-pinard-et-filles",
+      "name": "Pinard et Filles"
+    },
+    "region": {
+      "_id": "region-lanaudiere",
+      "name": "Lanaudière"
+    },
+    "resolvedFoodCount": null,
+    "style": null,
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-kendall-jackson-vintners-reserve-chardonnay",
+    "acidity": 3,
+    "alcohol": 13.5,
+    "appellation": {
+      "_id": "appellation-california",
+      "name": "California"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 4,
+    "color": "white",
+    "country": {
+      "_id": "country-etats-unis",
+      "name": "États-Unis"
+    },
+    "grapes": [
+      {
+        "_id": "grape-chardonnay",
+        "name": "Chardonnay"
+      }
+    ],
+    "name": "Kendall-Jackson Vintner's Reserve Chardonnay",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-poulet-wine-kendall-jackson-vintners-reserve-chardonnay",
+        "_ref": "food-poulet-roti",
+        "_type": null,
+        "name": "Poulet rôti"
+      },
+      {
+        "_key": "food-pates-cremeuses-wine-kendall-jackson-vintners-reserve-chardonnay",
+        "_ref": "food-pates-cremeuses",
+        "_type": "reference",
+        "name": "Pâtes crémeuses"
+      },
+      {
+        "_key": "food-chocolat-wine-kendall-jackson-vintners-reserve-chardonnay",
+        "_ref": "food-chocolat",
+        "_type": "reference",
+        "name": "Chocolat"
+      }
+    ],
+    "producer": {
+      "_id": "producer-kendall-jackson",
+      "name": "Kendall-Jackson Vineyards & Winery"
+    },
+    "region": {
+      "_id": "region-californie",
+      "name": "Californie"
+    },
+    "resolvedFoodCount": 2,
+    "style": "Blanc sec, riche, rond et boisé",
+    "sweetness": 2,
+    "tannins": 1,
+    "validReferenceCount": 2
+  },
+  {
+    "_id": "wine-lorpailleur-blanc-2025",
+    "acidity": 4,
+    "alcohol": 11.5,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-seyval-blanc",
+        "name": "Seyval blanc"
+      },
+      {
+        "_id": "grape-frontenac-blanc",
+        "name": "Frontenac blanc"
+      },
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      },
+      {
+        "_id": "grape-cayuga",
+        "name": "Cayuga"
+      }
+    ],
+    "name": "L'Orpailleur Blanc",
+    "pairingCount": 1,
+    "pairings": [
+      {
+        "_key": "food-poisson-wine-lorpailleur-blanc-2025",
+        "_ref": "food-poisson-fruits-de-mer",
+        "_type": "reference",
+        "name": "Poisson & fruits de mer"
+      }
+    ],
+    "producer": {
+      "_id": "producer-vignoble-de-l-orpailleur",
+      "name": "Vignoble de l'Orpailleur"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 1,
+    "style": "Blanc sec, frais et fruité",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 1
+  },
+  {
+    "_id": "wine-l-orpailleur-brut",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "sparkling",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-seyval",
+        "name": "Seyval"
+      },
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      }
+    ],
+    "name": "L'Orpailleur Brut",
+    "pairingCount": 6,
+    "pairings": [
+      {
+        "_key": "food-fromages-wine-l-orpailleur-brut",
+        "_ref": "food-fromages",
+        "_type": "reference",
+        "name": "Fromages"
+      },
+      {
+        "_key": "food-crabe-wine-l-orpailleur-brut",
+        "_ref": "food-crabe",
+        "_type": "reference",
+        "name": "Crabe"
+      },
+      {
+        "_key": "food-ramen-wine-l-orpailleur-brut",
+        "_ref": "food-ramen",
+        "_type": "reference",
+        "name": "Ramen"
+      },
+      {
+        "_key": "food-tarte-aux-fruits-wine-l-orpailleur-brut",
+        "_ref": "food-tarte-aux-fruits",
+        "_type": "reference",
+        "name": "Tarte aux fruits"
+      },
+      {
+        "_key": "food-creme-brulee-wine-l-orpailleur-brut",
+        "_ref": "food-creme-brulee",
+        "_type": "reference",
+        "name": "Crème brûlée"
+      },
+      {
+        "_key": "food-dessert-vanille-wine-l-orpailleur-brut",
+        "_ref": "food-dessert-vanille",
+        "_type": "reference",
+        "name": "Gâteau & dessert à la vanille"
+      }
+    ],
+    "producer": {
+      "_id": "producer-vignoble-de-l-orpailleur",
+      "name": "Vignoble de l'Orpailleur"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 6,
+    "style": "Vin effervescent brut, frais et équilibré",
+    "sweetness": 2,
+    "tannins": 1,
+    "validReferenceCount": 6
+  },
+  {
+    "_id": "wine-la-chablisienne-chablis-la-sereine",
+    "acidity": 5,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-chablis",
+      "name": "Chablis"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-chardonnay",
+        "name": "Chardonnay"
+      }
+    ],
+    "name": "La Chablisienne Chablis La Sereine",
+    "pairingCount": 12,
+    "pairings": [
+      {
+        "_key": "food-fromages-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-fromages",
+        "_type": null,
+        "name": "Fromages"
+      },
+      {
+        "_key": "food-saumon-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-saumon",
+        "_type": "reference",
+        "name": "Saumon"
+      },
+      {
+        "_key": "food-huitres-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-huitres",
+        "_type": "reference",
+        "name": "Huîtres"
+      },
+      {
+        "_key": "food-crevettes-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-crevettes",
+        "_type": "reference",
+        "name": "Crevettes"
+      },
+      {
+        "_key": "food-fondue-fromage-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-fondue-fromage",
+        "_type": "reference",
+        "name": "Fondue au fromage"
+      },
+      {
+        "_key": "food-petoncles-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-petoncles",
+        "_type": "reference",
+        "name": "Pétoncles"
+      },
+      {
+        "_key": "food-moules-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-moules",
+        "_type": "reference",
+        "name": "Moules"
+      },
+      {
+        "_key": "food-poulet-frit-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-poulet-frit",
+        "_type": "reference",
+        "name": "Poulet frit"
+      },
+      {
+        "_key": "food-tartare-saumon-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-tartare-saumon",
+        "_type": "reference",
+        "name": "Tartare de saumon"
+      },
+      {
+        "_key": "food-pesto-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-pesto",
+        "_type": "reference",
+        "name": "Pesto"
+      },
+      {
+        "_key": "food-salade-chevre-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-salade-chevre",
+        "_type": "reference",
+        "name": "Salade & fromage de chèvre"
+      },
+      {
+        "_key": "food-brunch-oeufs-benedictine-wine-la-chablisienne-chablis-la-sereine",
+        "_ref": "food-brunch-oeufs-benedictine",
+        "_type": "reference",
+        "name": "Brunch & œufs bénédictine"
+      }
+    ],
+    "producer": {
+      "_id": "producer-la-chablisienne",
+      "name": "La Chablisienne"
+    },
+    "region": {
+      "_id": "region-bourgogne",
+      "name": "Bourgogne"
+    },
+    "resolvedFoodCount": 11,
+    "style": "Blanc sec, frais et minéral",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 11
+  },
+  {
+    "_id": "wine-la-sablette-muscadet-sevre-et-maine-sur-lie",
+    "acidity": 5,
+    "alcohol": 11.5,
+    "appellation": {
+      "_id": "appellation-muscadet-sevre-et-maine",
+      "name": "Muscadet-Sèvre et Maine"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 1,
+    "color": "white",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-melon-de-bourgogne",
+        "name": "Melon de Bourgogne"
+      }
+    ],
+    "name": "La Sablette Muscadet-Sèvre et Maine sur Lie",
+    "pairingCount": 2,
+    "pairings": [
+      {
+        "_key": "food-poisson-wine-la-sablette-muscadet-sevre-et-maine-sur-lie",
+        "_ref": "food-poisson-fruits-de-mer",
+        "_type": "reference",
+        "name": "Poisson & fruits de mer"
+      },
+      {
+        "_key": "food-huitres-wine-la-sablette-muscadet-sevre-et-maine-sur-lie",
+        "_ref": "food-huitres",
+        "_type": "reference",
+        "name": "Huîtres"
+      }
+    ],
+    "producer": {
+      "_id": "producer-marcel-martin",
+      "name": "Marcel Martin"
+    },
+    "region": {
+      "_id": "region-vallee-de-la-loire",
+      "name": "Vallée de la Loire"
+    },
+    "resolvedFoodCount": 2,
+    "style": "Blanc sec, léger et vif",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 2
+  },
+  {
+    "_id": "wine-domaine-bergeville-le-blanc-2024",
+    "acidity": 5,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "sparkling",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      },
+      {
+        "_id": "grape-frontenac-gris",
+        "name": "Frontenac gris"
+      },
+      {
+        "_id": "grape-acadie-blanc",
+        "name": "Acadie blanc"
+      },
+      {
+        "_id": "grape-seyval",
+        "name": "Seyval"
+      },
+      {
+        "_id": "grape-frontenac-blanc",
+        "name": "Frontenac blanc"
+      },
+      {
+        "_id": "grape-riesling",
+        "name": "Riesling"
+      }
+    ],
+    "name": "Le Blanc",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-domaine-bergeville",
+      "name": "Domaine Bergeville"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": null,
+    "style": "Mousseux blanc brut",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-domaine-du-ridge-le-batonnier",
+    "acidity": 3,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 4,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-marechal-foch",
+        "name": "Maréchal Foch"
+      }
+    ],
+    "name": "Le Bâtonnier",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-steak-grillades-0",
+        "_ref": "food-steak-grillades",
+        "_type": "reference",
+        "name": "Steak et grillades"
+      },
+      {
+        "_key": "food-agneau-1",
+        "_ref": "food-agneau",
+        "_type": "reference",
+        "name": "Agneau"
+      },
+      {
+        "_key": "food-tourtiere-2",
+        "_ref": "food-tourtiere",
+        "_type": "reference",
+        "name": "Tourtière"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rouge souple, rond et légèrement boisé",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-domaine-bergeville-le-rose-2024",
+    "acidity": 5,
+    "alcohol": 13.5,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "rose",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      },
+      {
+        "_id": "grape-marquette",
+        "name": "Marquette"
+      },
+      {
+        "_id": "grape-frontenac-gris",
+        "name": "Frontenac gris"
+      },
+      {
+        "_id": "grape-gamay",
+        "name": "Gamay"
+      },
+      {
+        "_id": "grape-frontenac-noir",
+        "name": "Frontenac noir"
+      },
+      {
+        "_id": "grape-riesling",
+        "name": "Riesling"
+      },
+      {
+        "_id": "grape-acadie-blanc",
+        "name": "Acadie blanc"
+      }
+    ],
+    "name": "Le Rosé",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-domaine-bergeville",
+      "name": "Domaine Bergeville"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": null,
+    "style": "Mousseux rosé brut",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-domaine-du-ridge-le-stanbridge",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 3,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      }
+    ],
+    "name": "Le Stanbridge",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-thon-0",
+        "_ref": "food-thon",
+        "_type": "reference",
+        "name": "Thon"
+      },
+      {
+        "_key": "food-poulet-roti-1",
+        "_ref": "food-poulet-roti",
+        "_type": "reference",
+        "name": "Poulet rôti"
+      },
+      {
+        "_key": "food-poisson-grille-2",
+        "_ref": "food-poisson-grille",
+        "_type": "reference",
+        "name": "Poisson grillé"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Blanc sec, généreux et légèrement boisé",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-domaine-bergeville-le-soleil-s-en-est-mele-2025",
+    "acidity": 3,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-gamay",
+        "name": "Gamay"
+      },
+      {
+        "_id": "grape-marquette",
+        "name": "Marquette"
+      },
+      {
+        "_id": "grape-riesling",
+        "name": "Riesling"
+      },
+      {
+        "_id": "grape-frontenac-noir",
+        "name": "Frontenac noir"
+      }
+    ],
+    "name": "Le soleil s’en est mêlé",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-domaine-bergeville",
+      "name": "Domaine Bergeville"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": null,
+    "style": "Rouge léger et sec",
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-domaine-du-ridge-seyval-vidal",
+    "acidity": 4,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 3,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-seyval-blanc",
+        "name": "Seyval blanc"
+      },
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      }
+    ],
+    "name": "Les Petites Cuvées – Seyval/Vidal",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-sushis-0",
+        "_ref": "food-sushis",
+        "_type": "reference",
+        "name": "Sushis"
+      },
+      {
+        "_key": "food-salade-chevre-1",
+        "_ref": "food-salade-chevre",
+        "_type": "reference",
+        "name": "Salade & fromage de chèvre"
+      },
+      {
+        "_key": "food-cuisine-asiatique-sucree-salee-2",
+        "_ref": "food-cuisine-asiatique-sucree-salee",
+        "_type": "reference",
+        "name": "Cuisine asiatique sucrée-salée"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Blanc fruité, frais et expressif",
+    "sweetness": 2,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-domaine-du-ridge-les-petites-cuvees-vidal-brut",
+    "acidity": 5,
+    "alcohol": 10,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      }
+    ],
+    "name": "Les Petites Cuvées – Vidal Brut",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-crabe-0",
+        "_ref": "food-crabe",
+        "_type": "reference",
+        "name": "Crabe"
+      },
+      {
+        "_key": "food-huitres-1",
+        "_ref": "food-huitres",
+        "_type": "reference",
+        "name": "Huîtres"
+      },
+      {
+        "_key": "food-poisson-fruits-de-mer-2",
+        "_ref": "food-poisson-fruits-de-mer",
+        "_type": "reference",
+        "name": "Poisson & fruits de mer"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Effervescent brut, vif, citronné et minéral",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-les-pervenches-les-rosiers-2024",
+    "acidity": 4,
+    "alcohol": 13.5,
+    "appellation": {
+      "_id": "2acd9265-a02e-4b7c-a803-e702742f10cc",
+      "name": "Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 4,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-chardonnay",
+        "name": "Chardonnay"
+      }
+    ],
+    "name": "Les Rosiers 2024",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-poulet-roti-0",
+        "_ref": "food-poulet-roti",
+        "_type": "reference",
+        "name": "Poulet rôti"
+      },
+      {
+        "_key": "food-curry-1",
+        "_ref": "food-curry",
+        "_type": "reference",
+        "name": "Curry"
+      },
+      {
+        "_key": "food-fromages-2",
+        "_ref": "food-fromages",
+        "_type": "reference",
+        "name": "Fromages"
+      }
+    ],
+    "producer": {
+      "_id": "producer-les-pervenches",
+      "name": "Les Pervenches"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Chardonnay texturé, généreux et aromatique",
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-loimer-lois-gruner-veltliner-2023",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-kamptal-dac",
+      "name": "Kamptal DAC"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "white",
+    "country": {
+      "_id": "country-autriche",
+      "name": "Autriche"
+    },
+    "grapes": [
+      {
+        "_id": "grape-gruner-veltliner",
+        "name": "Grüner Veltliner"
+      }
+    ],
+    "name": "Lois Grüner Veltliner",
+    "pairingCount": 5,
+    "pairings": [
+      {
+        "_key": "food-vegetarien-wine-loimer-lois-gruner-veltliner-2023",
+        "_ref": "food-cuisine-vegetarienne",
+        "_type": "reference",
+        "name": "Cuisine végétarienne"
+      },
+      {
+        "_key": "food-homard-wine-loimer-lois-gruner-veltliner-2023",
+        "_ref": "food-homard",
+        "_type": "reference",
+        "name": "Homard"
+      },
+      {
+        "_key": "food-petoncles-wine-loimer-lois-gruner-veltliner-2023",
+        "_ref": "food-petoncles",
+        "_type": "reference",
+        "name": "Pétoncles"
+      },
+      {
+        "_key": "food-poisson-grille-wine-loimer-lois-gruner-veltliner-2023",
+        "_ref": "food-poisson-grille",
+        "_type": "reference",
+        "name": "Poisson grillé"
+      },
+      {
+        "_key": "food-thon-wine-loimer-lois-gruner-veltliner-2023",
+        "_ref": "food-thon",
+        "_type": "reference",
+        "name": "Thon"
+      }
+    ],
+    "producer": {
+      "_id": "producer-weingut-loimer",
+      "name": "Weingut Loimer"
+    },
+    "region": {
+      "_id": "region-basse-autriche-niederosterreich",
+      "name": "Basse-Autriche (Niederösterreich)"
+    },
+    "resolvedFoodCount": 5,
+    "style": "Blanc sec, vif, minéral et fruité",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 5
+  },
+  {
+    "_id": "wine-louis-jadot-bourgogne-couvent-des-jacobins-2023",
+    "acidity": 4,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-bourgogne",
+      "name": "Bourgogne"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-pinot-noir",
+        "name": "Pinot noir"
+      }
+    ],
+    "name": "Louis Jadot Bourgogne Couvent des Jacobins",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-canard-wine-louis-jadot-bourgogne-couvent-des-jacobins-2023",
+        "_ref": "food-canard",
+        "_type": "reference",
+        "name": "Canard"
+      },
+      {
+        "_key": "food-porc-wine-louis-jadot-bourgogne-couvent-des-jacobins-2023",
+        "_ref": "food-porc",
+        "_type": "reference",
+        "name": "Porc"
+      },
+      {
+        "_key": "food-veau-wine-louis-jadot-bourgogne-couvent-des-jacobins-2023",
+        "_ref": "food-veau",
+        "_type": "reference",
+        "name": "Veau"
+      }
+    ],
+    "producer": {
+      "_id": "producer-louis-jadot",
+      "name": "Louis Jadot"
+    },
+    "region": {
+      "_id": "region-bourgogne",
+      "name": "Bourgogne"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rouge sec, délicat, fruité et légèrement boisé",
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-les-pervenches-lesperance-2025",
+    "acidity": 4,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "2acd9265-a02e-4b7c-a803-e702742f10cc",
+      "name": "Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 4,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-gewurztraminer",
+        "name": "Gewurztraminer"
+      }
+    ],
+    "name": "L’Espérance 2025",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-cuisine-asiatique-sucree-salee-0",
+        "_ref": "food-cuisine-asiatique-sucree-salee",
+        "_type": "reference",
+        "name": "Cuisine asiatique sucrée-salée"
+      },
+      {
+        "_key": "food-curry-1",
+        "_ref": "food-curry",
+        "_type": "reference",
+        "name": "Curry"
+      },
+      {
+        "_key": "food-fromages-2",
+        "_ref": "food-fromages",
+        "_type": "reference",
+        "name": "Fromages"
+      }
+    ],
+    "producer": {
+      "_id": "producer-les-pervenches",
+      "name": "Les Pervenches"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Gewurztraminer sec, exotique, ample et frais",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-domaine-du-ridge-l-honorable-1-litre",
+    "acidity": 3,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 5,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-marechal-foch",
+        "name": "Maréchal Foch"
+      },
+      {
+        "_id": "grape-lucie-kuhlmann",
+        "name": "Lucie Kuhlmann"
+      }
+    ],
+    "name": "L’Honorable 1 litre",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-steak-grillades-0",
+        "_ref": "food-steak-grillades",
+        "_type": "reference",
+        "name": "Steak et grillades"
+      },
+      {
+        "_key": "food-canard-1",
+        "_ref": "food-canard",
+        "_type": "reference",
+        "name": "Canard"
+      },
+      {
+        "_key": "food-agneau-2",
+        "_ref": "food-agneau",
+        "_type": "reference",
+        "name": "Agneau"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rouge puissant, boisé et harmonieux",
+    "sweetness": 1,
+    "tannins": 4,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-domaine-bergeville-l-integrale",
+    "acidity": 5,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 3,
+    "color": "sparkling",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-saint-pepin",
+        "name": "Saint-Pépin"
+      },
+      {
+        "_id": "grape-frontenac-blanc",
+        "name": "Frontenac blanc"
+      },
+      {
+        "_id": "grape-acadie-blanc",
+        "name": "Acadie blanc"
+      },
+      {
+        "_id": "grape-frontenac-gris",
+        "name": "Frontenac gris"
+      }
+    ],
+    "name": "L’Intégrale",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-domaine-bergeville",
+      "name": "Domaine Bergeville"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": null,
+    "style": "Mousseux blanc brut nature",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-les-pervenches-macpel-pgg-2024",
+    "acidity": 3,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "2acd9265-a02e-4b7c-a803-e702742f10cc",
+      "name": "Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 4,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-pinot-gris",
+        "name": "Pinot gris"
+      },
+      {
+        "_id": "grape-gewurztraminer",
+        "name": "Gewurztraminer"
+      }
+    ],
+    "name": "Macpel PGG 2024",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-cuisine-epicee-0",
+        "_ref": "food-cuisine-epicee",
+        "_type": "reference",
+        "name": "Cuisine épicée"
+      },
+      {
+        "_key": "food-fromages-1",
+        "_ref": "food-fromages",
+        "_type": "reference",
+        "name": "Fromages"
+      },
+      {
+        "_key": "food-cuisine-vegetarienne-2",
+        "_ref": "food-cuisine-vegetarienne",
+        "_type": "reference",
+        "name": "Cuisine végétarienne"
+      }
+    ],
+    "producer": {
+      "_id": "producer-les-pervenches",
+      "name": "Les Pervenches"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Blanc de macération rond, juteux et légèrement tannique",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-mapu-cabernet-sauvignon-carmenere",
+    "acidity": 3,
+    "alcohol": 13.5,
+    "appellation": {
+      "_id": "appellation-valle-del-maule",
+      "name": "Valle del Maule"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-chili",
+      "name": "Chili"
+    },
+    "grapes": [
+      {
+        "_id": "grape-cabernet-sauvignon",
+        "name": "Cabernet Sauvignon"
+      },
+      {
+        "_id": "grape-carmenere",
+        "name": "Carmenère"
+      }
+    ],
+    "name": "Mapu Cabernet-Sauvignon/Carmenère",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-baron-philippe-de-rothschild",
+      "name": "Baron Philippe de Rothschild"
+    },
+    "region": {
+      "_id": "region-valle-del-maule",
+      "name": "Valle del Maule"
+    },
+    "resolvedFoodCount": null,
+    "style": "Rouge sec, mi-corsé, souple et généreux",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-martin-codax-albarino-rias-baixas-2025",
+    "acidity": 4,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "appellation-rias-baixas",
+      "name": "Rías Baixas"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "country-espagne",
+      "name": "Espagne"
+    },
+    "grapes": [
+      {
+        "_id": "grape-albarino",
+        "name": "Albariño"
+      }
+    ],
+    "name": "Martín Códax Albariño Rías Baixas",
+    "pairingCount": 5,
+    "pairings": [
+      {
+        "_key": "food-sushis-wine-martin-codax-albarino-rias-baixas-2025",
+        "_ref": "food-sushis",
+        "_type": null,
+        "name": "Sushis"
+      },
+      {
+        "_key": "food-poisson-wine-martin-codax-albarino-rias-baixas-2025",
+        "_ref": "food-poisson-fruits-de-mer",
+        "_type": "reference",
+        "name": "Poisson & fruits de mer"
+      },
+      {
+        "_key": "food-homard-wine-martin-codax-albarino-rias-baixas-2025",
+        "_ref": "food-homard",
+        "_type": "reference",
+        "name": "Homard"
+      },
+      {
+        "_key": "food-curry-wine-martin-codax-albarino-rias-baixas-2025",
+        "_ref": "food-curry",
+        "_type": "reference",
+        "name": "Curry"
+      },
+      {
+        "_key": "food-cuisine-asiatique-sucree-salee-wine-martin-codax-albarino-rias-baixas-2025",
+        "_ref": "food-cuisine-asiatique-sucree-salee",
+        "_type": "reference",
+        "name": "Cuisine asiatique sucrée-salée"
+      }
+    ],
+    "producer": {
+      "_id": "producer-martin-codax",
+      "name": "Martín Códax"
+    },
+    "region": {
+      "_id": "region-espagne-verte",
+      "name": "L'Espagne Verte"
+    },
+    "resolvedFoodCount": 4,
+    "style": "Blanc sec, vif, aromatique et frais",
+    "sweetness": 1,
+    "tannins": null,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-masi-campofiorin-verona",
+    "acidity": 3,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-rosso-verona-igt",
+      "name": "Rosso Verona IGT"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 4,
+    "color": "red",
+    "country": {
+      "_id": "country-italie",
+      "name": "Italie"
+    },
+    "grapes": [
+      {
+        "_id": "grape-corvina",
+        "name": "Corvina"
+      },
+      {
+        "_id": "grape-rondinella",
+        "name": "Rondinella"
+      },
+      {
+        "_id": "grape-molinara",
+        "name": "Molinara"
+      }
+    ],
+    "name": "Masi Campofiorin Verona",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-agneau-wine-masi-campofiorin-verona",
+        "_ref": "food-agneau",
+        "_type": "reference",
+        "name": "Agneau"
+      },
+      {
+        "_key": "food-bbq-cotes-levees-wine-masi-campofiorin-verona",
+        "_ref": "food-bbq-cotes-levees",
+        "_type": "reference",
+        "name": "BBQ & côtes levées"
+      },
+      {
+        "_key": "food-chocolat-wine-masi-campofiorin-verona",
+        "_ref": "food-chocolat",
+        "_type": "reference",
+        "name": "Chocolat"
+      }
+    ],
+    "producer": {
+      "_id": "producer-masi",
+      "name": "Masi"
+    },
+    "region": {
+      "_id": "region-venetie",
+      "name": "Vénétie"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rouge sec, généreux, fruité et épicé",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-mazzei-fonterutoli-chianti-classico-2023",
+    "acidity": 4,
+    "alcohol": 13.5,
+    "appellation": {
+      "_id": "appellation-chianti-classico",
+      "name": "Chianti Classico"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 4,
+    "color": "red",
+    "country": {
+      "_id": "country-italie",
+      "name": "Italie"
+    },
+    "grapes": [
+      {
+        "_id": "grape-sangiovese",
+        "name": "Sangiovese"
+      },
+      {
+        "_id": "grape-malvasia-nera",
+        "name": "Malvasia Nera"
+      },
+      {
+        "_id": "grape-colorino",
+        "name": "Colorino"
+      }
+    ],
+    "name": "Mazzei Fonterutoli Chianti Classico",
+    "pairingCount": 1,
+    "pairings": [
+      {
+        "_key": "food-agneau-wine-mazzei-fonterutoli-chianti-classico-2023",
+        "_ref": "food-agneau",
+        "_type": "reference",
+        "name": "Agneau"
+      }
+    ],
+    "producer": {
+      "_id": "producer-castello-di-fonterutoli",
+      "name": "Castello di Fonterutoli — Mazzei"
+    },
+    "region": {
+      "_id": "region-toscane",
+      "name": "Toscane"
+    },
+    "resolvedFoodCount": 1,
+    "style": "Rouge frais, structuré et gastronomique",
+    "sweetness": 1,
+    "tannins": 4,
+    "validReferenceCount": 1
+  },
+  {
+    "_id": "wine-meinklang-kontakt-2024",
+    "acidity": 4,
+    "alcohol": 11,
+    "appellation": {
+      "_id": "appellation-burgenland",
+      "name": "Burgenland"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "orange",
+    "country": {
+      "_id": "country-autriche",
+      "name": "Autriche"
+    },
+    "grapes": [
+      {
+        "_id": "grape-welschriesling",
+        "name": "Welschriesling"
+      },
+      {
+        "_id": "grape-pinot-gris",
+        "name": "Pinot gris"
+      },
+      {
+        "_id": "grape-traminer",
+        "name": "Traminer"
+      }
+    ],
+    "name": "Meinklang Kontakt",
+    "pairingCount": 5,
+    "pairings": [
+      {
+        "_key": "food-vegetarien-wine-meinklang-kontakt-2024",
+        "_ref": "food-cuisine-vegetarienne",
+        "_type": "reference",
+        "name": "Cuisine végétarienne"
+      },
+      {
+        "_key": "food-risotto-wine-meinklang-kontakt-2024",
+        "_ref": "food-risotto",
+        "_type": "reference",
+        "name": "Risotto"
+      },
+      {
+        "_key": "food-champignons-wine-meinklang-kontakt-2024",
+        "_ref": "food-champignons",
+        "_type": "reference",
+        "name": "Champignons"
+      },
+      {
+        "_key": "food-legumes-grilles-wine-meinklang-kontakt-2024",
+        "_ref": "food-legumes-grilles",
+        "_type": "reference",
+        "name": "Légumes grillés"
+      },
+      {
+        "_key": "food-ramen-wine-meinklang-kontakt-2024",
+        "_ref": "food-ramen",
+        "_type": "reference",
+        "name": "Ramen"
+      }
+    ],
+    "producer": {
+      "_id": "producer-meinklang",
+      "name": "Meinklang"
+    },
+    "region": {
+      "_id": "region-burgenland",
+      "name": "Burgenland"
+    },
+    "resolvedFoodCount": 5,
+    "style": "Blanc de macération sec, frais, texturé et légèrement tannique",
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": 5
+  },
+  {
+    "_id": "wine-marcel-lapierre-morgon-2025",
+    "acidity": 4,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "appellation-morgon",
+      "name": "Morgon"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-gamay",
+        "name": "Gamay"
+      }
+    ],
+    "name": "Morgon",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-marcel-lapierre",
+      "name": "Domaine Marcel Lapierre"
+    },
+    "region": {
+      "_id": "region-beaujolais",
+      "name": "Beaujolais"
+    },
+    "resolvedFoodCount": null,
+    "style": null,
+    "sweetness": 1,
+    "tannins": 2,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-mouton-cadet-bordeaux-rouge",
+    "acidity": 3,
+    "alcohol": 14.5,
+    "appellation": {
+      "_id": "appellation-bordeaux",
+      "name": "Bordeaux"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-merlot",
+        "name": "Merlot"
+      },
+      {
+        "_id": "grape-cabernet-sauvignon",
+        "name": "Cabernet Sauvignon"
+      },
+      {
+        "_id": "grape-cabernet-franc",
+        "name": "Cabernet Franc"
+      }
+    ],
+    "name": "Mouton Cadet Bordeaux Rouge",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-baron-philippe-de-rothschild",
+      "name": "Baron Philippe de Rothschild"
+    },
+    "region": {
+      "_id": "region-bordeaux",
+      "name": "Bordeaux"
+    },
+    "resolvedFoodCount": null,
+    "style": "Rouge sec, mi-corsé, souple et légèrement boisé",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-pares-balta-cava-brut",
+    "acidity": 4,
+    "alcohol": 11.5,
+    "appellation": {
+      "_id": "appellation-cava",
+      "name": "Cava"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "sparkling",
+    "country": {
+      "_id": "country-espagne",
+      "name": "Espagne"
+    },
+    "grapes": [
+      {
+        "_id": "grape-parellada",
+        "name": "Parellada"
+      },
+      {
+        "_id": "grape-macabeo",
+        "name": "Macabeo"
+      },
+      {
+        "_id": "grape-xarello",
+        "name": "Xarel·lo"
+      }
+    ],
+    "name": "Parés Baltà Cava Brut",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-pizza-wine-pares-balta-cava-brut",
+        "_ref": "food-pizza",
+        "_type": "reference",
+        "name": "Pizza"
+      },
+      {
+        "_key": "food-homard-wine-pares-balta-cava-brut",
+        "_ref": "food-homard",
+        "_type": "reference",
+        "name": "Homard"
+      },
+      {
+        "_key": "food-poutine-wine-pares-balta-cava-brut",
+        "_ref": "food-poutine",
+        "_type": "reference",
+        "name": "Poutine"
+      }
+    ],
+    "producer": {
+      "_id": "producer-pares-balta",
+      "name": "Parés Baltà"
+    },
+    "region": {
+      "_id": "region-catalogne",
+      "name": "Catalogne"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Mousseux sec, frais et vif",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-pieropan-soave-classico",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-soave",
+      "name": "Soave"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "country-italie",
+      "name": "Italie"
+    },
+    "grapes": [
+      {
+        "_id": "grape-garganega",
+        "name": "Garganega"
+      },
+      {
+        "_id": "grape-trebbiano-di-soave",
+        "name": "Trebbiano di Soave"
+      }
+    ],
+    "name": "Pieropan Soave Classico",
+    "pairingCount": 4,
+    "pairings": [
+      {
+        "_key": "food-poulet-wine-pieropan-soave-classico",
+        "_ref": "food-poulet-roti",
+        "_type": null,
+        "name": "Poulet rôti"
+      },
+      {
+        "_key": "food-vegetarien-wine-pieropan-soave-classico",
+        "_ref": "food-cuisine-vegetarienne",
+        "_type": "reference",
+        "name": "Cuisine végétarienne"
+      },
+      {
+        "_key": "food-homard-wine-pieropan-soave-classico",
+        "_ref": "food-homard",
+        "_type": "reference",
+        "name": "Homard"
+      },
+      {
+        "_key": "food-petoncles-wine-pieropan-soave-classico",
+        "_ref": "food-petoncles",
+        "_type": "reference",
+        "name": "Pétoncles"
+      }
+    ],
+    "producer": {
+      "_id": "producer-pieropan",
+      "name": "Pieropan"
+    },
+    "region": {
+      "_id": "region-venetie",
+      "name": "Vénétie"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Blanc sec, frais, floral et minéral",
+    "sweetness": 1,
+    "tannins": null,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-les-pervenches-pinot-zweigelt-2025",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "2acd9265-a02e-4b7c-a803-e702742f10cc",
+      "name": "Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-pinot-noir",
+        "name": "Pinot noir"
+      },
+      {
+        "_id": "grape-zweigelt",
+        "name": "Zweigelt"
+      }
+    ],
+    "name": "Pinot Zweigelt 2025",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-canard-0",
+        "_ref": "food-canard",
+        "_type": "reference",
+        "name": "Canard"
+      },
+      {
+        "_key": "food-champignons-1",
+        "_ref": "food-champignons",
+        "_type": "reference",
+        "name": "Champignons"
+      },
+      {
+        "_key": "food-planche-charcuteries-2",
+        "_ref": "food-planche-charcuteries",
+        "_type": "reference",
+        "name": "Planche & charcuteries"
+      }
+    ],
+    "producer": {
+      "_id": "producer-les-pervenches",
+      "name": "Les Pervenches"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rouge léger, sapide, fruité et finement tannique",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-domaine-bergeville-plus-petit-que-2025",
+    "acidity": 5,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "sparkling",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-frontenac-blanc",
+        "name": "Frontenac blanc"
+      },
+      {
+        "_id": "grape-acadie-blanc",
+        "name": "Acadie blanc"
+      },
+      {
+        "_id": "grape-geisenheim",
+        "name": "Geisenheim"
+      },
+      {
+        "_id": "grape-la-crescent",
+        "name": "La Crescent"
+      },
+      {
+        "_id": "grape-vidal",
+        "name": "Vidal"
+      },
+      {
+        "_id": "grape-frontenac-gris",
+        "name": "Frontenac gris"
+      },
+      {
+        "_id": "grape-seyval",
+        "name": "Seyval"
+      }
+    ],
+    "name": "Plus Petit Que",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-domaine-bergeville",
+      "name": "Domaine Bergeville"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": null,
+    "style": "Pétillant sur lies brut nature",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-les-pervenches-pur-pinot-2025",
+    "acidity": 4,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "2acd9265-a02e-4b7c-a803-e702742f10cc",
+      "name": "Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-pinot-noir",
+        "name": "Pinot noir"
+      }
+    ],
+    "name": "Pur Pinot 2025",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-canard-0",
+        "_ref": "food-canard",
+        "_type": "reference",
+        "name": "Canard"
+      },
+      {
+        "_key": "food-champignons-1",
+        "_ref": "food-champignons",
+        "_type": "reference",
+        "name": "Champignons"
+      },
+      {
+        "_key": "food-saumon-2",
+        "_ref": "food-saumon",
+        "_type": "reference",
+        "name": "Saumon"
+      }
+    ],
+    "producer": {
+      "_id": "producer-les-pervenches",
+      "name": "Les Pervenches"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Pinot noir souple, épicé et soyeux",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-trimbach-riesling-2023",
+    "acidity": 5,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "appellation-alsace",
+      "name": "Alsace"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "white",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-riesling",
+        "name": "Riesling"
+      }
+    ],
+    "name": "Riesling",
+    "pairingCount": null,
+    "pairings": null,
+    "producer": {
+      "_id": "producer-trimbach",
+      "name": "Trimbach"
+    },
+    "region": {
+      "_id": "region-alsace",
+      "name": "Alsace"
+    },
+    "resolvedFoodCount": null,
+    "style": null,
+    "sweetness": 1,
+    "tannins": null,
+    "validReferenceCount": null
+  },
+  {
+    "_id": "wine-domaine-du-ridge-rose-domaine-du-ridge",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 2,
+    "color": "rose",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-seyval-blanc",
+        "name": "Seyval blanc"
+      },
+      {
+        "_id": "grape-seyval-noir",
+        "name": "Seyval noir"
+      },
+      {
+        "_id": "grape-de-chaunac",
+        "name": "De Chaunac"
+      },
+      {
+        "_id": "grape-marechal-foch",
+        "name": "Maréchal Foch"
+      },
+      {
+        "_id": "grape-frontenac-blanc",
+        "name": "Frontenac blanc"
+      },
+      {
+        "_id": "grape-frontenac-noir",
+        "name": "Frontenac noir"
+      },
+      {
+        "_id": "grape-sabrevois",
+        "name": "Sabrevois"
+      }
+    ],
+    "name": "Rosé",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-saumon-0",
+        "_ref": "food-saumon",
+        "_type": "reference",
+        "name": "Saumon"
+      },
+      {
+        "_key": "food-salade-chevre-1",
+        "_ref": "food-salade-chevre",
+        "_type": "reference",
+        "name": "Salade & fromage de chèvre"
+      },
+      {
+        "_key": "food-poulet-roti-2",
+        "_ref": "food-poulet-roti",
+        "_type": "reference",
+        "name": "Poulet rôti"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rosé sec, léger et frais",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-domaine-du-ridge-rouge-domaine-du-ridge",
+    "acidity": 4,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-marechal-foch",
+        "name": "Maréchal Foch"
+      },
+      {
+        "_id": "grape-frontenac-noir",
+        "name": "Frontenac noir"
+      },
+      {
+        "_id": "grape-sabrevois",
+        "name": "Sabrevois"
+      }
+    ],
+    "name": "Rouge ",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-tartare-boeuf-0",
+        "_ref": "food-tartare-boeuf",
+        "_type": "reference",
+        "name": "Tartare de bœuf"
+      },
+      {
+        "_key": "food-lasagne-1",
+        "_ref": "food-lasagne",
+        "_type": "reference",
+        "name": "Lasagne"
+      },
+      {
+        "_key": "food-raclette-2",
+        "_ref": "food-raclette",
+        "_type": "reference",
+        "name": "Raclette"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rouge fruité, frais et accessible",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-ruffino-chianti",
+    "acidity": 4,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-chianti",
+      "name": "Chianti"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-italie",
+      "name": "Italie"
+    },
+    "grapes": [
+      {
+        "_id": "grape-sangiovese",
+        "name": "Sangiovese"
+      }
+    ],
+    "name": "Ruffino Chianti",
+    "pairingCount": 5,
+    "pairings": [
+      {
+        "_key": "food-pizza-wine-ruffino-chianti",
+        "_ref": "food-pizza",
+        "_type": null,
+        "name": "Pizza"
+      },
+      {
+        "_key": "food-pates-tomate-wine-ruffino-chianti",
+        "_ref": "food-pates-sauce-tomate",
+        "_type": "reference",
+        "name": "Pâtes sauce tomate"
+      },
+      {
+        "_key": "food-tacos-wine-ruffino-chianti",
+        "_ref": "food-tacos",
+        "_type": "reference",
+        "name": "Tacos"
+      },
+      {
+        "_key": "food-lasagne-wine-ruffino-chianti",
+        "_ref": "food-lasagne",
+        "_type": "reference",
+        "name": "Lasagne"
+      },
+      {
+        "_key": "food-tourtiere-wine-ruffino-chianti",
+        "_ref": "food-tourtiere",
+        "_type": "reference",
+        "name": "Tourtière"
+      }
+    ],
+    "producer": {
+      "_id": "producer-ruffino",
+      "name": "Ruffino"
+    },
+    "region": {
+      "_id": "region-toscane",
+      "name": "Toscane"
+    },
+    "resolvedFoodCount": 4,
+    "style": "Rouge sec, fruité, frais et mi-corsé",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-saint-martin",
+    "acidity": 2,
+    "alcohol": 17.5,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 4,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-frontenac-blanc",
+        "name": "Frontenac blanc"
+      }
+    ],
+    "name": "Saint-Martin",
+    "pairingCount": 2,
+    "pairings": [
+      {
+        "_key": "food-fromages-0",
+        "_ref": "food-fromages",
+        "_type": "reference",
+        "name": "Fromages"
+      },
+      {
+        "_key": "food-fruits-dessert-leger-1",
+        "_ref": "food-fruits-dessert-leger",
+        "_type": "reference",
+        "name": "Fruits & dessert léger"
+      }
+    ],
+    "producer": {
+      "_id": "bb61af16-e4c6-42ad-968c-edd0752d054c",
+      "name": "Domaine du Ridge"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 2,
+    "style": "Vin doux naturel, riche et boisé",
+    "sweetness": 5,
+    "tannins": 1,
+    "validReferenceCount": 2
+  },
+  {
+    "_id": "wine-schieferkopf-riesling-trocken-sec-2023",
+    "acidity": 5,
+    "alcohol": 12,
+    "appellation": {
+      "_id": "appellation-baden",
+      "name": "Baden"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "country-allemagne",
+      "name": "Allemagne"
+    },
+    "grapes": [
+      {
+        "_id": "grape-riesling",
+        "name": "Riesling"
+      }
+    ],
+    "name": "Schieferkopf Riesling Trocken Sec",
+    "pairingCount": 5,
+    "pairings": [
+      {
+        "_key": "food-sushis-wine-schieferkopf-riesling-trocken-sec-2023",
+        "_ref": "food-sushis",
+        "_type": "reference",
+        "name": "Sushis"
+      },
+      {
+        "_key": "food-poulet-frit-wine-schieferkopf-riesling-trocken-sec-2023",
+        "_ref": "food-poulet-frit",
+        "_type": "reference",
+        "name": "Poulet frit"
+      },
+      {
+        "_key": "food-tartare-saumon-wine-schieferkopf-riesling-trocken-sec-2023",
+        "_ref": "food-tartare-saumon",
+        "_type": "reference",
+        "name": "Tartare de saumon"
+      },
+      {
+        "_key": "food-salade-chevre-wine-schieferkopf-riesling-trocken-sec-2023",
+        "_ref": "food-salade-chevre",
+        "_type": "reference",
+        "name": "Salade & fromage de chèvre"
+      },
+      {
+        "_key": "food-brunch-oeufs-benedictine-wine-schieferkopf-riesling-trocken-sec-2023",
+        "_ref": "food-brunch-oeufs-benedictine",
+        "_type": "reference",
+        "name": "Brunch & œufs bénédictine"
+      }
+    ],
+    "producer": {
+      "_id": "producer-schieferkopf",
+      "name": "Schieferkopf"
+    },
+    "region": {
+      "_id": "region-baden",
+      "name": "Baden"
+    },
+    "resolvedFoodCount": 5,
+    "style": "Blanc sec, vif et minéral",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 5
+  },
+  {
+    "_id": "wine-segura-viudas-brut-organic",
+    "acidity": 4,
+    "alcohol": 11.5,
+    "appellation": {
+      "_id": "appellation-cava",
+      "name": "Cava"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "sparkling",
+    "country": {
+      "_id": "country-espagne",
+      "name": "Espagne"
+    },
+    "grapes": [
+      {
+        "_id": "grape-macabeo",
+        "name": "Macabeo"
+      },
+      {
+        "_id": "grape-parellada",
+        "name": "Parellada"
+      },
+      {
+        "_id": "grape-xarello",
+        "name": "Xarel·lo"
+      }
+    ],
+    "name": "Segura Viudas Brut Organic",
+    "pairingCount": 9,
+    "pairings": [
+      {
+        "_key": "food-planche-wine-segura-viudas-brut-organic",
+        "_ref": "food-planche-charcuteries",
+        "_type": "reference",
+        "name": "Planche & charcuteries"
+      },
+      {
+        "_key": "food-huitres-wine-segura-viudas-brut-organic",
+        "_ref": "food-huitres",
+        "_type": "reference",
+        "name": "Huîtres"
+      },
+      {
+        "_key": "food-crevettes-wine-segura-viudas-brut-organic",
+        "_ref": "food-crevettes",
+        "_type": "reference",
+        "name": "Crevettes"
+      },
+      {
+        "_key": "food-petoncles-wine-segura-viudas-brut-organic",
+        "_ref": "food-petoncles",
+        "_type": "reference",
+        "name": "Pétoncles"
+      },
+      {
+        "_key": "food-moules-wine-segura-viudas-brut-organic",
+        "_ref": "food-moules",
+        "_type": "reference",
+        "name": "Moules"
+      },
+      {
+        "_key": "food-poulet-frit-wine-segura-viudas-brut-organic",
+        "_ref": "food-poulet-frit",
+        "_type": "reference",
+        "name": "Poulet frit"
+      },
+      {
+        "_key": "food-tartare-saumon-wine-segura-viudas-brut-organic",
+        "_ref": "food-tartare-saumon",
+        "_type": "reference",
+        "name": "Tartare de saumon"
+      },
+      {
+        "_key": "food-crabe-wine-segura-viudas-brut-organic",
+        "_ref": "food-crabe",
+        "_type": "reference",
+        "name": "Crabe"
+      },
+      {
+        "_key": "food-brunch-oeufs-benedictine-wine-segura-viudas-brut-organic",
+        "_ref": "food-brunch-oeufs-benedictine",
+        "_type": "reference",
+        "name": "Brunch & œufs bénédictine"
+      }
+    ],
+    "producer": {
+      "_id": "producer-segura-viudas",
+      "name": "Segura Viudas"
+    },
+    "region": {
+      "_id": "region-catalogne",
+      "name": "Catalogne"
+    },
+    "resolvedFoodCount": 9,
+    "style": "Mousseux sec, frais, vif et minéral",
+    "sweetness": 1,
+    "tannins": null,
+    "validReferenceCount": 9
+  },
+  {
+    "_id": "wine-les-pervenches-seyval-chardo-2025",
+    "acidity": 5,
+    "alcohol": 12.3,
+    "appellation": {
+      "_id": "appellation-igp-vin-du-quebec",
+      "name": "IGP Vin du Québec"
+    },
+    "appleVarieties": null,
+    "beverageType": "wine",
+    "body": 3,
+    "color": "white",
+    "country": {
+      "_id": "d9fc0ce6-5f30-4e00-8bc5-63146a0a6407",
+      "name": "Canada"
+    },
+    "grapes": [
+      {
+        "_id": "grape-seyval",
+        "name": "Seyval"
+      },
+      {
+        "_id": "grape-chardonnay",
+        "name": "Chardonnay"
+      }
+    ],
+    "name": "Seyval Chardo 2025",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-poisson-grille-0",
+        "_ref": "food-poisson-grille",
+        "_type": "reference",
+        "name": "Poisson grillé"
+      },
+      {
+        "_key": "food-sushis-1",
+        "_ref": "food-sushis",
+        "_type": "reference",
+        "name": "Sushis"
+      },
+      {
+        "_key": "food-poulet-roti-2",
+        "_ref": "food-poulet-roti",
+        "_type": "reference",
+        "name": "Poulet rôti"
+      }
+    ],
+    "producer": {
+      "_id": "producer-les-pervenches",
+      "name": "Les Pervenches"
+    },
+    "region": {
+      "_id": "55a9fe9a-b3fe-41d6-8145-6adca1a818a8",
+      "name": "Cantons-de-l'Est"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Blanc mûr, texturé, tendu et expressif",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-torres-las-pisadas-rioja",
+    "acidity": 3,
+    "alcohol": 14,
+    "appellation": {
+      "_id": "appellation-rioja",
+      "name": "Rioja"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 4,
+    "color": "red",
+    "country": {
+      "_id": "country-espagne",
+      "name": "Espagne"
+    },
+    "grapes": [
+      {
+        "_id": "grape-tempranillo",
+        "name": "Tempranillo"
+      }
+    ],
+    "name": "Torres Las Pisadas Rioja",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-steak-wine-torres-las-pisadas-rioja",
+        "_ref": "food-steak-grillades",
+        "_type": "reference",
+        "name": "Steak et grillades"
+      },
+      {
+        "_key": "food-bbq-cotes-levees-wine-torres-las-pisadas-rioja",
+        "_ref": "food-bbq-cotes-levees",
+        "_type": "reference",
+        "name": "BBQ & côtes levées"
+      },
+      {
+        "_key": "food-chocolat-wine-torres-las-pisadas-rioja",
+        "_ref": "food-chocolat",
+        "_type": "reference",
+        "name": "Chocolat"
+      }
+    ],
+    "producer": {
+      "_id": "producer-familia-torres",
+      "name": "Familia Torres"
+    },
+    "region": {
+      "_id": "region-vallee-de-l-ebre",
+      "name": "Vallée de l'Ebre"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Rouge sec, fruité, structuré et épicé avec un élevage en bois perceptible",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-trop-content-chenin-blanc-2025",
+    "acidity": 4,
+    "alcohol": 14,
+    "appellation": {
+      "_id": "appellation-swartland",
+      "name": "Swartland"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "white",
+    "country": {
+      "_id": "country-afrique-du-sud",
+      "name": "Afrique du Sud"
+    },
+    "grapes": [
+      {
+        "_id": "grape-chenin-blanc",
+        "name": "Chenin blanc"
+      }
+    ],
+    "name": "Trop Content Chenin Blanc",
+    "pairingCount": 5,
+    "pairings": [
+      {
+        "_key": "food-fromages-wine-trop-content-chenin-blanc-2025",
+        "_ref": "food-fromages",
+        "_type": null,
+        "name": "Fromages"
+      },
+      {
+        "_key": "food-saumon-wine-trop-content-chenin-blanc-2025",
+        "_ref": "food-saumon",
+        "_type": null,
+        "name": "Saumon"
+      },
+      {
+        "_key": "food-pates-cremeuses-wine-trop-content-chenin-blanc-2025",
+        "_ref": "food-pates-cremeuses",
+        "_type": "reference",
+        "name": "Pâtes crémeuses"
+      },
+      {
+        "_key": "food-poisson-grille-wine-trop-content-chenin-blanc-2025",
+        "_ref": "food-poisson-grille",
+        "_type": "reference",
+        "name": "Poisson grillé"
+      },
+      {
+        "_key": "food-creme-brulee-wine-trop-content-chenin-blanc-2025",
+        "_ref": "food-creme-brulee",
+        "_type": "reference",
+        "name": "Crème brûlée"
+      }
+    ],
+    "producer": {
+      "_id": "producer-kruger-roux",
+      "name": "Krüger & Roux"
+    },
+    "region": {
+      "_id": "region-swartland",
+      "name": "Swartland"
+    },
+    "resolvedFoodCount": 3,
+    "style": "Blanc sec, frais, fruité et texturé",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 3
+  },
+  {
+    "_id": "wine-vidal-fleury-cotes-du-rhone",
+    "acidity": 3,
+    "alcohol": 14.5,
+    "appellation": {
+      "_id": "appellation-cotes-du-rhone",
+      "name": "Côtes du Rhône"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 4,
+    "color": "red",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-grenache",
+        "name": "Grenache"
+      },
+      {
+        "_id": "grape-carignan",
+        "name": "Carignan"
+      }
+    ],
+    "name": "Vidal-Fleury Côtes-du-Rhône",
+    "pairingCount": 2,
+    "pairings": [
+      {
+        "_key": "food-bbq-cotes-levees-wine-vidal-fleury-cotes-du-rhone",
+        "_ref": "food-bbq-cotes-levees",
+        "_type": "reference",
+        "name": "BBQ & côtes levées"
+      },
+      {
+        "_key": "food-chocolat-wine-vidal-fleury-cotes-du-rhone",
+        "_ref": "food-chocolat",
+        "_type": "reference",
+        "name": "Chocolat"
+      }
+    ],
+    "producer": {
+      "_id": "producer-vidal-fleury",
+      "name": "Vidal-Fleury"
+    },
+    "region": {
+      "_id": "region-vallee-du-rhone",
+      "name": "Vallée du Rhône"
+    },
+    "resolvedFoodCount": 2,
+    "style": "Rouge sec, corsé, chaleureux et épicé",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 2
+  },
+  {
+    "_id": "wine-whispering-angel-cotes-de-provence-2025",
+    "acidity": 4,
+    "alcohol": 13,
+    "appellation": {
+      "_id": "appellation-cotes-de-provence",
+      "name": "Côtes de Provence"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "rose",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-grenache",
+        "name": "Grenache"
+      },
+      {
+        "_id": "grape-cinsault",
+        "name": "Cinsault"
+      },
+      {
+        "_id": "grape-vermentino",
+        "name": "Vermentino"
+      },
+      {
+        "_id": "grape-syrah",
+        "name": "Syrah"
+      }
+    ],
+    "name": "Whispering Angel Côtes de Provence",
+    "pairingCount": 6,
+    "pairings": [
+      {
+        "_key": "food-saumon-wine-whispering-angel-cotes-de-provence-2025",
+        "_ref": "food-saumon",
+        "_type": "reference",
+        "name": "Saumon"
+      },
+      {
+        "_key": "food-curry-wine-whispering-angel-cotes-de-provence-2025",
+        "_ref": "food-curry",
+        "_type": "reference",
+        "name": "Curry"
+      },
+      {
+        "_key": "food-poisson-grille-wine-whispering-angel-cotes-de-provence-2025",
+        "_ref": "food-poisson-grille",
+        "_type": "reference",
+        "name": "Poisson grillé"
+      },
+      {
+        "_key": "food-thon-wine-whispering-angel-cotes-de-provence-2025",
+        "_ref": "food-thon",
+        "_type": "reference",
+        "name": "Thon"
+      },
+      {
+        "_key": "food-cuisine-asiatique-sucree-salee-wine-whispering-angel-cotes-de-provence-2025",
+        "_ref": "food-cuisine-asiatique-sucree-salee",
+        "_type": "reference",
+        "name": "Cuisine asiatique sucrée-salée"
+      },
+      {
+        "_key": "food-tarte-aux-fruits-wine-whispering-angel-cotes-de-provence-2025",
+        "_ref": "food-tarte-aux-fruits",
+        "_type": "reference",
+        "name": "Tarte aux fruits"
+      }
+    ],
+    "producer": {
+      "_id": "producer-chateau-desclans",
+      "name": "Château d'Esclans"
+    },
+    "region": {
+      "_id": "region-provence",
+      "name": "Provence"
+    },
+    "resolvedFoodCount": 6,
+    "style": "Rosé sec, pâle, frais et délicat",
+    "sweetness": 1,
+    "tannins": 1,
+    "validReferenceCount": 6
+  },
+  {
+    "_id": "wine-william-fevre-chablis-les-champs-royaux-2023",
+    "acidity": 5,
+    "alcohol": 12.5,
+    "appellation": {
+      "_id": "appellation-chablis",
+      "name": "Chablis"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 2,
+    "color": "white",
+    "country": {
+      "_id": "country-france",
+      "name": "France"
+    },
+    "grapes": [
+      {
+        "_id": "grape-chardonnay",
+        "name": "Chardonnay"
+      }
+    ],
+    "name": "William Fèvre Chablis Les Champs Royaux",
+    "pairingCount": 6,
+    "pairings": [
+      {
+        "_key": "food-sushis-wine-william-fevre-chablis-les-champs-royaux-2023",
+        "_ref": "food-sushis",
+        "_type": "reference",
+        "name": "Sushis"
+      },
+      {
+        "_key": "food-huitres-wine-william-fevre-chablis-les-champs-royaux-2023",
+        "_ref": "food-huitres",
+        "_type": "reference",
+        "name": "Huîtres"
+      },
+      {
+        "_key": "food-crevettes-wine-william-fevre-chablis-les-champs-royaux-2023",
+        "_ref": "food-crevettes",
+        "_type": "reference",
+        "name": "Crevettes"
+      },
+      {
+        "_key": "food-fondue-fromage-wine-william-fevre-chablis-les-champs-royaux-2023",
+        "_ref": "food-fondue-fromage",
+        "_type": "reference",
+        "name": "Fondue au fromage"
+      },
+      {
+        "_key": "food-moules-wine-william-fevre-chablis-les-champs-royaux-2023",
+        "_ref": "food-moules",
+        "_type": "reference",
+        "name": "Moules"
+      },
+      {
+        "_key": "food-pesto-wine-william-fevre-chablis-les-champs-royaux-2023",
+        "_ref": "food-pesto",
+        "_type": "reference",
+        "name": "Pesto"
+      }
+    ],
+    "producer": {
+      "_id": "producer-william-fevre",
+      "name": "William Fèvre"
+    },
+    "region": {
+      "_id": "region-bourgogne",
+      "name": "Bourgogne"
+    },
+    "resolvedFoodCount": 6,
+    "style": "Blanc sec, vif, minéral et précis",
+    "sweetness": 1,
+    "tannins": null,
+    "validReferenceCount": 6
+  },
+  {
+    "_id": "wine-zenato-valpolicella-superiore",
+    "acidity": 4,
+    "alcohol": 13.5,
+    "appellation": {
+      "_id": "appellation-valpolicella",
+      "name": "Valpolicella"
+    },
+    "appleVarieties": null,
+    "beverageType": null,
+    "body": 3,
+    "color": "red",
+    "country": {
+      "_id": "country-italie",
+      "name": "Italie"
+    },
+    "grapes": [
+      {
+        "_id": "grape-corvina-veronese",
+        "name": "Corvina Veronese"
+      },
+      {
+        "_id": "grape-rondinella",
+        "name": "Rondinella"
+      },
+      {
+        "_id": "grape-corvinone",
+        "name": "Corvinone"
+      }
+    ],
+    "name": "Zenato Valpolicella Superiore",
+    "pairingCount": 3,
+    "pairings": [
+      {
+        "_key": "food-pizza-wine-zenato-valpolicella-superiore",
+        "_ref": "food-pizza",
+        "_type": null,
+        "name": "Pizza"
+      },
+      {
+        "_key": "food-pates-tomate-wine-zenato-valpolicella-superiore",
+        "_ref": "food-pates-sauce-tomate",
+        "_type": "reference",
+        "name": "Pâtes sauce tomate"
+      },
+      {
+        "_key": "food-canard-wine-zenato-valpolicella-superiore",
+        "_ref": "food-canard",
+        "_type": "reference",
+        "name": "Canard"
+      }
+    ],
+    "producer": {
+      "_id": "producer-zenato",
+      "name": "Zenato"
+    },
+    "region": {
+      "_id": "region-venetie",
+      "name": "Vénétie"
+    },
+    "resolvedFoodCount": 2,
+    "style": "Rouge sec, frais, fruité et velouté",
+    "sweetness": 1,
+    "tannins": 3,
+    "validReferenceCount": 2
+  }
+]

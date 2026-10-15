@@ -1,0 +1,400 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import { client } from "@/sanity/lib/client";
+import { VIBE_PROFILES } from "@/lib/vibes/profiles";
+import {
+  buildVibeCandidatePool,
+  type VibeRecommendationWine,
+  type VibeDimensionScore,
+} from "@/lib/vibe-engine";
+
+export const revalidate = 60;
+
+type RecommendationWine = VibeRecommendationWine & {
+  _id: string;
+  slug: string;
+  name: string;
+  producer: string | null;
+  country: string | null;
+  region: string | null;
+  appellation: string | null;
+  grape: string | null;
+  price: number | null;
+  vintage: number | null;
+  image: unknown;
+};
+
+const winesQuery = `
+  *[
+    _type == "wine" &&
+    published == true &&
+    defined(slug.current) &&
+    !(_id in path("drafts.**"))
+  ] {
+    _id,
+    "slug": slug.current,
+    name,
+    color,
+
+    "producer": producer->name,
+    "country": country->name,
+    "region": region->name,
+    "appellation": appellation->name,
+    "grape": grapes[0]->name,
+
+    "price": approxPrice,
+    vintage,
+    image,
+
+    beverageType,
+    alcohol,
+    alcoholFree,
+
+    body,
+    sweetness,
+    roundness,
+    acidity,
+    tannins,
+    fruitIntensity,
+    minerality,
+    intensity,
+    complexity,
+    oakInfluence,
+    savory,
+
+    dnaMetadata
+  }
+`;
+
+function colorLabel(color?: string | null) {
+  const labels: Record<string, string> = {
+    red: "Rouge",
+    white: "Blanc",
+    rose: "Rosé",
+    orange: "Orange",
+    sparkling: "Effervescent",
+    fortified: "Fortifié",
+  };
+
+  return color ? labels[color] ?? color : "Vin";
+}
+
+function dimensionReason(dimension: VibeDimensionScore): string | null {
+  if (
+    typeof dimension.value !== "number" ||
+    typeof dimension.score !== "number" ||
+    dimension.score < 0.8
+  ) {
+    return null;
+  }
+
+  const value = dimension.value;
+
+  switch (dimension.dimension) {
+    case "body":
+      if (value <= 2) return "Un corps léger, sans lourdeur.";
+      if (value >= 4) return "Plus de matière et de présence.";
+      return "Un corps équilibré.";
+
+    case "sweetness":
+      if (value <= 2) return "Un profil sec et net.";
+      if (value >= 4) return "Une douceur assumée.";
+      return "Une légère rondeur.";
+
+    case "roundness":
+      if (value <= 2) return "Un profil vif et droit.";
+      if (value >= 4) return "Une texture ronde et enveloppante.";
+      return "Un équilibre entre tension et rondeur.";
+
+    case "acidity":
+      if (value >= 4) return "Une fraîcheur vive et nette.";
+      if (value <= 2) return "Une acidité douce, plus posée.";
+      return "Une fraîcheur bien intégrée.";
+
+    case "tannins":
+      if (value <= 2) return "Des tanins discrets.";
+      if (value >= 4) return "Une structure tannique bien présente.";
+      return "Des tanins présents sans dominer.";
+
+    case "fruitIntensity":
+      if (value >= 4) return "Le fruit est bien présent.";
+      if (value <= 2) return "Le fruit reste en retrait.";
+      return "Un fruit mesuré.";
+
+    case "minerality":
+      if (value >= 4) return "Une trame minérale nette.";
+      if (value <= 2) return "La minéralité reste discrète.";
+      return "La minéralité joue en soutien.";
+
+    case "intensity":
+      if (value <= 2) return "Une expression légère et facile.";
+      if (value >= 4) return "Une expression aromatique soutenue.";
+      return "Une intensité mesurée.";
+
+    case "complexity":
+      if (value >= 4) return "Assez de profondeur pour qu’on s’y attarde.";
+      if (value <= 2) return "Une lecture simple et immédiate.";
+      return "Une complexité juste assez présente.";
+
+    case "oakInfluence":
+      if (value <= 2) return "Le bois reste discret.";
+      if (value >= 4) return "L’élevage boisé est bien présent.";
+      return "Le bois est bien intégré.";
+
+    case "savory":
+      if (value >= 4) return "Un registre plus herbacé, épicé ou terreux.";
+      if (value <= 2) return "Un profil surtout porté par le fruit.";
+      return "Un peu de relief herbacé ou épicé.";
+
+    default:
+      return null;
+  }
+}
+
+function reasonsForCandidate(
+  dimensions: VibeDimensionScore[]
+): string[] {
+  return dimensions
+    .filter(
+      (dimension) =>
+        typeof dimension.value === "number" &&
+        typeof dimension.score === "number" &&
+        dimension.score >= 0.8
+    )
+    .sort((a, b) => {
+      const contributionA =
+        (a.score ?? 0) * a.weight * a.confidence;
+
+      const contributionB =
+        (b.score ?? 0) * b.weight * b.confidence;
+
+      return contributionB - contributionA;
+    })
+    .map(dimensionReason)
+    .filter((reason): reason is string => Boolean(reason))
+    .slice(0, 3);
+}
+
+export default async function AccordPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  const vibe = VIBE_PROFILES.find(
+    (candidate) => candidate.slug === slug
+  );
+
+  if (!vibe) {
+    notFound();
+  }
+
+  const wines = await client.fetch<RecommendationWine[]>(
+    winesQuery
+  );
+
+  const pool = buildVibeCandidatePool(wines, vibe);
+
+  const recommendations = pool.eligible
+    .slice(0, 4)
+    .map((candidate) => ({
+      ...candidate.wine,
+      affinity: Math.round(candidate.adjustedScore * 100),
+      reasons: reasonsForCandidate(candidate.dimensions),
+    }));
+
+  return (
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+
+      {/* FIL D'ARIANE */}
+      <section className="border-b border-[var(--lpv-line)]">
+        <div className="lpv-container flex items-center py-5">
+          <Link
+            href="/accords"
+            className="border-b border-[var(--lpv-ink)] pb-1 text-xs uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
+          >
+            ← Tous les moments
+          </Link>
+        </div>
+      </section>
+
+      {/* HERO */}
+      <section className="border-b border-[var(--lpv-line)]">
+        <div className="lpv-container py-16 md:py-24">
+          <div className="grid gap-12 md:grid-cols-[0.7fr_0.3fr] md:items-end">
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Le moment
+              </p>
+
+              <h1 className="lpv-display mt-7 max-w-[12ch] text-[clamp(5rem,10vw,10rem)] leading-[0.8] tracking-[-0.045em]">
+                {vibe.title}
+              </h1>
+            </div>
+
+            <div className="md:pb-2">
+              {vibe.description ? (
+                <p className="max-w-md text-lg leading-8 text-[var(--lpv-muted)] md:text-xl">
+                  {vibe.description}
+                </p>
+              ) : null}
+
+              <p className="mt-7 text-[0.65rem] uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                {pool.diagnostics.eligible} vins compatibles
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* POURQUOI */}
+      <section className="border-b border-[var(--lpv-line)]">
+        <div className="lpv-container grid lg:grid-cols-[0.34fr_0.66fr]">
+          <div className="py-14 lg:py-20 lg:pr-12">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Dans le verre
+            </p>
+
+            <h2 className="lpv-display mt-6 text-5xl leading-[0.92] md:text-6xl">
+              Ce qu’on
+              <br />
+              cherche.
+            </h2>
+          </div>
+
+          <div className="border-t border-[var(--lpv-line)] py-14 lg:border-t-0 lg:border-l lg:py-20 lg:pl-14">
+            <p className="max-w-2xl text-xl leading-9 text-[var(--lpv-muted)] md:text-2xl md:leading-10">
+              Pas une couleur imposée au hasard ni une bouteille choisie
+              parce qu’elle est populaire. Ici, le profil du vin doit
+              réellement correspondre au moment.
+            </p>
+
+            <p className="mt-8 max-w-2xl text-base leading-8 text-[var(--lpv-muted)]">
+              Corps, fraîcheur, rondeur, fruit, structure, minéralité,
+              intensité et complexité sont évalués selon la grille propre
+              à ce moment.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* RECOMMANDATIONS */}
+      <section className="border-b border-[var(--lpv-line)]">
+        <div className="lpv-container py-16 md:py-24">
+          <div className="grid gap-8 md:grid-cols-[0.3fr_0.7fr] md:items-end">
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Les bouteilles
+              </p>
+
+              <h2 className="lpv-display mt-6 text-5xl leading-[0.92] md:text-7xl">
+                On ouvre
+                <br />
+                quoi?
+              </h2>
+            </div>
+
+            <p className="max-w-xl text-lg leading-8 text-[var(--lpv-muted)]">
+              Quatre bouteilles qui passent réellement le test.
+              Pas quatre bouteilles qu’on essaie de faire fitter.
+            </p>
+          </div>
+
+          {recommendations.length ? (
+            <div className="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+              {recommendations.map((wine) => (
+                <article key={wine._id}>
+                  <Link
+                    href={`/vins/${wine.slug}`}
+                    className="group block"
+                  >
+                    <div className="relative flex aspect-[3/4] items-center justify-center overflow-hidden bg-[var(--lpv-paper-light)]">
+                      <div className="text-center">
+                        <p className="text-[0.6rem] uppercase tracking-[0.22em] text-[var(--lpv-muted)]">
+                          Le Premier Verre
+                        </p>
+                        <p className="mt-3 font-serif text-2xl italic text-[var(--lpv-ink)]/60">
+                          {wine.name}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-[var(--lpv-line)] pt-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <p className="text-[0.65rem] uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
+                          {colorLabel(wine.color)}
+                        </p>
+
+                        <p className="text-[0.65rem] uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+                          {wine.affinity}/100
+                        </p>
+                      </div>
+
+                      <h3 className="mt-4 text-xl leading-6 transition-opacity group-hover:opacity-55">
+                        {wine.name}
+                      </h3>
+
+                      {wine.producer ? (
+                        <p className="mt-2 text-sm text-[var(--lpv-muted)]">
+                          {wine.producer}
+                        </p>
+                      ) : null}
+
+                      <div className="mt-5 space-y-2 border-t border-[var(--lpv-line)] pt-4">
+                        {wine.reasons.map((reason) => (
+                          <p
+                            key={reason}
+                            className="text-sm leading-6 text-[var(--lpv-muted)]"
+                          >
+                            {reason}
+                          </p>
+                        ))}
+                      </div>
+
+                      <div className="mt-5 flex items-center justify-between gap-4">
+                        <span className="text-sm">
+                          {typeof wine.price === "number"
+                            ? `${wine.price.toFixed(2).replace(".", ",")} $`
+                            : ""}
+                        </span>
+
+                        <span className="text-lg transition-transform group-hover:translate-x-1">
+                          →
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-14 border-t border-[var(--lpv-line)] py-14">
+              <p className="lpv-display text-4xl">
+                Rien qu’on veut forcer.
+              </p>
+
+              <p className="mt-5 max-w-xl text-[var(--lpv-muted)]">
+                Aucun vin du répertoire ne passe actuellement cette grille
+                avec assez de confiance.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* RETOUR */}
+      <section>
+        <div className="lpv-container py-12">
+          <Link
+            href="/accords"
+            className="text-sm border-b border-[var(--lpv-ink)] pb-1 transition-opacity hover:opacity-50"
+          >
+            Voir les 50 moments →
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
+}

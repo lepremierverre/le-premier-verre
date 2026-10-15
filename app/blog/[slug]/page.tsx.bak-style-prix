@@ -1,0 +1,1227 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import type { SanityImageSource } from "@sanity/image-url";
+import { PortableText } from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/types";
+
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import { articleBySlugQuery } from "@/sanity/lib/queries";
+import BottleStage from "@/components/wine/BottleStage";
+import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
+
+export const revalidate = 60;
+
+type WinePreview = {
+  _id: string;
+  name: string;
+  slug: string;
+  vintage?: number;
+  color?: string;
+  bottleImage?: SanityImageSource;
+  approxPrice?: number;
+  oneLiner?: string;
+  producer?: {
+    _id: string;
+    name: string;
+    slug: string;
+  };
+};
+
+type ArticleWineCard = {
+  _key: string;
+  _type: "articleWineCard";
+  wine?: WinePreview;
+};
+
+type ProducerPreview = {
+  _id: string;
+  name: string;
+  slug: string;
+  municipality?: string;
+  heroImage?: SanityImageSource;
+  oneLiner?: string;
+  openToVisitors?: boolean;
+};
+
+type ArticleProducerCard = {
+  _key: string;
+  _type: "articleProducerCard";
+  producer?: ProducerPreview;
+};
+
+type PlacePreview = {
+  _id: string;
+  name: string;
+  slug: string;
+  type?: string;
+  city?: string;
+  region?: string;
+  address?: string;
+  website?: string;
+  coverImage?: SanityImageSource;
+  published?: boolean;
+};
+
+type ArticlePlaceCard = {
+  _key: string;
+  _type: "articlePlaceCard";
+  place?: PlacePreview;
+};
+
+type ArticleContentBlock =
+  | PortableTextBlock
+  | ArticleWineCard
+  | ArticleProducerCard
+  | ArticlePlaceCard;
+
+type Article = {
+  title: string;
+  excerpt?: string;
+  content?: ArticleContentBlock[] | string;
+  category?: string;
+  author?: string;
+  coverImage?: SanityImageSource;
+  tags?: string[];
+  tagsJson?: string;
+  publishedAt?: string;
+  _createdAt?: string;
+  relatedWines?: WinePreview[];
+};
+
+function formatDate(value?: string) {
+  if (!value) return null;
+
+  return new Intl.DateTimeFormat("fr-CA", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
+function getBlockText(block: ArticleContentBlock) {
+  if (block._type !== "block") return "";
+  if (!("children" in block) || !Array.isArray(block.children)) return "";
+
+  return block.children
+    .map((child) =>
+      "text" in child && typeof child.text === "string" ? child.text : ""
+    )
+    .join("")
+    .trim();
+}
+
+function ArticleProducerCardView({
+  value,
+}: {
+  value: ArticleProducerCard;
+}) {
+  const producer = value.producer;
+
+  if (!producer?.slug) return null;
+
+  const imageSrc = producer.heroImage
+    ? urlFor(producer.heroImage)
+        .ignoreImageParams()
+        .width(700)
+        .height(520)
+        .fit("crop")
+        .url()
+    : null;
+
+  return (
+    <Link
+      href={`/producteurs/${producer.slug}`}
+      className="group my-10 grid max-w-[46rem] border-b border-[var(--lpv-line)] py-5 md:grid-cols-[150px_1fr] md:gap-7"
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--lpv-paper-light)]">
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={producer.name}
+            className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+          />
+        ) : null}
+      </div>
+
+      <div className="flex flex-col justify-center pt-5 md:pt-0">
+        <p className="text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+          {[producer.municipality, "Producteur"].filter(Boolean).join(" · ")}
+        </p>
+
+        <h3 className="lpv-display mt-2 text-[1.8rem] leading-[1] text-[var(--lpv-ink)]">
+          {producer.name}
+        </h3>
+
+        {producer.oneLiner ? (
+          <p className="mt-2 max-w-lg text-sm leading-6 text-[var(--lpv-muted)]">
+            {producer.oneLiner}
+          </p>
+        ) : null}
+
+        <span className="mt-4 inline-flex w-fit items-center gap-2 border-b border-[var(--lpv-ink)] pb-1 text-sm">
+          Voir le producteur
+          <span className="transition-transform group-hover:translate-x-1">
+            →
+          </span>
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function ArticlePlaceCardView({
+  value,
+}: {
+  value: ArticlePlaceCard;
+}) {
+  const place = value.place;
+
+  if (!place) return null;
+
+  const imageSrc = place.coverImage
+    ? urlFor(place.coverImage)
+        .ignoreImageParams()
+        .width(700)
+        .height(520)
+        .fit("crop")
+        .url()
+    : null;
+
+  const typeLabel =
+    place.type === "restaurant"
+      ? "Restaurant"
+      : place.type === "wine-bar"
+        ? "Bar à vin"
+        : place.type === "caviste"
+          ? "Caviste"
+          : place.type === "shop"
+            ? "Boutique"
+            : "Hébergement";
+
+  const inner = (
+    <>
+      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--lpv-paper-light)]">
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={place.name}
+            className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+          />
+        ) : null}
+      </div>
+
+      <div className="flex flex-col justify-center pt-5 md:pt-0">
+        <p className="text-[0.68rem] uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+          {[place.city, typeLabel].filter(Boolean).join(" · ")}
+        </p>
+
+        <h3 className="lpv-display mt-2 text-[1.8rem] leading-[1] text-[var(--lpv-ink)]">
+          {place.name}
+        </h3>
+
+        {place.address ? (
+          <p className="mt-2 max-w-lg text-sm leading-6 text-[var(--lpv-muted)]">
+            {place.address}
+          </p>
+        ) : null}
+
+        {place.published ? (
+          <span className="mt-4 inline-flex w-fit items-center gap-2 border-b border-[var(--lpv-ink)] pb-1 text-sm">
+            Voir l’adresse
+            <span className="transition-transform group-hover:translate-x-1">
+              →
+            </span>
+          </span>
+        ) : (
+          <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+            <span className="inline-flex items-center gap-2 border-b border-[var(--lpv-ink)] pb-1">
+              Voir le site ↗
+            </span>
+
+            <span className="inline-flex items-center gap-2 border-b border-[var(--lpv-ink)] pb-1">
+              Réserver ↗
+            </span>
+          </div>
+        )}
+      </div>
+    </>
+  );
+
+  const className =
+    "group my-10 grid max-w-[46rem] border-y border-[var(--lpv-line)] py-5 md:grid-cols-[150px_1fr] md:gap-7";
+
+  if (place.published && place.slug) {
+    return (
+      <Link href={`/bonnes-adresses/${place.slug}`} className={className}>
+        {inner}
+      </Link>
+    );
+  }
+
+  if (place.website) {
+    return (
+      <a
+        href={place.website}
+        target="_blank"
+        rel="noreferrer"
+        className={className}
+      >
+        {inner}
+      </a>
+    );
+  }
+
+  return <div className={className}>{inner}</div>;
+}
+
+function ArticleWineCardView({
+  value,
+  interactive = true,
+}: {
+  value: ArticleWineCard;
+  interactive?: boolean;
+}) {
+  const wine = value.wine;
+
+  if (!wine?.slug) return null;
+
+  const cardContent = (
+    <div className="grid gap-7 sm:grid-cols-[180px_1fr] sm:items-center md:grid-cols-[210px_1fr] md:gap-10">
+      <div className="relative">
+        <BottleStage
+          image={wine.bottleImage}
+          alt={wine.name ?? "Bouteille de vin"}
+          color={wine.color ?? undefined}
+          variant="card"
+          className={
+            interactive
+              ? "!h-[360px] transition duration-700 group-hover:scale-[1.02] sm:!h-[400px]"
+              : "!h-[360px] sm:!h-[400px]"
+          }
+        />
+      </div>
+
+      <div>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            {wine.producer?.name || "Le Premier Verre"}
+          </p>
+
+          {typeof wine.approxPrice === "number" ? (
+            <span className="text-xs text-[var(--lpv-muted)]">
+              · {wine.approxPrice.toFixed(2).replace(".", ",")} $
+            </span>
+          ) : null}
+        </div>
+
+        <h3 className="lpv-display mt-3 text-[clamp(2.4rem,4vw,4rem)] leading-[0.9]">
+          {wine.name}
+        </h3>
+
+        {wine.oneLiner ? (
+          <p className="mt-5 max-w-lg text-sm leading-7 text-[var(--lpv-muted)] md:text-base">
+            {wine.oneLiner}
+          </p>
+        ) : null}
+
+        {interactive ? (
+          <span className="mt-7 inline-flex items-center gap-3 border-b border-[var(--lpv-ink)] pb-1 text-sm font-medium">
+            Voir la fiche
+            <span
+              aria-hidden="true"
+              className="transition-transform group-hover:translate-x-1"
+            >
+              →
+            </span>
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+
+  if (!interactive) {
+    return (
+      <div className="my-12 block max-w-[46rem] py-6 md:my-16 md:py-8">
+        {cardContent}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={`/vins/${wine.slug}`}
+      className="group my-12 block max-w-[46rem] py-6 md:my-16 md:py-8"
+    >
+      {cardContent}
+    </Link>
+  );
+}
+
+function parseTags(article: Article) {
+  if (Array.isArray(article.tags)) return article.tags;
+
+  if (!article.tagsJson) return [];
+
+  try {
+    const parsed = JSON.parse(article.tagsJson);
+
+    return Array.isArray(parsed)
+      ? parsed.filter((item): item is string => typeof item === "string")
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return buildDynamicMetadata({
+    entity: "article",
+    slug,
+    locale: "fr",
+  });
+}
+
+export default async function ArticlePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  const article = await client.fetch<Article | null>(
+    articleBySlugQuery,
+    { slug }
+  );
+
+  if (!article) notFound();
+
+  const imageSrc = article.coverImage
+    ? urlFor(article.coverImage)
+        .width(2000)
+        .height(1400)
+        .fit("crop")
+        .url()
+    : null;
+
+  const tags = parseTags(article);
+
+  const legacyParagraphs =
+    typeof article.content === "string"
+      ? article.content
+          .split(/\n{2,}/)
+          .map((paragraph) => paragraph.trim())
+          .filter(Boolean)
+      : [];
+
+  const portableContentRaw = Array.isArray(article.content)
+    ? article.content
+    : [];
+
+  // Les CTA de fin sont gérés globalement par le template.
+  // On retire donc du contenu Sanity :
+  // - les lignes commençant par →
+  // - le titre "Pour continuer"
+  const portableContent = portableContentRaw.filter((item) => {
+    if (item?._type !== "block") return true;
+
+    const block = item as PortableTextBlock;
+
+    const text = block.children
+      ?.map((child) => (child._type === "span" ? child.text : ""))
+      .join("")
+      .trim();
+
+    if (!text) return true;
+
+    if (text.startsWith("→")) {
+      return false;
+    }
+
+    if (text.toLowerCase() === "pour continuer") {
+      return false;
+    }
+
+    return true;
+  });
+
+  const wineSectionStart = portableContent.findIndex(
+    (block) =>
+      getBlockText(block).toLowerCase() ===
+      "six bouteilles pour commencer"
+  );
+
+  const wineSectionEnd = portableContent.findIndex(
+    (block, index) =>
+      index > wineSectionStart &&
+      getBlockText(block).toLowerCase() ===
+        "une bouteille que tu n’aimes pas, ça compte aussi"
+  );
+
+  const contentBeforeWines =
+    wineSectionStart >= 0
+      ? portableContent.slice(0, wineSectionStart)
+      : portableContent;
+
+  const contentAfterWines =
+    wineSectionStart >= 0 && wineSectionEnd >= 0
+      ? portableContent.slice(wineSectionEnd)
+      : [];
+
+  const wines = article.relatedWines || [];
+
+  return (
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+      <article className="pb-24">
+        <div className="lpv-container pt-8 md:pt-10">
+          <Link href="/guides" className="lpv-text-link">
+            <span>←</span> Retour aux articles
+          </Link>
+        </div>
+
+        <header className="lpv-container grid items-center gap-7 border-b border-[var(--lpv-line)] pb-9 pt-7 md:gap-10 md:pb-12 md:pt-10 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="flex min-w-0 flex-col justify-center lg:pl-8">
+            
+
+            <h1 className="lpv-display mt-0 max-w-[12ch] text-[clamp(3rem,5.2vw,5.4rem)] leading-[0.94] tracking-[-0.045em] lg:ml-3">
+              {article.title}
+            </h1>
+
+            {article.excerpt ? (
+              <p className="mt-5 max-w-lg text-base leading-7 text-[var(--lpv-muted)] md:mt-6 md:text-lg md:leading-8">
+                {article.excerpt}
+              </p>
+            ) : null}
+
+            <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 border-t border-[var(--lpv-line)] pt-4 text-[0.62rem] uppercase tracking-[0.14em] text-[var(--lpv-muted)] md:mt-7 md:pt-5">
+              {article.author ? <span>{article.author}</span> : null}
+
+              {formatDate(article.publishedAt || article._createdAt) ? (
+                <span>
+                  · {formatDate(article.publishedAt || article._createdAt)}
+                </span>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="relative aspect-[4/3] w-full self-center overflow-hidden bg-[var(--lpv-paper-light)]">
+            {imageSrc ? (
+              <img
+                src={imageSrc}
+                alt={article.title}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex aspect-[4/3] items-center justify-center">
+                <p className="text-sm text-[var(--lpv-muted)]">
+                  Image à ajouter dans Sanity.
+                </p>
+              </div>
+            )}
+          </div>
+        </header>
+
+        <section className="lpv-container grid gap-10 pt-16 pb-4 md:grid-cols-[0.3fr_0.7fr] md:pt-24 md:pb-6">
+          <div>
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Le journal
+            </p>
+
+            <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-6xl">
+              L’article.
+            </h2>
+          </div>
+
+          {portableContent.length > 0 ? (
+            <div className="max-w-4xl">
+              <PortableText
+                value={contentBeforeWines}
+                components={{
+                  types: {
+                    articleWineCard: ({ value }) => (
+                      <ArticleWineCardView
+                        value={value as ArticleWineCard}
+                        interactive={slug !== "20-vins-a-connaitre-pour-commencer"}
+                      />
+                    ),
+                    articleProducerCard: ({ value }) => (
+                      <ArticleProducerCardView
+                        value={value as ArticleProducerCard}
+                      />
+                    ),
+                    articlePlaceCard: ({ value }) => (
+                      <ArticlePlaceCardView
+                        value={value as ArticlePlaceCard}
+                      />
+                    ),
+                  },
+                  block: {
+                    normal: ({ children, value }) => {
+                      const rawText = value.children
+                        ?.map((child) =>
+                          child._type === "span" ? child.text : ""
+                        )
+                        .join("")
+                        .trim();
+
+                      const isCTA = rawText?.startsWith("→");
+                      const isPrimaryCTA =
+                        rawText?.toLowerCase().includes("trouver une bouteille") ||
+                        rawText?.toLowerCase().includes("trouver ma bouteille");
+
+                      if (isCTA && isPrimaryCTA) {
+                        const href =
+                          value.markDefs?.find(
+                            (mark: any) => mark._type === "link"
+                          )?.href || "/ce-soir";
+
+                        return (
+                          <div className="my-8">
+                            <Link
+                              href={href}
+                              className="inline-flex w-fit max-w-full items-center gap-4 bg-[var(--lpv-ink)] px-5 py-4 text-base font-medium text-[var(--lpv-paper)] transition-opacity hover:opacity-85"
+                            >
+                              <span className="text-base font-medium text-[var(--lpv-paper)]">
+                                Trouver une bouteille
+                              </span>
+
+                              <span
+                                aria-hidden="true"
+                                className="text-lg text-[var(--lpv-paper)]/75"
+                              >
+                                →
+                              </span>
+                            </Link>
+                          </div>
+                        );
+                      }
+
+                      if (isCTA) {
+                        const lowerText = rawText?.toLowerCase() || "";
+
+                        const href =
+                          lowerText.includes("explorer les vins")
+                            ? "/vins"
+                            : lowerText.includes("explorer les cépages")
+                              ? "/cepages"
+                              : lowerText.includes("découvrir les producteurs")
+                                ? "/producteurs"
+                                : lowerText.includes("ce soir")
+                                  ? "/ce-soir"
+                                  : lowerText.includes("infolettre")
+                                    ? "/newsletter"
+                                    : value.markDefs?.find(
+                                        (mark: any) => mark._type === "link"
+                                      )?.href;
+
+                        if (href) {
+                          return (
+                            <div className="my-3 max-w-[46rem]">
+                              <Link
+                                href={href}
+                                className="inline-flex w-fit max-w-full items-center gap-4 bg-[var(--lpv-ink)] px-5 py-4 text-base font-medium text-[var(--lpv-paper)] transition-opacity hover:opacity-85"
+                              >
+                                <span className="text-[var(--lpv-paper)]">
+                                  {rawText?.replace(/^→\s*/, "")}
+                                </span>
+                                <span
+                                  aria-hidden="true"
+                                  className="text-lg text-[var(--lpv-paper)]/75"
+                                >
+                                  →
+                                </span>
+                              </Link>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <div className="my-3 max-w-[46rem]">
+                            <div className="inline-flex items-center gap-3 border-b border-[var(--lpv-ink)] pb-2 text-lg font-medium md:text-xl">
+                              {children}
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <p className="mb-7 max-w-[46rem] text-[1.08rem] leading-[1.9] text-[var(--lpv-ink)] md:text-[1.14rem]">
+                          {children}
+                        </p>
+                      );
+                    },
+
+                    h2: ({ children }) => (
+                      <div className="mb-9 mt-20 pt-2 md:mt-24">
+                        <h2 className="lpv-display max-w-3xl text-[clamp(3rem,6vw,5.5rem)] leading-[0.9]">
+                          {children}
+                        </h2>
+                      </div>
+                    ),
+
+                    h3: ({ children }) => (
+                      <h3 className="mb-5 mt-12 max-w-2xl text-2xl font-medium leading-tight md:text-3xl">
+                        {children}
+                      </h3>
+                    ),
+
+                    takeaway: ({ children, value }) => {
+                      const rawText = value.children
+                        ?.map((child) =>
+                          child._type === "span" ? child.text : ""
+                        )
+                        .join("")
+                        .trim();
+
+                      const takeawayText = rawText
+                        ?.replace(/^À RETENIR\s*:\s*/i, "")
+                        .trim();
+
+                      return (
+                        <div className="my-10 max-w-[46rem] border-y border-[var(--lpv-line)] py-5">
+                          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                            À retenir
+                          </p>
+
+                          <p className="mt-2 text-base leading-7 text-[var(--lpv-ink)] md:text-[1.05rem]">
+                            {takeawayText || children}
+                          </p>
+                        </div>
+                      );
+                    },
+
+                    blockquote: ({ children, value }) => {
+                      const rawText = value.children
+                        ?.map((child) =>
+                          child._type === "span" ? child.text : ""
+                        )
+                        .join("")
+                        .trim();
+
+                      if (rawText === "OCCASION + STYLE + BUDGET.") {
+                        return (
+                          <div className="my-14 border-y border-[var(--lpv-ink)] py-10 md:my-20 md:py-14">
+                            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                              Le réflexe à retenir
+                            </p>
+
+                            <p className="lpv-display mt-5 max-w-4xl text-[clamp(3rem,7vw,6.5rem)] leading-[0.84]">
+                              Occasion
+                              <span className="mx-3 text-[var(--lpv-cocoa)]">+</span>
+                              Style
+                              <span className="mx-3 text-[var(--lpv-cocoa)]">+</span>
+                              Budget
+                            </p>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div className="my-10 max-w-[42rem] md:my-14">
+                          <p className="text-xl italic leading-[1.65] text-[var(--lpv-ink)] md:text-2xl">
+                            {children}
+                          </p>
+                        </div>
+                      );
+                    },
+                  },
+
+                  marks: {
+                    link: ({ children, value }) => {
+                      const href = value?.href || "#";
+                      const internal = href.startsWith("/");
+
+                      return (
+                        <Link
+                          href={href}
+                          className="font-medium underline decoration-[var(--lpv-cocoa)] decoration-1 underline-offset-4 transition-opacity hover:opacity-60"
+                          {...(!internal
+                            ? {
+                                target: "_blank",
+                                rel: "noopener noreferrer",
+                              }
+                            : {})}
+                        >
+                          {children}
+                        </Link>
+                      );
+                    },
+                  },
+
+                  list: {
+                    bullet: ({ children }) => (
+                      <ul className="my-10 grid gap-3 md:grid-cols-3">
+                        {children}
+                      </ul>
+                    ),
+                  },
+
+                  listItem: {
+                    bullet: ({ children }) => (
+                      <li className="border-t border-[var(--lpv-line)] pt-4 text-lg leading-7">
+                        {children}
+                      </li>
+                    ),
+                  },
+                }}
+              />
+
+              {wineSectionStart >= 0 ? (
+                <section className="mt-24 mb-4 md:mt-32 md:mb-6">
+                  <div className="mb-10 border-t border-[var(--lpv-line)] pt-8">
+                    <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                      Pour commencer
+                    </p>
+
+                    <h2 className="lpv-display mt-5 max-w-4xl text-[clamp(3rem,6vw,5.5rem)] leading-[0.9]">
+                      Six bouteilles pour commencer.
+                    </h2>
+
+                    <p className="mt-7 max-w-2xl text-lg leading-8 text-[var(--lpv-muted)]">
+                      Six styles assez différents pour commencer à voir ce que
+                      tu aimes — et ce que tu peux très bien laisser aux autres.
+                    </p>
+                  </div>
+
+                  {wines.length > 0 ? (
+                    <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+                      {wines.map((wine) => {
+
+                        return (
+                          <Link
+                            href={`/vins/${wine.slug}`}
+                            key={wine._id}
+                            className="group block"
+                          >
+                            <div className="relative">
+                              <BottleStage
+                                image={wine.bottleImage}
+                                alt={wine.name ?? "Bouteille de vin"}
+                                color={wine.color ?? undefined}
+                                variant="card"
+                                className="transition duration-700 group-hover:scale-[1.025]"
+                              />
+
+                              {typeof wine.approxPrice === "number" ? (
+                                <div className="absolute right-0 top-0 bg-[var(--lpv-paper)] px-3 py-2 text-xs">
+                                  {wine.approxPrice.toFixed(2).replace(".", ",")} $
+                                </div>
+                              ) : null}
+                            </div>
+
+                            <div className="border-b border-[var(--lpv-line)] pb-6 pt-5">
+                              {wine.producer?.name ? (
+                                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                                  {wine.producer.name}
+                                </p>
+                              ) : null}
+
+                              <h3 className="mt-2 text-xl font-medium leading-tight">
+                                {wine.name}
+                              </h3>
+
+                              {wine.oneLiner ? (
+                                <p className="mt-3 line-clamp-2 text-sm leading-6 text-[var(--lpv-muted)]">
+                                  {wine.oneLiner}
+                                </p>
+                              ) : null}
+
+                              <span className="mt-5 inline-block border-b border-[var(--lpv-ink)] pb-1 text-sm">
+                                La fiche <span className="ml-1">↗</span>
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-[var(--lpv-muted)]">
+                      Les bouteilles liées seront bientôt affichées ici.
+                    </p>
+                  )}
+                </section>
+              ) : null}
+
+              {contentAfterWines.length > 0 ? (
+                <PortableText
+                  value={contentAfterWines}
+                  components={{
+                  types: {
+                    articleWineCard: ({ value }) => (
+                      <ArticleWineCardView
+                        value={value as ArticleWineCard}
+                        interactive={slug !== "20-vins-a-connaitre-pour-commencer"}
+                      />
+                    ),
+                    articleProducerCard: ({ value }) => (
+                      <ArticleProducerCardView
+                        value={value as ArticleProducerCard}
+                      />
+                    ),
+                    articlePlaceCard: ({ value }) => (
+                      <ArticlePlaceCardView
+                        value={value as ArticlePlaceCard}
+                      />
+                    ),
+                  },
+                    block: {
+                      normal: ({ children, value }) => {
+                        const rawText = value.children
+                          ?.map((child) =>
+                            child._type === "span" ? child.text : ""
+                          )
+                          .join("")
+                          .trim();
+
+                        const isCTA = rawText?.startsWith("→");
+                        const lowerText = rawText?.toLowerCase() || "";
+
+                        // Les CTA de fin d'article sont désormais remplacés
+                        // par le bloc Infolettre global du template.
+                        if (isCTA) {
+                          return null;
+                        }
+
+                        const isNewsletter =
+                          lowerText.includes("s’inscrire à l’infolettre") ||
+                          lowerText.includes("s'inscrire à l'infolettre");
+
+                        const isPrimaryCTA =
+                          lowerText.includes("trouver une bouteille") ||
+                          lowerText.includes("trouver ma bouteille");
+
+                        const isPersonalCTA =
+                          lowerText.includes("ma cave") ||
+                          lowerText.includes("mon carnet");
+
+                        if (isNewsletter) {
+                          return (
+                            <div className="my-16 bg-[var(--lpv-paper-light)] px-7 py-10 md:my-20 md:px-10 md:py-12">
+                              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                                L’infolettre
+                              </p>
+
+                              <div className="mt-5 grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+                                <div>
+                                  <p className="lpv-display max-w-2xl text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.9]">
+                                    On se reparle autour d’un verre?
+                                  </p>
+
+                                  <p className="mt-5 max-w-xl text-base leading-7 text-[var(--lpv-muted)]">
+                                    Des bouteilles qu’on a aimées, des producteurs à connaître
+                                    et quelques bonnes adresses. Pas tous les jours. Juste quand
+                                    on a quelque chose de bon à partager.
+                                  </p>
+                                </div>
+
+                                <div className="inline-flex w-fit items-center gap-4 bg-[var(--lpv-ink)] px-5 py-4 text-base font-medium text-[var(--lpv-paper)]">
+                                  <span>
+                                    {rawText.replace(/^→\s*/, "")}
+                                  </span>
+                                  <span aria-hidden="true">→</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        if (isPrimaryCTA) {
+                          const href =
+                            value.markDefs?.find(
+                              (mark: any) => mark._type === "link"
+                            )?.href || "/ce-soir";
+
+                          return (
+                            <div className="my-8">
+                              <Link
+                                href={href}
+                                className="inline-flex w-fit max-w-full items-center gap-4 bg-[var(--lpv-ink)] px-5 py-4 text-base font-medium text-[var(--lpv-paper)] transition-opacity hover:opacity-85"
+                              >
+                                <span className="text-base font-medium text-[var(--lpv-paper)]">
+                                  Trouver ma bouteille
+                                </span>
+
+                                <span
+                                  aria-hidden="true"
+                                  className="text-lg text-[var(--lpv-paper)]/75"
+                                >
+                                  →
+                                </span>
+                              </Link>
+                            </div>
+                          );
+                        }
+
+                        if (isCTA && isPersonalCTA) {
+                          return (
+                            <div className="my-2 mr-3 inline-block">
+                              <Link
+                                href={
+                                  value.markDefs?.find(
+                                    (mark: any) => mark._type === "link"
+                                  )?.href || "#"
+                                }
+                                className="group inline-flex items-center gap-3 border border-[var(--lpv-line)] px-4 py-2.5 text-sm font-medium transition-colors hover:border-[var(--lpv-ink)] md:text-base"
+                              >
+                                {rawText
+                                  .replace(/^→\s*/, "")
+                                  .replace(/^Ouvrir\s+/i, "")
+                                  .replace(/^Voir\s+/i, "")}
+
+                                <span
+                                  aria-hidden="true"
+                                  className="text-[var(--lpv-cocoa)] transition-transform group-hover:translate-x-0.5"
+                                >
+                                  →
+                                </span>
+                              </Link>
+                            </div>
+                          );
+                        }
+
+                        if (isCTA) {
+                          const href =
+                            lowerText.includes("explorer les vins")
+                              ? "/vins"
+                              : lowerText.includes("explorer les cépages")
+                                ? "/cepages"
+                                : lowerText.includes("découvrir les producteurs")
+                                  ? "/producteurs"
+                                  : lowerText.includes("ce soir")
+                                    ? "/ce-soir"
+                                    : lowerText.includes("infolettre")
+                                      ? "/newsletter"
+                                      : value.markDefs?.find(
+                                          (mark: any) => mark._type === "link"
+                                        )?.href;
+
+                          if (href) {
+                            return (
+                              <div className="my-3 max-w-[46rem]">
+                                <Link
+                                  href={href}
+                                  className="inline-flex w-fit max-w-full items-center gap-4 bg-[var(--lpv-ink)] px-5 py-4 text-base font-medium text-[var(--lpv-paper)] transition-opacity hover:opacity-85"
+                                >
+                                  {children}
+                                </Link>
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <div className="my-3 max-w-[46rem]">
+                              <div className="inline-flex items-center gap-3 border-b border-[var(--lpv-ink)] pb-2 text-lg font-medium">
+                                {children}
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <p className="mb-6 max-w-[46rem] text-[1.08rem] leading-[1.9] md:text-[1.14rem]">
+                            {children}
+                          </p>
+                        );
+                      },
+
+                      h2: ({ children }) => (
+                        <div className="mb-9 mt-20 pt-2 md:mt-24">
+                          <h2 className="lpv-display max-w-3xl text-[clamp(3rem,6vw,5.5rem)] leading-[0.9]">
+                            {children}
+                          </h2>
+                        </div>
+                      ),
+
+                      takeaway: ({ children, value }) => {
+                      const rawText = value.children
+                        ?.map((child) =>
+                          child._type === "span" ? child.text : ""
+                        )
+                        .join("")
+                        .trim();
+
+                      const takeawayText = rawText
+                        ?.replace(/^À RETENIR\s*:\s*/i, "")
+                        .trim();
+
+                      return (
+                        <div className="my-10 max-w-[46rem] border-y border-[var(--lpv-line)] py-5">
+                          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                            À retenir
+                          </p>
+
+                          <p className="mt-2 text-base leading-7 text-[var(--lpv-ink)] md:text-[1.05rem]">
+                            {takeawayText || children}
+                          </p>
+                        </div>
+                      );
+                    },
+
+                    blockquote: ({ children, value }) => {
+                        const rawText = value.children
+                          ?.map((child) =>
+                            child._type === "span" ? child.text : ""
+                          )
+                          .join("")
+                          .trim();
+
+                        if (rawText === "OCCASION + STYLE + BUDGET.") {
+                          return (
+                            <div className="my-14 border-y border-[var(--lpv-ink)] py-10 md:my-20 md:py-14">
+                              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                                Le réflexe à retenir
+                              </p>
+
+                              <p className="lpv-display mt-5 text-[clamp(3rem,7vw,6.5rem)] leading-[0.84]">
+                                Occasion + Style + Budget
+                              </p>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <div className="my-10 max-w-[42rem] md:my-14">
+                            <p className="text-xl italic leading-[1.65] text-[var(--lpv-ink)] md:text-2xl">
+                              {children}
+                            </p>
+                          </div>
+                        );
+                      },
+                    },
+
+                    marks: {
+                      link: ({ children, value }) => (
+                        <Link
+                          href={value?.href || "#"}
+                          className="font-medium underline decoration-[var(--lpv-cocoa)] underline-offset-4"
+                        >
+                          {children}
+                        </Link>
+                      ),
+                    },
+
+                    list: {
+                      bullet: ({ children }) => (
+                        <ul className="my-10 grid gap-3 md:grid-cols-3">
+                          {children}
+                        </ul>
+                      ),
+                    },
+
+                    listItem: {
+                      bullet: ({ children }) => (
+                        <li className="border-t border-[var(--lpv-line)] pt-4 text-lg">
+                          {children}
+                        </li>
+                      ),
+                    },
+                  }}
+                />
+              ) : null}
+            </div>
+          ) : legacyParagraphs.length > 0 ? (
+            <div className="lpv-prose max-w-3xl">
+              {legacyParagraphs.map((paragraph, index) => (
+                <p key={`${index}-${paragraph.slice(0, 24)}`}>
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <p className="text-base leading-8 text-[var(--lpv-muted)]">
+              Le contenu détaillé de cet article est en préparation.
+            </p>
+          )}
+        </section>
+
+        <section className="lpv-container py-10 md:py-14">
+          <div className="bg-[var(--lpv-paper-light)] px-7 py-10 md:px-10 md:py-12">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              L’infolettre
+            </p>
+
+            <div className="mt-5 grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+              <div>
+                <p className="lpv-display max-w-2xl text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.9]">
+                  On se reparle autour d’un verre?
+                </p>
+
+                <p className="mt-5 max-w-xl text-base leading-7 text-[var(--lpv-muted)]">
+                  Des bouteilles qu’on a aimées, des producteurs à connaître et
+                  quelques bonnes adresses. Pas tous les jours. Juste quand on a
+                  quelque chose de bon à partager.
+                </p>
+              </div>
+
+              <Link
+                href="/newsletter"
+                className="group inline-flex w-fit items-center gap-3 border-b border-[var(--lpv-ink)] pb-2 text-base font-medium text-[var(--lpv-ink)] transition-opacity hover:opacity-60"
+              >
+                <span>S’inscrire à l’infolettre</span>
+                <span
+                  aria-hidden="true"
+                  className="transition-transform group-hover:translate-x-1"
+                >
+                  →
+                </span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {tags.length > 0 ? (
+          <section className="lpv-container py-8 md:py-10">
+            <div className="flex flex-col gap-5 md:flex-row md:items-center md:gap-8">
+              <p className="lpv-kicker shrink-0 text-[var(--lpv-cocoa)]">
+                Dans cet article
+              </p>
+
+              <div className="flex flex-wrap gap-x-3 gap-y-2">
+                {tags.map((tag, index) => (
+                  <span
+                    key={tag}
+                    className="text-base text-[var(--lpv-muted)]"
+                  >
+                    {tag}
+                    {index < tags.length - 1 ? (
+                      <span className="ml-3 text-[var(--lpv-line)]">•</span>
+                    ) : null}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        <section className="lpv-container pt-10 pb-20 md:pt-14 md:pb-24">
+          <div className="pt-4">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              La suite
+            </p>
+
+            <Link href="/blog" className="group mt-6 block">
+              <h2 className="lpv-display max-w-4xl text-5xl leading-[0.9] transition-opacity group-hover:opacity-60 md:text-7xl">
+                À découvrir ensuite
+              </h2>
+
+              <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--lpv-muted)]">
+                D’autres bouteilles, des producteurs, des endroits et quelques
+                détours pour continuer à découvrir le vin sans en faire un examen.
+              </p>
+
+              <span className="lpv-text-link mt-8">
+                Continuer dans le journal <span>→</span>
+              </span>
+            </Link>
+          </div>
+        </section>
+      </article>
+    </main>
+  );
+}

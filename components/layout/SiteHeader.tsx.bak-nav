@@ -1,0 +1,571 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import {
+  SignOutButton,
+  useUser,
+} from "@clerk/nextjs";
+
+import { SearchButton } from "@/components/search/SearchButton";
+
+const navItemsFr = [
+  ["Ce soir", "/ce-soir"],
+  ["Bouteilles", "/vins"],
+  ["Producteurs", "/producteurs"],
+  ["Régions", "/regions"],
+  ["Cépages", "/cepages"],
+  ["Accords", "/accords"],
+  ["Bonnes adresses", "/bonnes-adresses"],
+  ["Guides", "/guides"],
+  ["À lire", "/blog"],
+];
+
+const navItemsEn = [
+  ["Tonight", "/en/tonight"],
+  ["Bottles", "/en/wines"],
+  ["Producers", "/en/producers"],
+  ["Regions", "/en/regions"],
+  ["Grapes", "/en/grapes"],
+  ["Pairings", "/en/pairings"],
+  ["Places", "/en/places"],
+  ["Guides", "/en/guides"],
+  ["Read", "/en/journal"],
+];
+
+const bilingualRoutes = [
+  ["/ce-soir", "/en/tonight"],
+  ["/vins", "/en/wines"],
+  ["/sans-alcool", "/en/alcohol-free"],
+  ["/producteurs", "/en/producers"],
+  ["/regions", "/en/regions"],
+  ["/cepages", "/en/grapes"],
+  ["/accords", "/en/pairings"],
+  ["/bonnes-adresses", "/en/places"],
+  ["/guides", "/en/guides"],
+  ["/blog", "/en/journal"],
+  ["/recherche", "/en/search"],
+  ["/a-propos", "/en/about"],
+  ["/contact", "/en/contact"],
+  ["/newsletter", "/en/newsletter"],
+  ["/politique-confidentialite", "/en/privacy-policy"],
+  ["/connexion", "/en/sign-in"],
+  ["/inscription", "/en/sign-up"],
+  ["/ma-cave", "/en/cellar"],
+  ["/favoris", "/en/favorites"],
+  ["/mon-carnet", "/en/notebook"],
+  ["/mes-listes", "/en/lists"],
+  ["/mes-preferences", "/en/preferences"],
+] as const;
+
+function getLocalizedPath(pathname: string, target: "fr" | "en") {
+  if (pathname === "/" || pathname === "/en") {
+    return target === "en" ? "/en" : "/";
+  }
+
+  for (const [frBase, enBase] of bilingualRoutes) {
+    if (pathname === frBase || pathname.startsWith(`${frBase}/`)) {
+      const suffix = pathname.slice(frBase.length);
+      return target === "en" ? `${enBase}${suffix}` : `${frBase}${suffix}`;
+    }
+
+    if (pathname === enBase || pathname.startsWith(`${enBase}/`)) {
+      const suffix = pathname.slice(enBase.length);
+      return target === "fr" ? `${frBase}${suffix}` : `${enBase}${suffix}`;
+    }
+  }
+
+  return target === "en" ? "/en" : "/";
+}
+
+function getInitials(
+  firstName?: string | null,
+  lastName?: string | null,
+  email?: string | null
+) {
+  const initials = [firstName, lastName]
+    .filter(Boolean)
+    .map((value) => value?.trim().charAt(0).toUpperCase())
+    .join("");
+
+  if (initials) return initials.slice(0, 2);
+
+  return email?.trim().charAt(0).toUpperCase() || "M";
+}
+
+export function SiteHeader() {
+  const pathname = usePathname();
+  const locale = pathname?.startsWith("/en") ? "en" : "fr";
+  const isEnglish = locale === "en";
+  const navItems = isEnglish ? navItemsEn : navItemsFr;
+  const frenchPath = getLocalizedPath(pathname ?? "/", "fr");
+  const englishPath = getLocalizedPath(pathname ?? "/", "en");
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [isLocal, setIsLocal] = useState(false);
+  const [environmentChecked, setEnvironmentChecked] = useState(false);
+
+  const accountRef = useRef<HTMLDivElement>(null);
+  const { isLoaded, isSignedIn, user } = useUser();
+
+  const initials = getInitials(
+    user?.firstName,
+    user?.lastName,
+    user?.primaryEmailAddress?.emailAddress
+  );
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    function handleOutsideClick(event: MouseEvent) {
+      if (
+        accountRef.current &&
+        !accountRef.current.contains(event.target as Node)
+      ) {
+        setAccountOpen(false);
+      }
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setAccountOpen(false);
+        setMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
+  const prelaunchPages = [
+    "/disponible-bientot",
+    "/en/disponible-bientot",
+    "/a-propos",
+    "/contact",
+    "/newsletter",
+    "/politique-confidentialite",
+  ];
+
+  useEffect(() => {
+    setIsLocal(
+      window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+    );
+    setEnvironmentChecked(true);
+  }, []);
+
+  if (
+    prelaunchPages.includes(pathname ?? "") ||
+    (pathname === "/" && (!environmentChecked || !isLocal))
+  ) {
+    return null;
+  }
+
+  return (
+    <>
+      <header className="relative z-[9000] border-b border-[var(--lpv-line)] bg-[var(--lpv-paper)]">
+        <div className="lpv-container flex h-[78px] items-center justify-between">
+          <div className="flex items-center gap-3 sm:gap-5">
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label={isEnglish ? "Open menu" : "Ouvrir le menu"}
+              className="group flex h-10 w-10 items-center justify-center rounded-full border border-[var(--lpv-ink)] transition-colors hover:bg-[var(--lpv-ink)] hover:text-[var(--lpv-paper-light)]"
+            >
+              <span className="flex w-[17px] flex-col gap-[4px]">
+                <span className="h-px w-full bg-current" />
+                <span className="h-px w-[12px] bg-current transition-all group-hover:w-full" />
+              </span>
+            </button>
+
+            <Link
+              href={isEnglish ? "/en" : "/"}
+              className="lpv-display text-[1.65rem] leading-none sm:text-[2rem]"
+            >
+              Le Premier Verre
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-3 sm:gap-5 md:gap-7">
+            <div className="flex items-center gap-1.5 text-[0.56rem] font-semibold uppercase tracking-[0.12em] sm:gap-2 sm:text-[0.62rem] sm:tracking-[0.16em]">
+              <Link
+                href={frenchPath}
+                className={
+                  !isEnglish
+                    ? "opacity-100"
+                    : "opacity-35 transition-opacity hover:opacity-100"
+                }
+              >
+                FR
+              </Link>
+
+              <span className="opacity-25">|</span>
+
+              <Link
+                href={englishPath}
+                className={
+                  isEnglish
+                    ? "opacity-100"
+                    : "opacity-35 transition-opacity hover:opacity-100"
+                }
+              >
+                EN
+              </Link>
+            </div>
+
+            <SearchButton locale={locale} />
+
+            {!isLoaded ? (
+              <span
+                aria-hidden="true"
+                className="h-9 w-9 animate-pulse rounded-full border border-[var(--lpv-line)]"
+              />
+            ) : isSignedIn ? (
+              <div
+                ref={accountRef}
+                className="relative"
+              >
+                <button
+                  type="button"
+                  onClick={() => setAccountOpen((current) => !current)}
+                  aria-label={isEnglish ? "Open account menu" : "Ouvrir le menu du compte"}
+                  aria-expanded={accountOpen}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--lpv-ink)] text-[0.68rem] font-semibold uppercase tracking-[0.08em] transition-colors hover:bg-[var(--lpv-ink)] hover:text-[var(--lpv-paper-light)]"
+                >
+                  {initials}
+                </button>
+
+                {accountOpen ? (
+                  <div className="absolute right-0 top-[calc(100%+14px)] w-[280px] border border-[var(--lpv-line)] bg-[var(--lpv-paper-light)] p-5 shadow-[0_18px_50px_rgba(33,29,26,0.10)]">
+                    <div className="border-b border-[var(--lpv-line)] pb-5">
+                      <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                        {isEnglish ? "My account" : "Mon compte"}
+                      </p>
+
+                      <p className="mt-3 truncate text-sm">
+                        {user.fullName ||
+                          user.primaryEmailAddress?.emailAddress}
+                      </p>
+                    </div>
+
+                    <nav className="flex flex-col py-3">
+                      <Link
+                        href={isEnglish ? "/en/cellar" : "/ma-cave"}
+                        onClick={() => setAccountOpen(false)}
+                        className="group border-b border-[var(--lpv-line)] py-4 transition-opacity hover:opacity-60"
+                      >
+                        <span className="block text-[0.56rem] font-medium uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                          {isEnglish ? "My personal space" : "Mon espace personnel"}
+                        </span>
+
+                        <span className="mt-2 flex items-center justify-between">
+                          <span className="lpv-display text-[1.75rem] leading-none">
+                            {isEnglish ? "My cellar" : "Ma cave"}
+                          </span>
+
+                          <span className="text-base transition-transform duration-300 group-hover:translate-x-1">
+                            →
+                          </span>
+                        </span>
+                      </Link>
+
+                      <Link
+                        href={isEnglish ? "/en/profile" : "/mon-profil"}
+                        onClick={() => setAccountOpen(false)}
+                        className="group flex items-center justify-between border-b border-[var(--lpv-line-light)] py-3 text-sm transition-opacity hover:opacity-50"
+                      >
+                        <span>
+                          {isEnglish
+                            ? "Profile information"
+                            : "Informations du profil"}
+                        </span>
+                        <span className="text-xs">→</span>
+                      </Link>
+                    </nav>
+
+                    <SignOutButton redirectUrl={isEnglish ? "/en" : "/"}>
+                      <button
+                        type="button"
+                        className="mt-3 flex w-full items-center justify-between text-left text-[0.68rem] font-semibold uppercase tracking-[0.17em] text-[var(--lpv-cocoa)] transition-opacity hover:opacity-50"
+                      >
+                        {isEnglish ? "Sign out" : "Se déconnecter"}
+                        <span>→</span>
+                      </button>
+                    </SignOutButton>
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <Link
+                href={isEnglish ? "/en/sign-in" : "/connexion"}
+                className="hidden text-[0.68rem] font-semibold uppercase tracking-[0.18em] transition-opacity hover:opacity-50 sm:inline"
+              >
+                {isEnglish ? "Sign in" : "Connexion"}
+              </Link>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {menuOpen ? (
+        <div className="fixed inset-0 z-[10000]">
+          <button
+            type="button"
+            aria-label={isEnglish ? "Close menu" : "Fermer le menu"}
+            onClick={() => setMenuOpen(false)}
+            className="absolute inset-0 bg-black/32"
+          />
+
+          {isEnglish ? (
+            <aside className="lpv-fade-in absolute inset-y-0 left-0 flex w-full max-w-[680px] flex-col overflow-y-auto bg-[var(--lpv-cocoa)] px-6 py-6 text-[var(--lpv-paper-light)] sm:px-10 sm:py-9">
+              {/* HEADER */}
+              <div className="flex items-center justify-between border-b border-white/20 pb-6">
+                <p className="lpv-display text-2xl">
+                  Le Premier Verre
+                </p>
+
+                <button
+                  type="button"
+                  aria-label="Close menu"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex h-10 w-10 items-center justify-center text-[2rem] font-light leading-none text-white/70 transition-opacity hover:text-white"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* MAIN NAVIGATION */}
+              <div className="flex flex-1 flex-col justify-center py-10 sm:py-12">
+
+                <nav
+                  aria-label="Main navigation"
+                  className="flex flex-col"
+                >
+                  {[
+                    ["Wines", "/en/wines"],
+                    ["Producers", "/en/producers"],
+                    ["Places", "/en/places"],
+                    ["Pairings", "/en/pairings"],
+                    ["Guides", "/en/guides"],
+                    ["Read", "/en/journal"],
+                  ].map(([label, href], index) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMenuOpen(false)}
+                      className={`group py-2.5 sm:py-3 ${
+                        index === 3 ? "mt-5 sm:mt-7" : ""
+                      }`}
+                    >
+                      <span className="lpv-display block text-[clamp(2.8rem,7vw,4.7rem)] leading-[0.94] tracking-[-0.045em] transition-opacity duration-300 group-hover:opacity-55">
+                        {label}
+                      </span>
+                    </Link>
+                  ))}
+                </nav>
+
+                {/* TONIGHT */}
+                <div className="mt-9 border-t border-white/20 pt-7 sm:mt-11 sm:pt-8">
+                  <Link
+                    href="/en/tonight"
+                    onClick={() => setMenuOpen(false)}
+                    className="group inline-flex items-center gap-4"
+                  >
+                    <span className="text-[0.72rem] font-semibold uppercase tracking-[0.15em] text-white/70 transition-colors group-hover:text-white">
+                      What are we drinking tonight?
+                    </span>
+
+                    <span className="text-sm text-white/55 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
+                      →
+                    </span>
+                  </Link>
+                </div>
+
+              </div>
+
+              {/* MENU FOOTER */}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/20 pt-5 text-[0.6rem] font-medium uppercase tracking-[0.14em] text-white/50">
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setAccountOpen(true);
+                  }}
+                  className="transition-colors hover:text-white"
+                >
+                  My account
+                </button>
+
+                <span className="text-white/20">·</span>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={frenchPath}
+                    onClick={() => setMenuOpen(false)}
+                    className="transition-colors hover:text-white"
+                  >
+                    FR
+                  </Link>
+
+                  <span className="text-white/25">/</span>
+
+                  <Link
+                    href={englishPath}
+                    onClick={() => setMenuOpen(false)}
+                    className="text-white"
+                  >
+                    EN
+                  </Link>
+                </div>
+
+                <span className="text-white/20">·</span>
+
+                <a
+                  href="https://www.instagram.com/lepremierverre/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-white"
+                >
+                  Instagram
+                </a>
+
+              </div>
+            </aside>
+          ) : (
+            <aside className="lpv-fade-in absolute inset-y-0 left-0 flex w-full max-w-[680px] flex-col overflow-y-auto bg-[var(--lpv-cocoa)] px-6 py-6 text-[var(--lpv-paper-light)] sm:px-10 sm:py-9">
+
+              {/* ENTÊTE */}
+              <div className="flex items-center justify-between border-b border-white/20 pb-6">
+                <p className="lpv-display text-2xl">
+                  Le Premier Verre
+                </p>
+
+                <button
+                  type="button"
+                  aria-label="Fermer le menu"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex h-10 w-10 items-center justify-center text-[2rem] font-light leading-none text-white/70 transition-opacity hover:text-white"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* NAVIGATION PRINCIPALE */}
+              <div className="flex flex-1 flex-col justify-center py-10 sm:py-12">
+
+                <nav
+                  aria-label="Navigation principale"
+                  className="flex flex-col"
+                >
+                  {[
+                    ["Vins", "/vins"],
+                    ["Producteurs", "/producteurs"],
+                    ["Bonnes adresses", "/bonnes-adresses"],
+                    ["Accords", "/accords"],
+                    ["Guides", "/guides"],
+                    ["À lire", "/blog"],
+                  ].map(([label, href], index) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMenuOpen(false)}
+                      className={`group py-2.5 sm:py-3 ${
+                        index === 3 ? "mt-5 sm:mt-7" : ""
+                      }`}
+                    >
+                      <span className="lpv-display block text-[clamp(2.8rem,7vw,4.7rem)] leading-[0.94] tracking-[-0.045em] transition-opacity duration-300 group-hover:opacity-55">
+                        {label}
+                      </span>
+                    </Link>
+                  ))}
+                </nav>
+
+                {/* CE SOIR — fonctionnalité signature */}
+                <div className="mt-9 border-t border-white/20 pt-7 sm:mt-11 sm:pt-8">
+                  <Link
+                    href="/ce-soir"
+                    onClick={() => setMenuOpen(false)}
+                    className="group inline-flex items-center gap-4"
+                  >
+                    <span className="text-[0.72rem] font-semibold uppercase tracking-[0.15em] text-white/70 transition-colors group-hover:text-white">
+                      Ce soir, on boit quoi?
+                    </span>
+
+                    <span className="text-sm text-white/55 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
+                      →
+                    </span>
+                  </Link>
+                </div>
+
+              </div>
+
+              {/* PIED DU MENU */}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/20 pt-5 text-[0.6rem] font-medium uppercase tracking-[0.14em] text-white/50">
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setAccountOpen(true);
+                  }}
+                  className="transition-colors hover:text-white"
+                >
+                  Mon compte
+                </button>
+
+                <span className="text-white/20">·</span>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={frenchPath}
+                    onClick={() => setMenuOpen(false)}
+                    className="text-white"
+                  >
+                    FR
+                  </Link>
+
+                  <span className="text-white/25">/</span>
+
+                  <Link
+                    href={englishPath}
+                    onClick={() => setMenuOpen(false)}
+                    className="transition-colors hover:text-white"
+                  >
+                    EN
+                  </Link>
+                </div>
+
+                <span className="text-white/20">·</span>
+
+                <a
+                  href="https://www.instagram.com/lepremierverre/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-white"
+                >
+                  Instagram
+                </a>
+
+              </div>
+
+            </aside>
+          )}
+        </div>
+      ) : null}
+    </>
+  );
+}

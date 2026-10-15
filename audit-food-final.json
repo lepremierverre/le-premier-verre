@@ -1,0 +1,754 @@
+[
+  {
+    "_id": "wine-abeille-fabre-sa-chateau-mont-redon-chateau-mont-redon-lirac",
+    "name": "Château Mont-Redon Lirac",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-alain-lorieux-chinon-expression-2023",
+    "name": "Alain Lorieux Chinon Expression",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-albert-bichot-bourgogne-aligote",
+    "name": "Albert Bichot Bourgogne Aligoté",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-alois-lageder-spa-alois-lageder-pinot-bianco-sudtirol-alto-adige-2024-2024",
+    "name": "Alois Lageder Pinot Bianco Südtirol Alto Adige 2024",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-alto-moncayo-garnacha-2023",
+    "name": "Alto Moncayo Garnacha",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-aspall-premier-cru-cyder",
+    "name": "Premier Cru Cyder",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-aveleda-fonte-vinho-verde-2024",
+    "name": "Aveleda Fonte Vinho Verde",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-bodegas-luis-gurpegui-muga-s-a-111-tempranillo-selection-special-rioja-2023",
+    "name": "111 Tempranillo Sélection Spécial Rioja 2023",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-boland-cellar-boland-cellar-chenin-blanc-2025-2025",
+    "name": "Boland Cellar Chenin Blanc 2025",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-campo-viejo-tempranillo-rioja",
+    "name": "Campo Viejo Tempranillo Rioja",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-casa-ferreirinha-papa-figos-douro-2024",
+    "name": "Casa Ferreirinha Papa Figos Douro",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-casillero-del-diablo-cabernet-sauvignon",
+    "name": "Casillero del Diablo Cabernet Sauvignon",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-christophe-pacalet-beaujolais-les-marcellins-2024",
+    "name": "Christophe Pacalet Beaujolais Les Marcellins",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-cidrerie-du-minot-cremant-de-pomme",
+    "name": "Crémant de Pomme",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-cidrerie-du-minot-la-bolee",
+    "name": "La Bolée",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-cidrerie-michel-jodoin-petillant-rose",
+    "name": "Pétillant Rosé",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-cidrerie-milton-galia",
+    "name": "Galia",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-delinquente-tuff-nutt-bianco-pet-nat-2024",
+    "name": "Delinquente Tuff Nutt Bianco Pet Nat",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-devils-corner-pinot-noir-2024",
+    "name": "Devil's Corner Pinot Noir",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-bergeville-amourette-2025",
+    "name": "Amourette",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-bergeville-canonique-2024",
+    "name": "Canonique",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-bergeville-colfo-2025",
+    "name": "Colfo",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-bergeville-l-integrale",
+    "name": "L’Intégrale",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-bergeville-le-blanc-2024",
+    "name": "Le Blanc",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-bergeville-le-rose-2024",
+    "name": "Le Rosé",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-bergeville-le-soleil-s-en-est-mele-2025",
+    "name": "Le soleil s’en est mêlé",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-bergeville-plus-petit-que-2025",
+    "name": "Plus Petit Que",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-nival-ces-petits-imprevus-2025",
+    "name": "Domaine du Nival Ces petits imprévus",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-nival-matiere-a-discussion-2025",
+    "name": "Domaine du Nival Matière à discussion",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-bise-d-automne",
+    "name": "Bise d’Automne",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-blanc-domaine-du-ridge",
+    "name": "Blanc – Domaine du Ridge",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-champs-de-florence",
+    "name": "Champs de Florence",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-fado",
+    "name": "Fado",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-l-honorable-1-litre",
+    "name": "L’Honorable 1 litre",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-le-batonnier",
+    "name": "Le Bâtonnier",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-le-litre-du-ridge-rose",
+    "name": "Domaine du Ridge Le Litre du Ridge Rosé",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-le-stanbridge",
+    "name": "Le Stanbridge",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-les-petites-cuvees-vidal-brut",
+    "name": "Les Petites Cuvées – Vidal Brut",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-lucy-k",
+    "name": "Domaine du Ridge Lucy K.",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-rose-domaine-du-ridge",
+    "name": "Rosé",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-rouge-domaine-du-ridge",
+    "name": "Rouge ",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-saint-martin",
+    "name": "Saint-Martin",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-du-ridge-seyval-vidal",
+    "name": "Les Petites Cuvées – Seyval/Vidal",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-lafrance-bin-kin",
+    "name": "Bin Kin",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-lafrance-cidre-de-glace",
+    "name": "Cidre de glace",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-lafrance-tin-toe",
+    "name": "Tin Toé",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domaine-saint-basile-frontenac-2023",
+    "name": "Domaine Saint-Basile Frontenac",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-domane-wachau-gruner-veltliner-selection",
+    "name": "Domäne Wachau Grüner Veltliner Selection",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-dr-loosen-riesling-mosel-2025",
+    "name": "Dr. Loosen Riesling Mosel",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024",
+    "name": "Domaine des Nugues Beaujolais-Villages 2024",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-eric-bordelet-sidre-brut",
+    "name": "Sidre Brut",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-famille-perrin-cotes-du-rhone-signature-2023",
+    "name": "Famille Perrin Côtes du Rhône Signature",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-ferraton-pere-et-fils-syrah",
+    "name": "Ferraton Père & Fils Syrah",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-georges-duboeuf-brouilly",
+    "name": "Georges Duboeuf Brouilly",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-gerard-bertrand-gerard-bertrand-naturae-pays-d-oc",
+    "name": "Gérard Bertrand Naturae Chardonnay Pays d'Oc",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-gestioni-piccini-srl-piccini-chianti-classico-riserva",
+    "name": "Piccini Chianti Classico Riserva",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-john-doe-2025",
+    "name": "John Doe",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-kendall-jackson-vintners-reserve-chardonnay",
+    "name": "Kendall-Jackson Vintner's Reserve Chardonnay",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-kim-crawford-sauvignon-blanc-marlborough",
+    "name": "Kim Crawford Sauvignon Blanc Marlborough",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-kir-yianni-sa-kir-yianni-assyrtiko",
+    "name": "Kir-Yianni Assyrtiko",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-l-orpailleur-brut",
+    "name": "L'Orpailleur Brut",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-la-chablisienne-chablis-la-sereine",
+    "name": "La Chablisienne Chablis La Sereine",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-la-sablette-muscadet-sevre-et-maine-sur-lie",
+    "name": "La Sablette Muscadet-Sèvre et Maine sur Lie",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-les-pervenches-les-rosiers-2024",
+    "name": "Les Rosiers 2024",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-les-pervenches-lesperance-2025",
+    "name": "L’Espérance 2025",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-les-pervenches-macpel-pgg-2024",
+    "name": "Macpel PGG 2024",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-les-pervenches-pinot-zweigelt-2025",
+    "name": "Pinot Zweigelt 2025",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-les-pervenches-pur-pinot-2025",
+    "name": "Pur Pinot 2025",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-les-pervenches-seyval-chardo-2025",
+    "name": "Seyval Chardo 2025",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-loimer-lois-gruner-veltliner-2023",
+    "name": "Lois Grüner Veltliner",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-lorpailleur-blanc-2025",
+    "name": "L'Orpailleur Blanc",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-louis-bouillot-louis-bouillot-perle-rare-cremant-de-bourgogne-2022-2022",
+    "name": "Louis Bouillot Perle Rare Crémant de Bourgogne 2022",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-louis-jadot-bourgogne-couvent-des-jacobins-2023",
+    "name": "Louis Jadot Bourgogne Couvent des Jacobins",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-mapu-cabernet-sauvignon-carmenere",
+    "name": "Mapu Cabernet-Sauvignon/Carmenère",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-marcel-lapierre-morgon-2025",
+    "name": "Morgon",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-martin-codax-albarino-rias-baixas-2025",
+    "name": "Martín Códax Albariño Rías Baixas",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-masi-campofiorin-verona",
+    "name": "Masi Campofiorin Verona",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-mazzei-fonterutoli-chianti-classico-2023",
+    "name": "Mazzei Fonterutoli Chianti Classico",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-meinklang-kontakt-2024",
+    "name": "Meinklang Kontakt",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-mouton-cadet-bordeaux-rouge",
+    "name": "Mouton Cadet Bordeaux Rouge",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-pares-balta-cava-brut",
+    "name": "Parés Baltà Cava Brut",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-pieropan-soave-classico",
+    "name": "Pieropan Soave Classico",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-ruffino-chianti",
+    "name": "Ruffino Chianti",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-schieferkopf-riesling-trocken-sec-2023",
+    "name": "Schieferkopf Riesling Trocken Sec",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-segura-viudas-brut-organic",
+    "name": "Segura Viudas Brut Organic",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-torres-las-pisadas-rioja",
+    "name": "Torres Las Pisadas Rioja",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-trabanco-sidra-tradicional",
+    "name": "Sidra Trabanco Tradicional",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-trimbach-riesling-2023",
+    "name": "Riesling",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-trop-content-chenin-blanc-2025",
+    "name": "Trop Content Chenin Blanc",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-vidal-fleury-cotes-du-rhone",
+    "name": "Vidal-Fleury Côtes-du-Rhône",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-vina-cousino-macul-sa-cousino-macul-antiguas-reservas-valle-del-maipo",
+    "name": "Cousiño-Macul Antiguas Reservas Cabernet Sauvignon",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-whispering-angel-cotes-de-provence-2025",
+    "name": "Whispering Angel Côtes de Provence",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-william-fevre-chablis-les-champs-royaux-2023",
+    "name": "William Fèvre Chablis Les Champs Royaux",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  },
+  {
+    "_id": "wine-zenato-valpolicella-superiore",
+    "name": "Zenato Valpolicella Superiore",
+    "pairingCount": 4,
+    "resolvedFoodCount": 4,
+    "uniqueFoodCount": 4,
+    "validReferenceCount": 4
+  }
+]

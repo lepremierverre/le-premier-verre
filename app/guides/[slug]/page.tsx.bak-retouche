@@ -1,0 +1,296 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { PortableText } from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/types";
+import type { SanityImageSource } from "@sanity/image-url";
+
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import { guideBySlugQuery } from "@/sanity/lib/queries";
+import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
+import GuideTable, { type GuideTableValue } from "@/components/guides/GuideTable";
+import GuideChecklist, { type GuideChecklistValue } from "@/components/guides/GuideChecklist";
+import GuideRelatedArticles, { type GuideRelatedArticle } from "@/components/guides/GuideRelatedArticles";
+import GuideActions from "@/components/guides/GuideActions";
+
+export const revalidate = 60;
+
+type RelatedItem = {
+  _id: string;
+  name?: string;
+  title?: string;
+  slug?: string;
+};
+
+type Guide = {
+  title: string;
+  excerpt?: string;
+  content?: Array<PortableTextBlock | GuideTableValue | GuideChecklistValue>;
+  coverImage?: SanityImageSource;
+  guideType?: string;
+  difficulty?: string;
+  estimatedReadingTime?: string;
+  publishedAt?: string;
+  relatedCountries?: RelatedItem[];
+  relatedRegions?: RelatedItem[];
+  relatedAppellations?: RelatedItem[];
+  relatedGrapes?: RelatedItem[];
+  relatedArticles?: GuideRelatedArticle[];
+  relatedWines?: RelatedItem[];
+  relatedProducers?: RelatedItem[];
+  relatedPlaces?: RelatedItem[];
+};
+
+function formatLabel(value?: string) {
+  if (!value) return null;
+
+  const labels: Record<string, string> = {
+    beginner: "Débutant",
+    buying: "Guide d’achat",
+    practical: "Guide pratique",
+    region: "Guide régional",
+    grape: "Guide cépage",
+    pairing: "Guide accords",
+    tasting: "Guide dégustation",
+    travel: "Guide voyage",
+    intermediate: "Intermédiaire",
+    advanced: "Avancé",
+  };
+
+  return labels[value] || value.replace(/[-_]/g, " ");
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return buildDynamicMetadata({
+    entity: "guide",
+    slug,
+    locale: "fr",
+  });
+}
+
+export default async function GuidePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  const guide = await client.fetch<Guide | null>(
+    guideBySlugQuery,
+    { slug }
+  );
+
+  if (!guide) notFound();
+
+  const imageSrc = guide.coverImage
+    ? urlFor(guide.coverImage)
+        .width(1200)
+        .height(800)
+        .fit("crop")
+        .url()
+    : null;
+
+  const printChecklist = (guide.content || []).find(
+    (block): block is GuideChecklistValue =>
+      "_type" in block && block._type === "guideChecklist"
+  );
+
+  const relatedGroups = [
+    ["Pays", guide.relatedCountries],
+    ["Régions", guide.relatedRegions],
+    ["Appellations", guide.relatedAppellations],
+    ["Cépages", guide.relatedGrapes],
+  ].filter(([, items]) => Array.isArray(items) && items.length > 0) as [
+    string,
+    RelatedItem[]
+  ][];
+
+  return (
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+      <article className="lpv-container pb-24">
+        <div className="guide-screen-only pt-8 md:pt-10">
+          <Link href="/guides" className="lpv-text-link">
+            <span>←</span> Retour aux guides
+          </Link>
+        </div>
+
+        <section className="guide-print-hero grid gap-7 border-b border-[var(--lpv-line)] pb-9 pt-7 md:gap-10 md:pb-12 md:pt-10 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="self-start pt-1 md:pt-3">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              {formatLabel(guide.guideType) || "Guide"}
+            </p>
+
+            <h1 className="lpv-display mt-4 max-w-[11ch] text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.96] tracking-[-0.04em] lg:mt-5 lg:text-[clamp(3.6rem,4.5vw,5.2rem)]">
+              {guide.title}
+            </h1>
+
+            {guide.excerpt ? (
+              <p className="mt-5 max-w-md text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-7">
+                {guide.excerpt}
+              </p>
+            ) : null}
+          </div>
+
+          <div className="guide-print-cover-image self-start overflow-hidden bg-transparent">
+            {imageSrc ? (
+              <img
+                src={imageSrc}
+                alt={guide.title}
+                className="aspect-[4/3] w-full object-cover"
+              />
+            ) : (
+              <div className="flex aspect-[3/2] items-center justify-center">
+                <p className="text-sm text-[var(--lpv-muted)]">
+                  Image à ajouter dans Sanity.
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {guide.content?.length ? (
+          <section className="guide-print-content grid gap-6 py-10 md:grid-cols-[0.28fr_0.72fr] md:gap-10 md:py-16">
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Le guide
+              </p>
+
+              <h2 className="lpv-display mt-4 text-3xl leading-[0.98] tracking-[-0.035em] md:text-4xl">
+                À savoir.
+              </h2>
+            </div>
+
+            <div className="lpv-prose max-w-3xl">
+              <PortableText
+                value={guide.content}
+                components={{
+                  block: {
+                    h3: ({ children }) => {
+                      const text = String(children);
+                      const match = text.match(/^(?:Scénario|Scenario)\s+([A-C])\s+—\s+(.+)$/);
+
+                      return match ? (
+                        <h3 className="mb-7 mt-12 text-[clamp(1.35rem,1.65vw,1.6rem)] font-normal leading-[1.1] tracking-[-0.025em] text-[var(--lpv-ink)] md:mb-8 md:mt-14">
+                          <span className="mr-2 text-[0.72em] font-medium uppercase tracking-[0.12em] text-[var(--lpv-cocoa)]">
+                            {match[1]} —
+                          </span>
+                          {match[2]}
+                        </h3>
+                      ) : (
+                        <h3 className="mb-7 mt-12 text-[clamp(1.35rem,1.65vw,1.6rem)] font-normal leading-[1.1] tracking-[-0.025em] text-[var(--lpv-ink)] md:mb-8 md:mt-14">
+                          {children}
+                        </h3>
+                      );
+                    },
+                    h2: ({ children }) => {
+                      const text = String(children);
+                      const match = text.match(/^(\d+)\.\s*(.+)$/);
+
+                      return match ? (
+                        <div className="mb-8 mt-14 md:mb-10 md:mt-20">
+                          <p className="lpv-kicker mb-3 text-[var(--lpv-cocoa)]">
+                            {match[1].padStart(2, "0")}
+                          </p>
+                          <h2 className="lpv-display max-w-2xl text-[clamp(2.15rem,2.7vw,3rem)] leading-[0.96]">
+                            {match[2]}
+                          </h2>
+                        </div>
+                      ) : (
+                        <h2 className="lpv-display mb-8 mt-14 max-w-2xl text-[clamp(2.15rem,2.7vw,3rem)] leading-[0.96] md:mb-10 md:mt-20">
+                          {children}
+                        </h2>
+                      );
+                    },
+                  },
+                  types: {
+                    guideTable: ({ value }) => (
+                      <GuideTable
+                        value={value as GuideTableValue}
+                        locale="fr"
+                      />
+                    ),
+                    guideChecklist: ({ value }) => (
+                      <GuideChecklist
+                        value={value as GuideChecklistValue}
+                        locale="fr"
+                        mode="screen"
+                      />
+                    ),
+                  },
+                }}
+              />
+            </div>
+          </section>
+        ) : (
+          <section className="border-b border-[var(--lpv-line)] py-20 text-center">
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              En préparation
+            </p>
+
+            <h2 className="lpv-display mt-6 text-5xl">
+              Le contenu arrive bientôt.
+            </h2>
+          </section>
+        )}
+
+        {printChecklist ? (
+          <GuideChecklist
+            value={printChecklist}
+            locale="fr"
+            mode="print"
+          />
+        ) : null}
+
+        <GuideRelatedArticles
+          articles={guide.relatedArticles}
+          locale="fr"
+        />
+
+        {relatedGroups.length > 0 ? (
+          <section className="grid gap-10 border-b border-[var(--lpv-line)] py-16 md:grid-cols-[0.3fr_0.7fr] md:py-20">
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Pour continuer
+              </p>
+
+              <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-6xl">
+                Aller plus loin.
+              </h2>
+            </div>
+
+            <div>
+              {relatedGroups.map(([label, items]) => (
+                <div
+                  key={label}
+                  className="border-t border-[var(--lpv-line)] py-6"
+                >
+                  <p className="text-xs uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
+                    {label}
+                  </p>
+
+                  <div className="mt-4 space-y-3">
+                    {items.map((item) => (
+                      <p key={item._id} className="text-xl">
+                        {item.name || item.title}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+        <GuideActions
+          locale="fr"
+          title={guide.title}
+        />
+      </article>
+    </main>
+  );
+}

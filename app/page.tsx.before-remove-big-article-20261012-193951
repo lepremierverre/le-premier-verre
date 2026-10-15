@@ -1,0 +1,570 @@
+import Link from "next/link";
+import type { SanityImageSource } from "@sanity/image-url";
+
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import { articlesQuery, guidesQuery } from "@/sanity/lib/queries";
+import BottleStage from "@/components/wine/BottleStage";
+
+export const revalidate = 60;
+
+type HomeArticle = {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  coverImage?: SanityImageSource;
+};
+
+type HomeGuide = {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  coverImage?: SanityImageSource;
+  guideType?: string;
+  difficulty?: string;
+  estimatedReadingTime?: string;
+};
+
+type HomePlace = {
+  _id: string;
+  name: string;
+  slug: string;
+  type?: string;
+  city?: string;
+  region?: string;
+  highlights?: string[];
+  coverImage?: SanityImageSource;
+  lpvPartner?: boolean;
+  mediaPermissionStatus?: string;
+};
+
+type FeaturedWine = {
+  name: string;
+  slug: string;
+  vintage?: number;
+  beverageType?: "wine" | "cider";
+  alcoholFree?: boolean;
+  color?: string;
+  bottleImage?: SanityImageSource;
+  producer?: {
+    name?: string;
+  };
+};
+
+function Photo({
+  src,
+  alt,
+  className = "",
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={`h-full w-full object-cover ${className}`}
+    />
+  );
+}
+
+export default async function HomePage() {
+  const homeWines = await client.fetch<FeaturedWine[]>(
+    `*[_type == "wine" && published == true] | order(_updatedAt desc)[0...4] {
+      name,
+      "slug": slug.current,
+      vintage,
+      beverageType,
+      alcoholFree,
+      color,
+      bottleImage,
+      producer->{name}
+    }`
+  );
+
+  const featuredWine = homeWines[0] ?? null;
+  const selectionWines = homeWines.slice(1, 4);
+
+  const articles = await client.fetch<HomeArticle[]>(articlesQuery);
+  const featuredArticle = articles[0] ?? null;
+
+  const guides = await client.fetch<HomeGuide[]>(guidesQuery);
+  const featuredGuide = guides[0] ?? null;
+
+  const bottleImage = featuredWine?.bottleImage
+    ? urlFor(featuredWine.bottleImage)
+        .width(900)
+        .height(1000)
+        .fit("max")
+        .url()
+    : null;
+
+  const featuredProducer = await client.fetch<{
+    name: string;
+    slug: string;
+    municipality?: string;
+    oneLiner?: string;
+    heroImage?: SanityImageSource;
+  } | null>(
+    `*[
+      _type == "producer" &&
+      published == true &&
+      lpvPartner == true &&
+      defined(slug.current)
+    ] | order(_updatedAt desc)[0] {
+      name,
+      "slug": slug.current,
+      municipality,
+      oneLiner,
+      heroImage
+    }`
+  );
+
+  const featuredPlace = await client.fetch<HomePlace | null>(
+    `*[
+      _type == "place" &&
+      published == true &&
+      lpvPartner == true &&
+      defined(slug.current) &&
+      defined(coverImage) &&
+      mediaPermissionStatus in [
+        "provided_by_place",
+        "authorized_by_place",
+        "lpv_original",
+        "licensed"
+      ]
+    ] | order(_updatedAt desc)[0] {
+      _id,
+      name,
+      "slug": slug.current,
+      type,
+      city,
+      region,
+      highlights,
+      coverImage,
+      lpvPartner,
+      mediaPermissionStatus
+    }`
+  );
+
+  return (
+    <main className="bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+          {/* HERO */}
+          <section className="relative min-h-[78vh] overflow-hidden">
+            <Photo
+              src="/images/lpv/table-vin.jpg"
+              alt="Des amis réunis autour d’une table et de bouteilles de vin"
+              className="absolute inset-0 grayscale"
+            />
+
+            <div className="absolute inset-0 bg-black/38" />
+
+            <div className="lpv-container relative z-10 flex min-h-[78vh] flex-col justify-end pb-10 pt-24 text-[var(--lpv-paper-light)] md:pb-10">
+              <p className="lpv-kicker mb-6 text-white/72">
+                Le Premier Verre
+              </p>
+
+              <h1 className="lpv-display max-w-5xl text-[clamp(4rem,15vw,5.2rem)] md:text-[clamp(4.6rem,11vw,10.5rem)] leading-[0.82]">
+                Boire moins
+                <br />
+                compliqué.
+              </h1>
+
+              <div className="mt-10 border-t border-white/35 pt-5 md:flex md:items-end md:justify-between md:gap-12">
+                <p className="lpv-kicker text-white/75">
+                  Le vin, vu d’ici.
+                </p>
+
+                <nav
+                  aria-label="Explorer Le Premier Verre"
+                  className="mt-6 grid grid-cols-2 gap-x-8 gap-y-3 text-[10px] uppercase tracking-[0.18em] text-white/82 md:mt-0 md:flex md:flex-wrap md:justify-end md:gap-x-7"
+                >
+                  <Link href="/vins">Vins →</Link>
+                  <Link href="/producteurs">Producteurs →</Link>
+                  <Link href="/bonnes-adresses">Bonnes adresses →</Link>
+                  <Link href="/blog">Journal →</Link>
+                </nav>
+              </div>
+        </div>
+      </section>
+
+      {/* CE SOIR */}
+      <section className="bg-[var(--lpv-paper)]">
+        <div className="lpv-container py-20 md:py-28 lg:py-32">
+
+          <div className="grid md:mx-6 md:grid-cols-2 md:items-stretch lg:mx-10 xl:mx-14">
+
+            {/* PHOTO */}
+            <div className="h-[320px] overflow-hidden sm:h-[380px] md:h-[460px]">
+              <Photo
+                src="/images/lpv/bouteille-ce-soir.jpg"
+                alt="Moment de table autour du vin"
+              />
+            </div>
+
+            {/* TEXTE */}
+            <div className="flex min-h-[360px] flex-col justify-center px-0 py-10 md:min-h-0 md:px-12 md:py-12 lg:px-16">
+
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Commencer ici
+              </p>
+
+              <h2 className="lpv-display mt-5 text-[clamp(3.4rem,11vw,4.5rem)] leading-[0.86] tracking-[-0.05em] md:mt-7 md:text-[clamp(4.4rem,6.2vw,6.6rem)]">
+                Une bouteille
+                <br />
+                pour ce soir.
+              </h2>
+
+              <div className="mt-7 md:mt-8">
+                <Link
+                  href="/ce-soir"
+                  className="lpv-text-link w-fit"
+                >
+                  Ce soir, on boit quoi? <span>→</span>
+                </Link>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* SÉLECTION DU MOMENT */}
+      <section className="bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)]">
+        <div className="lpv-container py-8 md:py-12">
+          <div className="flex items-end justify-between gap-8">
+            <div>
+              <h2 className="lpv-display text-[clamp(2.7rem,6vw,4.15rem)] leading-[0.9] tracking-[-0.04em]">
+                Trois bouteilles pour maintenant.
+              </h2>
+            </div>
+
+            <Link
+              href="/vins"
+              className="lpv-text-link hidden shrink-0 text-white md:flex"
+            >
+              Tous les vins <span>→</span>
+            </Link>
+          </div>
+
+          <div className="mt-8 grid md:mt-10 md:grid-cols-3">
+            {selectionWines.map((wine, index) => (
+              <Link
+                key={wine.slug}
+                href={`/vins/${wine.slug}`}
+                className={`group flex h-full flex-col py-8 md:px-8 md:py-10 ${
+                  index > 0
+                    ? "border-t border-white/20 md:border-l md:border-t-0"
+                    : ""
+                }`}
+              >
+                <div className="relative flex h-full flex-col">
+                  <p className="absolute left-0 top-0 z-10 font-[var(--font-display)] text-[2rem] leading-none text-white/40">
+                    0{index + 1}
+                  </p>
+
+                  <BottleStage
+                    image={wine.bottleImage}
+                    alt={wine.name}
+                    color={
+                      wine.beverageType === "cider" ? undefined : wine.color
+                    }
+                    variant="card"
+                    className="!h-[300px] [&>div]:!h-[280px] [&_img]:!max-h-[275px] [&_img]:!max-w-[64%] md:!h-[390px] md:[&>div]:!h-[365px] md:[&_img]:!max-h-[355px]"
+                  />
+
+                  <div className="flex min-h-[150px] flex-1 flex-col border-t border-white/20 pt-4 md:min-h-[165px]">
+                    <p className="lpv-kicker text-white/55">
+                      {[
+                        wine.beverageType === "cider"
+                          ? "Cidre"
+                          : wine.color || "Vin",
+                        wine.alcoholFree ? "Sans alcool" : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+
+                    <h3 className="lpv-display mt-3 min-h-[3.4rem] text-[1.8rem] leading-[0.94]">
+                      {wine.name}
+                    </h3>
+
+                    {wine.producer?.name ? (
+                      <p className="mt-auto pt-4 text-sm leading-5 text-white/55">
+                        {wine.producer.name}
+                        {wine.vintage ? ` · ${wine.vintage}` : ""}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* DÉCOUVRIR — STRUCTURE CLASSIQUE */}
+      <section className="bg-[var(--lpv-paper)]">
+        <div className="lpv-container py-16 md:py-24">
+
+          {/* PRODUCTEUR */}
+          {featuredProducer ? (
+            <section className="py-24 md:py-32">
+              <div className="mx-auto max-w-[1180px] px-6 md:px-10">
+
+                <div className="mx-auto max-w-[900px] text-center">
+                  <p className="text-[15px] font-medium">
+                    À découvrir cette semaine
+                  </p>
+
+                  <h2 className="lpv-display mt-4 text-[clamp(3.4rem,6vw,5.8rem)] leading-[0.9] tracking-[-0.045em]">
+                    {featuredProducer.name}
+                  </h2>
+
+                  {featuredProducer.municipality ? (
+                    <p className="mt-4 text-[15px] italic text-[var(--lpv-muted)]">
+                      {featuredProducer.municipality}, Québec
+                    </p>
+                  ) : null}
+
+                  <Link
+                    href={`/producteurs/${featuredProducer.slug}`}
+                    className="mt-7 inline-flex items-center gap-2 text-[15px] underline underline-offset-[6px]"
+                  >
+                    Découvrir le domaine <span>→</span>
+                  </Link>
+                </div>
+
+                {featuredProducer.heroImage ? (
+                  <Link
+                    href={`/producteurs/${featuredProducer.slug}`}
+                    className="mt-12 block overflow-hidden md:mt-14"
+                  >
+                    <Photo
+                      src={urlFor(featuredProducer.heroImage)
+                        .width(1800)
+                        .height(950)
+                        .fit("crop")
+                        .url()}
+                      alt={featuredProducer.name}
+                      className="aspect-[16/8] object-cover"
+                    />
+                  </Link>
+                ) : null}
+
+                {featuredProducer.oneLiner ? (
+                  <p className="mx-auto mt-7 max-w-[620px] text-center text-[15px] leading-7 text-[var(--lpv-muted)]">
+                    {featuredProducer.oneLiner}
+                  </p>
+                ) : null}
+
+              </div>
+            </section>
+          ) : null}
+
+          {featuredArticle ? (
+            <section className="bg-[var(--lpv-paper-light)] py-24 md:py-32">
+              <div className="mx-auto max-w-[1180px] px-6 md:px-10">
+
+                <div className="mx-auto max-w-[1000px] text-center">
+                  <p className="text-[15px] font-medium">
+                    À lire
+                  </p>
+
+                  <h2 className="lpv-display mx-auto mt-4 max-w-[980px] text-[clamp(3rem,5.5vw,5.3rem)] leading-[0.92] tracking-[-0.045em]">
+                    {featuredArticle.title}
+                  </h2>
+
+                  <Link
+                    href={`/blog/${featuredArticle.slug}`}
+                    className="mt-7 inline-flex items-center gap-2 text-[15px] underline underline-offset-[6px]"
+                  >
+                    Lire l’article <span>→</span>
+                  </Link>
+                </div>
+
+                {featuredArticle.coverImage ? (
+                  <Link
+                    href={`/blog/${featuredArticle.slug}`}
+                    className="mt-12 block overflow-hidden md:mt-14"
+                  >
+                    <Photo
+                      src={urlFor(featuredArticle.coverImage)
+                        .width(1800)
+                        .height(950)
+                        .fit("crop")
+                        .url()}
+                      alt={featuredArticle.title}
+                      className="aspect-[16/8] object-cover grayscale"
+                    />
+                  </Link>
+                ) : null}
+
+              </div>
+            </section>
+          ) : null}
+
+          {featuredPlace ? (
+            <div className="mt-8 grid md:mt-12 md:grid-cols-2 md:items-stretch">
+
+              <div className="order-2 flex flex-col justify-center py-10 md:order-1 md:px-14 md:py-10 lg:px-20">
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  Bonne adresse
+                </p>
+
+                <h2 className="lpv-display mt-5 text-[clamp(2.8rem,4vw,4.25rem)] leading-[0.92] tracking-[-0.035em]">
+                  {featuredPlace.name}
+                </h2>
+
+                {(featuredPlace.city || featuredPlace.region) ? (
+                  <p className="mt-4 text-sm text-[var(--lpv-muted)]">
+                    {[featuredPlace.city, featuredPlace.region]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                ) : null}
+
+                {featuredPlace.highlights?.[0] ? (
+                  <p className="mt-6 max-w-md text-[14px] leading-6 text-[var(--lpv-muted)]">
+                    {featuredPlace.highlights[0]}
+                  </p>
+                ) : null}
+
+                <Link
+                  href={`/bonnes-adresses/${featuredPlace.slug}`}
+                  className="lpv-text-link mt-8 w-fit"
+                >
+                  Découvrir <span>→</span>
+                </Link>
+              </div>
+
+              {featuredPlace.coverImage ? (
+                <Link
+                  href={`/bonnes-adresses/${featuredPlace.slug}`}
+                  className="order-1 block overflow-hidden md:order-2"
+                >
+                  <img
+                    src={urlFor(featuredPlace.coverImage)
+                      .width(1300)
+                      .height(975)
+                      .fit("crop")
+                      .url()}
+                    alt={featuredPlace.name}
+                    className="h-[340px] w-full object-cover md:h-[440px]"
+                  />
+                </Link>
+              ) : null}
+
+            </div>
+          ) : null}
+
+
+          {/* JOURNAL */}
+          {featuredArticle ? (
+            <div className="mt-8 grid md:mt-10 md:grid-cols-[1.04fr_0.96fr] md:items-stretch">
+
+              <div className="order-2 flex flex-col justify-center py-10 md:order-1 md:px-14 md:py-12 lg:px-20">
+                <p className="text-[14px] font-medium leading-5">
+                  À lire
+                </p>
+
+                <h2 className="lpv-display mt-5 text-[clamp(2.9rem,4.5vw,4.8rem)] leading-[0.9] tracking-[-0.04em]">
+                  {featuredArticle.title}
+                </h2>
+
+                {featuredArticle.excerpt ? (
+                  <p className="mt-6 max-w-md text-[14px] leading-6 text-[var(--lpv-muted)]">
+                    {featuredArticle.excerpt}
+                  </p>
+                ) : null}
+
+                <Link
+                  href={`/blog/${featuredArticle.slug}`}
+                  className="mt-8 inline-flex min-w-[210px] items-center justify-between border border-[var(--lpv-line)] px-6 py-4 text-[14px] leading-none"
+                >
+                  Lire l’article <span>→</span>
+                </Link>
+              </div>
+
+              {featuredArticle.coverImage ? (
+                <Link
+                  href={`/blog/${featuredArticle.slug}`}
+                  className="order-1 block overflow-hidden md:order-2"
+                >
+                  <img
+                    src={urlFor(featuredArticle.coverImage)
+                      .width(1300)
+                      .height(975)
+                      .fit("crop")
+                      .url()}
+                    alt={featuredArticle.title}
+                    className="h-[340px] w-full object-cover md:h-[440px]"
+                  />
+                </Link>
+              ) : null}
+
+            </div>
+          ) : null}
+
+
+          {/* LIENS DE CONTINUATION */}
+          <div className="mt-16 flex flex-wrap gap-x-8 gap-y-4 border-t border-[var(--lpv-line)] pt-7 md:mt-24">
+            <Link href="/producteurs" className="lpv-text-link">
+              Tous les producteurs <span>→</span>
+            </Link>
+
+            <Link href="/bonnes-adresses" className="lpv-text-link">
+              Toutes les bonnes adresses <span>→</span>
+            </Link>
+
+            <Link href="/guides" className="lpv-text-link">
+              Les guides <span>→</span>
+            </Link>
+          </div>
+
+        </div>
+      </section>
+
+      {/* NEWSLETTER */}
+      <section className="bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)]">
+        <div className="lpv-container grid gap-0 py-16 md:grid-cols-[0.8fr_1.2fr] md:py-24">
+          <div className="overflow-hidden">
+            <Photo
+              src="/images/lpv/infolettre.jpg"
+              alt="Paysage viticole du Premier Verre"
+              className="aspect-[4/5]"
+            />
+          </div>
+
+          <div className="flex flex-col justify-center border-white/20 pt-10 md:border-l md:px-14 md:pt-0 lg:px-20">
+            <p className="lpv-kicker text-white/55">
+              L’infolettre
+            </p>
+
+            <h2 className="lpv-display mt-8 max-w-3xl text-[clamp(4rem,7vw,7.5rem)] leading-[0.86]">
+              Avant le
+              <br />
+              week-end.
+            </h2>
+
+            <p className="mt-8 max-w-xl text-base leading-8 text-white/68">
+              Une bouteille, une adresse et une idée à garder sous la main.
+            </p>
+
+            <Link
+              href="/newsletter"
+              className="lpv-text-link mt-10 w-fit text-white"
+            >
+              S’inscrire <span>→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}

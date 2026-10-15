@@ -1,0 +1,2049 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { PortableText } from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/types";
+import type { SanityImageSource } from "@sanity/image-url";
+
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import { placeBySlugQuery } from "@/sanity/lib/queries";
+import BottleStage from "@/components/wine/BottleStage";
+import { buildDynamicMetadata } from "@/lib/seo/dynamic-metadata";
+
+export const revalidate = 60;
+
+type PlaceWine = {
+  _id: string;
+  name: string;
+  slug: string;
+  vintage?: number;
+  color?: string;
+  bottleImage?: SanityImageSource;
+  approxPrice?: number;
+  producer?: {
+    _id?: string;
+    name?: string;
+    slug?: string;
+  };
+};
+
+type Place = {
+  name: string;
+  type?: string;
+  city?: string;
+  region?: string;
+  address?: string;
+  website?: string;
+  instagram?: string;
+  instagramPosts?: {
+    url: string;
+  }[];
+  coverImage?: SanityImageSource;
+  secondaryImage?: SanityImageSource;
+  secondaryImageCredit?: string;
+  mediaCredit?: string;
+  mediaPermissionStatus?: "none" | "provided_by_place" | "authorized_by_place" | "lpv_original" | "licensed";
+  lpvPartner?: boolean;
+  highlights?: string[];
+  description?: PortableTextBlock[];
+  availableWines?: PlaceWine[];
+  producerWines?: PlaceWine[];
+};
+
+function formatPrice(value?: number) {
+  if (typeof value !== "number") return null;
+
+  return new Intl.NumberFormat("fr-CA", {
+    style: "currency",
+    currency: "CAD",
+  }).format(value);
+}
+
+function formatColor(value?: string) {
+  if (!value) return null;
+
+  const labels: Record<string, string> = {
+    red: "Rouge",
+    white: "Blanc",
+    rose: "Rosé",
+    orange: "Orange",
+    sparkling: "Effervescent",
+    fortified: "Fortifié",
+  };
+
+  return labels[value] || value;
+}
+
+function formatType(value?: string) {
+  if (!value) return "Adresse";
+
+  const labels: Record<string, string> = {
+    restaurant: "Restaurant",
+    "wine-bar": "Bar à vin",
+    caviste: "Caviste",
+    shop: "Boutique",
+    other: "Adresse",
+  };
+
+  return labels[value] || value;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return buildDynamicMetadata({
+    entity: "place",
+    slug,
+    locale: "fr",
+  });
+}
+
+export default async function PlacePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  const place = await client.fetch<Place | null>(
+    placeBySlugQuery,
+    { slug }
+  );
+
+  if (!place) notFound();
+
+  const placeWines = Array.from(
+    new Map(
+      [
+        ...(place.producerWines ?? []),
+        ...(place.availableWines ?? []),
+      ].map((wine) => [wine._id, wine])
+    ).values()
+  );
+
+  const authorizedMediaStatuses = new Set([
+    "provided_by_place",
+    "authorized_by_place",
+    "lpv_original",
+    "licensed",
+  ]);
+
+  const canDisplayCoverImage =
+    Boolean(place.coverImage) &&
+    Boolean(
+      place.mediaPermissionStatus &&
+      authorizedMediaStatuses.has(place.mediaPermissionStatus)
+    );
+
+  const imageSrc = canDisplayCoverImage && place.coverImage
+    ? urlFor(place.coverImage)
+        .width(1600)
+        .height(1900)
+        .fit("crop")
+        .url()
+    : null;
+
+  const facts = [
+    ["Type", formatType(place.type)],
+    ["Ville", place.city],
+    ["Région", place.region],
+    ["Adresse", place.address],
+      ["Site web", place.website],
+  ].filter(([, value]) => Boolean(value)) as [string, string][];
+
+  const useSaucettePartnerLayout =
+    place.lpvPartner === true && slug === "saucette";
+
+  if (useSaucettePartnerLayout) {
+    const saucetteHighlights = [
+      {
+        title: "Une sélection qui bouge",
+        text: "Plus d’une centaine de références, avec des arrivages qui renouvellent constamment les tablettes.",
+      },
+      {
+        title: "Caviste le jour, buvette le soir",
+        text: "Une bouteille à emporter ou quelques verres à découvrir sur place avec les assiettes de Marie-Ève.",
+      },
+      {
+        title: "Une question de goût",
+        text: "Ici, on part de ce que vous aimez plutôt que de ce que vous êtes censé connaître.",
+      },
+    ];
+
+    return (
+      <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+        <article className="lpv-container pb-24">
+
+          <div className="pt-8 md:pt-10">
+            <Link
+              href="/bonnes-adresses"
+              className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
+            >
+              <span aria-hidden="true">←</span>
+              <span>Bonnes adresses</span>
+            </Link>
+          </div>
+
+          {/* HERO */}
+          <section className="pt-8 md:pt-10">
+            <div className="grid gap-10 md:grid-cols-[0.41fr_0.59fr] md:items-center md:gap-14">
+
+              <div className="md:flex md:min-h-[31rem] md:translate-x-8 md:flex-col md:justify-center md:pr-6">
+                <h1 className="lpv-display max-w-[8ch] text-[clamp(5.6rem,7.6vw,8.4rem)] leading-[0.79] tracking-[-0.065em]">
+                  Saucette
+                </h1>
+
+                <p className="mt-9 max-w-[29ch] text-[clamp(1.05rem,1.25vw,1.25rem)] leading-[1.42] tracking-[-0.02em]">
+                  Du vin, des assiettes et beaucoup de bonnes raisons de rester.
+                </p>
+
+                <p className="mt-8 text-[0.6rem] uppercase tracking-[0.19em] text-[var(--lpv-muted)]">
+                  Saint-Lambert, Québec
+                </p>
+              </div>
+
+              <figure>
+                <div className="aspect-[1.48/1] overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/saucette1.jpg"
+                    alt="Saucette à Saint-Lambert"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Saucette
+                </figcaption>
+              </figure>
+
+            </div>
+          </section>
+
+          {/* L'ADRESSE */}
+          <section className="pb-16 pt-8 md:pb-20 md:pt-10">
+            <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
+
+              <figure className="w-full md:w-[570px]">
+                <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/saucette2.jpg"
+                    alt="Chez Saucette"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Saucette
+                </figcaption>
+              </figure>
+
+              <div className="flex items-center">
+                <div className="mx-auto max-w-[39rem]">
+                  <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                    L’adresse
+                  </p>
+
+                  <div className="mt-8 space-y-5 text-[1.08rem] leading-8 md:text-[1.12rem] md:leading-9">
+                    <p>
+                      À Saint-Lambert, Saucette réunit un caviste et une buvette
+                      sous le même toit. Catherine Denault et Marie-Ève Collin y
+                      ont créé un endroit où l’on vient chercher une bouteille,
+                      prendre un verre ou manger quelques bouchées, mais surtout
+                      se faire guider sans avoir besoin de connaître le vin.
+                    </p>
+
+                    <p>
+                      Leur façon de faire tient beaucoup à l’accueil. On peut
+                      arriver sans savoir ce qu’on veut boire et simplement se
+                      laisser surprendre. La sélection rassemble plus d’une
+                      centaine de références de petits producteurs et artisans,
+                      avec des arrivages qui font constamment évoluer les
+                      tablettes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          {/* TROIS CHOSES */}
+          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+              Trois choses à savoir.
+            </h2>
+
+            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+              {saucetteHighlights.map((item, index) => (
+                <article
+                  key={item.title}
+                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                    index > 0
+                      ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
+                      : ""
+                  }`}
+                >
+                  <p className="text-[0.58rem] tracking-[0.2em] text-[var(--lpv-muted)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+
+                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                    {item.title}
+                  </h3>
+
+                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                    {item.text}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* POURQUOI SAUCETTE */}
+          <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-cocoa)] text-[var(--lpv-paper)]">
+            <div className="lpv-container py-16 md:py-20">
+              <div className="grid gap-10 md:grid-cols-[0.38fr_0.62fr] md:items-center md:gap-16">
+
+                <div>
+                  <h2 className="lpv-display max-w-[8ch] text-[clamp(3.5rem,4.8vw,5.3rem)] leading-[0.87] tracking-[-0.055em]">
+                    Pourquoi Saucette.
+                  </h2>
+
+                  <p className="mt-6 max-w-[28ch] text-[1rem] leading-[1.5] opacity-70">
+                    Une place ici se mérite. Voici ce qui nous a convaincus.
+                  </p>
+                </div>
+
+                <p className="max-w-[42ch] text-[clamp(1.25rem,1.55vw,1.6rem)] leading-[1.3] tracking-[-0.025em]">
+                  Parce qu’on peut y entrer sans connaître le cépage, la région
+                  ou la bonne façon de parler du vin. Catherine et Marie-Ève
+                  partent plutôt de ce qu’on aime, posent quelques questions et
+                  nous amènent ailleurs. C’est exactement le genre d’endroit qui
+                  rend le vin plus simple, plus humain et beaucoup plus agréable
+                  à découvrir.
+                </p>
+
+              </div>
+            </div>
+          </section>
+
+          {/* LE VIN CHEZ SAUCETTE */}
+          <section className="py-16 md:py-24">
+            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+
+              <div className="md:pl-10">
+                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                  Le vin chez Saucette.
+                </h2>
+              </div>
+
+              <div className="max-w-2xl space-y-5 text-[1rem] leading-8 text-[var(--lpv-muted)]">
+                <p>
+                  Catherine et Marie-Ève goûtent et choisissent les vins ensemble.
+                  Elles cherchent surtout des bouteilles qui provoquent quelque
+                  chose, faites par des artisans dont elles aiment la façon de
+                  travailler. Bio, biodynamie et faible intervention reviennent
+                  souvent dans la sélection, sans devenir une règle à cocher.
+                </p>
+
+                <p>
+                  Leur façon d’en parler est tout aussi simple. Le prix, l’étiquette
+                  ou l’appellation ne décident pas si un vin est bon. Leur conseil
+                  tient en quelques mots. Aime ce que t’aimes.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          {/* BOUTEILLES */}
+          {placeWines.length ? (
+            <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+              <div className="lpv-container pb-16 pt-10 md:pb-20 md:pt-14">
+                <div className="md:pl-10">
+                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                    Leurs bouteilles.
+                  </h2>
+                </div>
+
+                <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+                  {placeWines.slice(0, 5).map((wine) => (
+                    <Link
+                      key={wine._id}
+                      href={`/vins/${wine.slug}`}
+                      className="group relative flex min-h-[390px] flex-col bg-[var(--lpv-paper-light)] p-5 md:min-h-[450px] md:p-6"
+                    >
+                      <div className="flex h-[235px] items-center justify-center py-4 md:h-[285px]">
+                        <BottleStage
+                          image={wine.bottleImage}
+                          alt={wine.name ?? "Bouteille de vin"}
+                          color={wine.color ?? undefined}
+                          variant="card"
+                          className="h-full max-h-[255px] transition-transform duration-500 ease-out group-hover:-translate-y-1 md:max-h-[270px]"
+                        />
+                      </div>
+
+                      <div className="mt-auto border-t border-[var(--lpv-line)] pt-4">
+                        <p className="text-[0.52rem] uppercase tracking-[0.17em] text-[var(--lpv-muted)]">
+                          {[formatColor(wine.color), wine.vintage]
+                            .filter(Boolean)
+                            .join(" · ") || "Vin"}
+                        </p>
+
+                        <h3 className="lpv-display mt-3 min-h-[3.4rem] text-[clamp(1.45rem,1.6vw,1.75rem)] leading-[0.94] tracking-[-0.035em]">
+                          {wine.name}
+                        </h3>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : (
+            <section className="pb-4 pt-3 md:pb-8 md:pt-5">
+              <div>
+                <div className="md:pl-10">
+                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                    Leurs bouteilles.
+                  </h2>
+                </div>
+
+                <div className="mt-8 flex min-h-[180px] items-center justify-center px-6 py-10 text-center md:mt-10 md:min-h-[210px] md:py-12">
+                  <div>
+                    <p className="lpv-display text-[clamp(1.9rem,2.7vw,3rem)] leading-[0.92] tracking-[-0.04em]">
+                      On y travaille ;)
+                    </p>
+
+                    <p className="mx-auto mt-5 max-w-[520px] text-[0.95rem] leading-7 text-[var(--lpv-muted)]">
+                      Notre sélection de bouteilles à découvrir chez Saucette arrive bientôt.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Y ALLER */}
+          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
+            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+
+              <div className="md:pl-10">
+                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                  Passer chez Saucette.
+                </h2>
+
+                {place.address ? (
+                  <p className="mt-8 max-w-[29ch] text-[1.05rem] leading-7 text-[var(--lpv-ink)]/72">
+                    {place.address}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="md:pt-1">
+                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
+
+                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                      Type
+                    </p>
+                    <p className="text-[0.95rem]">
+                      Caviste + buvette
+                    </p>
+                  </div>
+
+                  {place.website ? (
+                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Site officiel
+                      </p>
+                      <a
+                        href={place.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                      >
+                        {place.website
+                          .replace(/^https?:\/\//, "")
+                          .replace(/^www\./, "")
+                          .replace(/\/$/, "")}
+                      </a>
+                    </div>
+                  ) : null}
+
+                  {place.instagram ? (
+                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Instagram
+                      </p>
+                      <a
+                        href={place.instagram}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                      >
+                        @saucettecaviste
+                      </a>
+                    </div>
+                  ) : null}
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+        </article>
+      </main>
+    );
+  }
+
+  const useBeytPartnerLayout =
+    place.lpvPartner === true && slug === "beyt";
+
+  if (useBeytPartnerLayout) {
+    const beytHighlights = [
+      {
+        title: "Beyt veut dire maison",
+        text: "Un clin d’œil aux origines libanaises d’Anthony et à une façon de recevoir qui est au cœur du projet.",
+      },
+      {
+        title: "Une table à partager",
+        text: "Des assiettes inspirées du Liban et de la Méditerranée, pensées pour circuler au milieu de la table.",
+      },
+      {
+        title: "Le vin avec la table",
+        text: "Une sélection de petits producteurs choisie autant pour ce qu’elle raconte que pour ce qu’elle apporte au repas.",
+      },
+    ];
+
+    return (
+      <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+        <article className="lpv-container pb-24">
+
+          <div className="pt-8 md:pt-10">
+            <Link
+              href="/bonnes-adresses"
+              className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
+            >
+              <span aria-hidden="true">←</span>
+              <span>Bonnes adresses</span>
+            </Link>
+          </div>
+
+          {/* HERO */}
+          <section className="pt-8 md:pt-10">
+            <div className="grid gap-10 md:grid-cols-[0.41fr_0.59fr] md:items-center md:gap-14">
+
+              <div className="md:flex md:min-h-[31rem] md:translate-x-8 md:flex-col md:justify-center md:pr-6">
+                <h1 className="lpv-display max-w-[8ch] text-[clamp(5.6rem,7.6vw,8.4rem)] leading-[0.79] tracking-[-0.065em]">
+                  Beyt
+                </h1>
+
+                <p className="mt-9 max-w-[29ch] text-[clamp(1.05rem,1.25vw,1.25rem)] leading-[1.42] tracking-[-0.02em]">
+                  Une cave à manger où l’hospitalité passe avant tout.
+                </p>
+
+                <p className="mt-8 text-[0.6rem] uppercase tracking-[0.19em] text-[var(--lpv-muted)]">
+                  Montréal, Québec
+                </p>
+              </div>
+
+              <figure>
+                <div className="aspect-[1.48/1] overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/beyt3.jpg"
+                    alt="Beyt à Montréal"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Beyt
+                </figcaption>
+              </figure>
+
+            </div>
+          </section>
+
+          {/* L'ADRESSE */}
+          <section className="pb-16 pt-8 md:pb-20 md:pt-10">
+            <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
+
+              <figure className="w-full md:w-[570px]">
+                <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/beyt1.jpg"
+                    alt="Chez Beyt"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Beyt
+                </figcaption>
+              </figure>
+
+              <div className="flex items-center">
+                <div className="mx-auto max-w-[39rem]">
+                  <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                    L’adresse
+                  </p>
+
+                  <div className="mt-8 space-y-5 text-[1.08rem] leading-8 md:text-[1.12rem] md:leading-9">
+                    <p>
+                      Beyt veut dire maison en arabe. Un nom qui résume bien
+                      l’idée derrière cette cave à manger montréalaise imaginée
+                      par Anthony Gebrayel et Angélique Custeau. On y vient pour
+                      boire un verre, partager quelques assiettes et, très vite,
+                      avoir envie de rester.
+                    </p>
+
+                    <p>
+                      La cuisine s’inspire du Liban et de la Méditerranée et
+                      mise sur le partage. Le vin s’inscrit naturellement dans
+                      la même idée avec une sélection de petits producteurs et
+                      des bouteilles choisies pour accompagner la table autant
+                      que le moment.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          {/* TROIS CHOSES */}
+          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+              Trois choses à savoir.
+            </h2>
+
+            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+              {beytHighlights.map((item, index) => (
+                <article
+                  key={item.title}
+                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                    index > 0
+                      ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
+                      : ""
+                  }`}
+                >
+                  <p className="text-[0.58rem] tracking-[0.2em] text-[var(--lpv-muted)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+
+                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                    {item.title}
+                  </h3>
+
+                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                    {item.text}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* POURQUOI BEYT */}
+          <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-cocoa)] text-[var(--lpv-paper)]">
+            <div className="lpv-container py-16 md:py-20">
+              <div className="grid gap-10 md:grid-cols-[0.38fr_0.62fr] md:items-center md:gap-16">
+
+                <div>
+                  <h2 className="lpv-display max-w-[8ch] text-[clamp(3.5rem,4.8vw,5.3rem)] leading-[0.87] tracking-[-0.055em]">
+                    Pourquoi Beyt.
+                  </h2>
+
+                  <p className="mt-6 max-w-[28ch] text-[1rem] leading-[1.5] opacity-70">
+                    Une place ici se mérite. Voici ce qui nous a convaincus.
+                  </p>
+                </div>
+
+                <p className="max-w-[42ch] text-[clamp(1.25rem,1.55vw,1.6rem)] leading-[1.3] tracking-[-0.025em]">
+                  Parce qu’ici, le vin ne vit pas tout seul. Il arrive avec
+                  les assiettes, les épices, les discussions et cette façon
+                  généreuse de recevoir. Beyt réussit à faire de la découverte
+                  quelque chose de simple et de gourmand. On vient pour manger,
+                  on ouvre une bouteille et, quelque part entre les deux, on a
+                  déjà envie de rester.
+                </p>
+
+              </div>
+            </div>
+          </section>
+
+          {/* LE VIN CHEZ BEYT */}
+          <section className="py-16 md:py-24">
+            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+
+              <div className="md:pl-10">
+                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                  Le vin chez Beyt.
+                </h2>
+              </div>
+
+              <div className="max-w-2xl space-y-5 text-[1rem] leading-8 text-[var(--lpv-muted)]">
+                <p>
+                  La sélection regarde du côté des petits producteurs et des
+                  bouteilles qui trouvent naturellement leur place à table.
+                  Des vins capables d’accompagner les épices, les herbes, les
+                  grillades et les assiettes à partager sans prendre toute la
+                  place.
+                </p>
+
+                <p>
+                  La carte évolue avec les arrivages et laisse de la place à
+                  la découverte. On peut arriver avec une idée précise ou
+                  simplement choisir son prochain verre en fonction de ce
+                  qu’on mange.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          {/* BOUTEILLES */}
+          {placeWines.length ? (
+            <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+              <div className="lpv-container pb-16 pt-10 md:pb-20 md:pt-14">
+                <div className="md:pl-10">
+                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                    Leurs bouteilles.
+                  </h2>
+                </div>
+
+                <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+                  {placeWines.slice(0, 5).map((wine) => (
+                    <Link
+                      key={wine._id}
+                      href={`/vins/${wine.slug}`}
+                      className="group relative flex min-h-[390px] flex-col bg-[var(--lpv-paper-light)] p-5 md:min-h-[450px] md:p-6"
+                    >
+                      <div className="flex h-[235px] items-center justify-center py-4 md:h-[285px]">
+                        <BottleStage
+                          image={wine.bottleImage}
+                          alt={wine.name ?? "Bouteille de vin"}
+                          color={wine.color ?? undefined}
+                          variant="card"
+                          className="h-full max-h-[255px] transition-transform duration-500 ease-out group-hover:-translate-y-1 md:max-h-[270px]"
+                        />
+                      </div>
+
+                      <div className="mt-auto border-t border-[var(--lpv-line)] pt-4">
+                        <p className="text-[0.52rem] uppercase tracking-[0.17em] text-[var(--lpv-muted)]">
+                          {[formatColor(wine.color), wine.vintage]
+                            .filter(Boolean)
+                            .join(" · ") || "Vin"}
+                        </p>
+
+                        <h3 className="lpv-display mt-3 min-h-[3.4rem] text-[clamp(1.45rem,1.6vw,1.75rem)] leading-[0.94] tracking-[-0.035em]">
+                          {wine.name}
+                        </h3>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : (
+            <section className="pb-4 pt-3 md:pb-8 md:pt-5">
+              <div>
+                <div className="md:pl-10">
+                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                    Leurs bouteilles.
+                  </h2>
+                </div>
+
+                <div className="mt-8 flex min-h-[180px] items-center justify-center px-6 py-10 text-center md:mt-10 md:min-h-[210px] md:py-12">
+                  <div>
+                    <p className="lpv-display text-[clamp(1.9rem,2.7vw,3rem)] leading-[0.92] tracking-[-0.04em]">
+                      On y travaille ;)
+                    </p>
+
+                    <p className="mx-auto mt-5 max-w-[520px] text-[0.95rem] leading-7 text-[var(--lpv-muted)]">
+                      Notre sélection de bouteilles à découvrir chez Beyt arrive bientôt.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Y ALLER */}
+          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
+            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+
+              <div className="md:pl-10">
+                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                  Passer chez Beyt.
+                </h2>
+
+                {place.address ? (
+                  <p className="mt-8 max-w-[29ch] text-[1.05rem] leading-7 text-[var(--lpv-ink)]/72">
+                    {place.address}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="md:pt-1">
+                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
+
+                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                      Type
+                    </p>
+                    <p className="text-[0.95rem]">
+                      Cave à manger
+                    </p>
+                  </div>
+
+                  {place.website ? (
+                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Site officiel
+                      </p>
+                      <a
+                        href={place.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                      >
+                        {place.website
+                          .replace(/^https?:\/\//, "")
+                          .replace(/^www\./, "")
+                          .replace(/\/$/, "")}
+                      </a>
+                    </div>
+                  ) : null}
+
+                  {place.instagram ? (
+                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Instagram
+                      </p>
+                      <a
+                        href={place.instagram}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                      >
+                        @beytcaveamanger
+                      </a>
+                    </div>
+                  ) : null}
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+        </article>
+      </main>
+    );
+  }
+
+  const usePastekPartnerLayout =
+    place.lpvPartner === true && slug === "buvette-pastek";
+
+  if (usePastekPartnerLayout) {
+    const pastekHighlights = [
+      {
+        title: "Au cœur du Vieux-Montréal",
+        text: "Une buvette sur Saint-Paul où l’on peut passer pour un verre, partager quelques assiettes et facilement prolonger la soirée.",
+      },
+      {
+        title: "Une sélection qui bouge",
+        text: "Des vins nature, des importations privées et des bouteilles choisies pour donner envie de découvrir autre chose.",
+      },
+      {
+        title: "La table compte aussi",
+        text: "Une cuisine de saison pensée pour le partage et pour accompagner naturellement ce qui se trouve dans les verres.",
+      },
+    ];
+
+    return (
+      <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+        <article className="lpv-container pb-24">
+
+          <div className="pt-8 md:pt-10">
+            <Link
+              href="/bonnes-adresses"
+              className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
+            >
+              <span aria-hidden="true">←</span>
+              <span>Bonnes adresses</span>
+            </Link>
+          </div>
+
+          {/* HERO */}
+          <section className="pt-8 md:pt-10">
+            <div className="grid gap-10 md:grid-cols-[0.41fr_0.59fr] md:items-center md:gap-14">
+              <div className="md:flex md:min-h-[31rem] md:translate-x-8 md:flex-col md:justify-center md:pr-6">
+                <h1 className="lpv-display max-w-[8ch] text-[clamp(5.6rem,7.6vw,8.4rem)] leading-[0.79] tracking-[-0.065em]">
+                  Buvette Pastek
+                </h1>
+
+                <p className="mt-9 max-w-[29ch] text-[clamp(1.05rem,1.25vw,1.25rem)] leading-[1.42] tracking-[-0.02em]">
+                  Le genre d’endroit où un verre en appelle souvent un autre.
+                </p>
+
+                <p className="mt-8 text-[0.6rem] uppercase tracking-[0.19em] text-[var(--lpv-muted)]">
+                  Montréal, Québec
+                </p>
+              </div>
+
+              <figure>
+                <div className="aspect-[1.48/1] overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/pastek1.jpg"
+                    alt="Buvette Pastek à Montréal"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Buvette Pastek
+                </figcaption>
+              </figure>
+            </div>
+          </section>
+
+          {/* L'ADRESSE */}
+          <section className="pb-16 pt-8 md:pb-20 md:pt-10">
+            <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
+              <figure className="w-full md:w-[570px]">
+                <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/pastek2.jpg"
+                    alt="Chez Buvette Pastek"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Buvette Pastek
+                </figcaption>
+              </figure>
+
+              <div className="flex items-center">
+                <div className="mx-auto max-w-[39rem]">
+                  <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                    L’adresse
+                  </p>
+
+                  <div className="mt-8 space-y-5 text-[1.08rem] leading-8 md:text-[1.12rem] md:leading-9">
+                    <p>
+                      Sur la rue Saint-Paul, Buvette Pastek réunit tout ce
+                      qu’on aime d’un bar à vin sans rendre l’expérience
+                      compliquée. On peut y passer pour boire un verre,
+                      découvrir une bouteille et partager quelques assiettes,
+                      puis décider que finalement, on reste.
+                    </p>
+
+                    <p>
+                      La cuisine suit les saisons et le vin occupe une vraie
+                      place à table. La sélection fait la part belle aux vins
+                      nature et aux importations privées, avec assez de
+                      mouvement pour qu’il y ait toujours quelque chose de
+                      nouveau à essayer.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* TROIS CHOSES */}
+          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+              Trois choses à savoir.
+            </h2>
+
+            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+              {pastekHighlights.map((item, index) => (
+                <article
+                  key={item.title}
+                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                    index > 0
+                      ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
+                      : ""
+                  }`}
+                >
+                  <p className="text-[0.58rem] tracking-[0.2em] text-[var(--lpv-muted)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+
+                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                    {item.title}
+                  </h3>
+
+                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                    {item.text}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* POURQUOI PASTEK */}
+          <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-cocoa)] text-[var(--lpv-paper)]">
+            <div className="lpv-container py-16 md:py-20">
+              <div className="grid gap-10 md:grid-cols-[0.38fr_0.62fr] md:items-center md:gap-16">
+                <div>
+                  <h2 className="lpv-display max-w-[8ch] text-[clamp(3.5rem,4.8vw,5.3rem)] leading-[0.87] tracking-[-0.055em]">
+                    Pourquoi Pastek.
+                  </h2>
+
+                  <p className="mt-6 max-w-[28ch] text-[1rem] leading-[1.5] opacity-70">
+                    Une place ici se mérite. Voilà ce qui nous a convaincus.
+                  </p>
+                </div>
+
+                <p className="max-w-[42ch] text-[clamp(1.25rem,1.55vw,1.6rem)] leading-[1.3] tracking-[-0.025em]">
+                  Pastek fait partie de ces endroits où le vin est pris au
+                  sérieux sans que l’ambiance le devienne. La sélection donne
+                  envie d’essayer, la cuisine suit et le conseil reste
+                  accessible. Une adresse où la découverte se fait simplement,
+                  autour d’une bonne bouteille et de quelque chose à partager.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* LE VIN CHEZ PASTEK */}
+          <section className="py-16 md:py-24">
+            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+              <div className="md:pl-10">
+                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                  Le vin chez Pastek.
+                </h2>
+              </div>
+
+              <div className="max-w-2xl space-y-5 text-[1rem] leading-8 text-[var(--lpv-muted)]">
+                <p>
+                  La carte fait une belle place aux vins nature, aux
+                  importations privées et aux petits producteurs. Elle évolue
+                  au fil des arrivages, avec des bouteilles choisies autant
+                  pour leur personnalité que pour le plaisir de les boire à
+                  table.
+                </p>
+
+                <p>
+                  Pas besoin de connaître le producteur ou l’appellation avant
+                  de commander. On peut se laisser guider, essayer quelque
+                  chose de nouveau ou simplement trouver la bouteille qui ira
+                  bien avec le repas.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* LEURS BOUTEILLES */}
+          {placeWines.length ? (
+            <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+              <div className="lpv-container pb-16 pt-10 md:pb-20 md:pt-14">
+                <div className="md:pl-10">
+                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                    Leurs bouteilles.
+                  </h2>
+                </div>
+
+                <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+                  {placeWines.slice(0, 5).map((wine) => (
+                    <Link
+                      key={wine._id}
+                      href={`/vins/${wine.slug}`}
+                      className="group relative flex min-h-[390px] flex-col bg-[var(--lpv-paper-light)] p-5 md:min-h-[450px] md:p-6"
+                    >
+                      <div className="flex h-[235px] items-center justify-center py-4 md:h-[285px]">
+                        <BottleStage
+                          image={wine.bottleImage}
+                          alt={wine.name ?? "Bouteille de vin"}
+                          color={wine.color ?? undefined}
+                          variant="card"
+                          className="h-full max-h-[255px] transition-transform duration-500 ease-out group-hover:-translate-y-1 md:max-h-[270px]"
+                        />
+                      </div>
+
+                      <div className="mt-auto border-t border-[var(--lpv-line)] pt-4">
+                        <p className="text-[0.52rem] uppercase tracking-[0.17em] text-[var(--lpv-muted)]">
+                          {[formatColor(wine.color), wine.vintage]
+                            .filter(Boolean)
+                            .join(" · ") || "Vin"}
+                        </p>
+
+                        <h3 className="lpv-display mt-3 min-h-[3.4rem] text-[clamp(1.45rem,1.6vw,1.75rem)] leading-[0.94] tracking-[-0.035em]">
+                          {wine.name}
+                        </h3>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : (
+            <section className="pb-4 pt-3 md:pb-8 md:pt-5">
+              <div>
+                <div className="md:pl-10">
+                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                    Leurs bouteilles.
+                  </h2>
+                </div>
+
+                <div className="mt-8 flex min-h-[180px] items-center justify-center px-6 py-10 text-center md:mt-10 md:min-h-[210px] md:py-12">
+                  <div>
+                    <p className="lpv-display text-[clamp(1.9rem,2.7vw,3rem)] leading-[0.92] tracking-[-0.04em]">
+                      On y travaille ;)
+                    </p>
+
+                    <p className="mx-auto mt-5 max-w-[520px] text-[0.95rem] leading-7 text-[var(--lpv-muted)]">
+                      Notre sélection de bouteilles à découvrir chez Pastek arrive bientôt.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* PASSER CHEZ PASTEK */}
+          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
+            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+              <div className="md:pl-10">
+                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                  Passer chez Pastek.
+                </h2>
+
+                {place.address ? (
+                  <p className="mt-8 max-w-[29ch] text-[1.05rem] leading-7 text-[var(--lpv-ink)]/72">
+                    {place.address}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="md:pt-1">
+                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
+                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                      Type
+                    </p>
+                    <p className="text-[0.95rem]">
+                      Bar à vin
+                    </p>
+                  </div>
+
+                  {place.website ? (
+                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Site web
+                      </p>
+                      <a
+                        href={place.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                      >
+                        {place.website
+                          .replace(/^https?:\/\//, "")
+                          .replace(/^www\./, "")
+                          .replace(/\/$/, "")}
+                      </a>
+                    </div>
+                  ) : null}
+
+                  {place.instagram ? (
+                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Instagram
+                      </p>
+                      <a
+                        href={place.instagram}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                      >
+                        @buvettepastek
+                      </a>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </article>
+      </main>
+    );
+  }
+
+  const useCandidePartnerLayout =
+    place.lpvPartner === true && slug === "candide";
+
+  if (useCandidePartnerLayout) {
+    const candideHighlights = [
+      {
+        title: "Dans un ancien presbytère",
+        text: "Candide s’est installé dans un ancien presbytère de la Petite-Bourgogne, un lieu qui donne tout de suite une identité particulière à l’expérience.",
+      },
+      {
+        title: "Le Québec au fil des saisons",
+        text: "La cuisine évolue avec les saisons et les arrivages, en accordant une place importante aux producteurs et aux ingrédients d’ici.",
+      },
+      {
+        title: "Les vignerons avant les étiquettes",
+        text: "La carte met de l’avant celles et ceux qui font le vin, avec une attention particulière portée à leur travail et à leur façon de cultiver.",
+      },
+    ];
+
+    return (
+      <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+        <article className="lpv-container pb-24">
+
+          <div className="pt-8 md:pt-10">
+            <Link
+              href="/bonnes-adresses"
+              className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
+            >
+              <span aria-hidden="true">←</span>
+              <span>Bonnes adresses</span>
+            </Link>
+          </div>
+
+          {/* HERO */}
+          <section className="pt-8 md:pt-10">
+            <div className="grid gap-10 md:grid-cols-[0.41fr_0.59fr] md:items-center md:gap-14">
+              <div className="md:flex md:min-h-[31rem] md:translate-x-8 md:flex-col md:justify-center md:pr-6">
+                <h1 className="lpv-display max-w-[8ch] text-[clamp(5.6rem,7.6vw,8.4rem)] leading-[0.79] tracking-[-0.065em]">
+                  Candide
+                </h1>
+
+                <p className="mt-9 max-w-[29ch] text-[clamp(1.05rem,1.25vw,1.25rem)] leading-[1.42] tracking-[-0.02em]">
+                  Une cuisine d’ici, des saisons et des vins choisis avec la même attention.
+                </p>
+
+                <p className="mt-8 text-[0.6rem] uppercase tracking-[0.19em] text-[var(--lpv-muted)]">
+                  Montréal, Québec
+                </p>
+              </div>
+
+              <figure>
+                <div className="aspect-[1.48/1] overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/candide1.jpg"
+                    alt="Restaurant Candide à Montréal"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Candide
+                </figcaption>
+              </figure>
+            </div>
+          </section>
+
+          {/* L'ADRESSE */}
+          <section className="pb-16 pt-8 md:pb-20 md:pt-10">
+            <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
+              <figure className="w-full md:w-[570px]">
+                <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/candide2.jpg"
+                    alt="Chez Candide à Montréal"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Candide
+                </figcaption>
+              </figure>
+
+              <div className="flex items-center">
+                <div className="mx-auto max-w-[39rem]">
+                  <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                    L’adresse
+                  </p>
+
+                  <div className="mt-8 space-y-5 text-[1.08rem] leading-8 md:text-[1.12rem] md:leading-9">
+                    <p>
+                      Installé dans un ancien presbytère de la
+                      Petite-Bourgogne, Candide propose une cuisine québécoise
+                      qui évolue au rythme des saisons et des arrivages. Le
+                      menu change régulièrement, avec une attention
+                      particulière portée aux producteurs et aux ingrédients
+                      d’ici.
+                    </p>
+
+                    <p>
+                      Le vin fait pleinement partie de l’expérience. La carte
+                      s’intéresse aux vigneronnes et aux vignerons derrière
+                      les bouteilles et laisse une vraie place à la
+                      découverte, au conseil et aux échanges autour du vin.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* TROIS CHOSES */}
+          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+              Trois choses à savoir.
+            </h2>
+
+            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+              {candideHighlights.map((item, index) => (
+                <article
+                  key={item.title}
+                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                    index > 0
+                      ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
+                      : ""
+                  }`}
+                >
+                  <p className="text-[0.58rem] tracking-[0.2em] text-[var(--lpv-muted)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+
+                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                    {item.title}
+                  </h3>
+
+                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                    {item.text}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* POURQUOI CANDIDE */}
+          <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-cocoa)] text-[var(--lpv-paper)]">
+            <div className="lpv-container py-16 md:py-20">
+              <div className="grid gap-10 md:grid-cols-[0.38fr_0.62fr] md:items-center md:gap-16">
+                <div>
+                  <h2 className="lpv-display max-w-[8ch] text-[clamp(3.5rem,4.8vw,5.3rem)] leading-[0.87] tracking-[-0.055em]">
+                    Pourquoi Candide.
+                  </h2>
+
+                  <p className="mt-6 max-w-[28ch] text-[1rem] leading-[1.5] opacity-70">
+                    Une place ici se mérite. Voilà ce qui nous a convaincus.
+                  </p>
+                </div>
+
+                <p className="max-w-[42ch] text-[clamp(1.25rem,1.55vw,1.6rem)] leading-[1.3] tracking-[-0.025em]">
+                  Candide réunit deux choses qu’on aime voir ensemble. Une
+                  cuisine profondément liée à son territoire et une carte des
+                  vins qui s’intéresse autant aux personnes derrière les
+                  bouteilles qu’à ce qu’il y a dans le verre. Le résultat est
+                  une expérience cohérente où le vin accompagne réellement la
+                  table et où la curiosité a toute sa place.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* LE VIN CHEZ CANDIDE */}
+          <section className="py-16 md:py-24">
+            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+              <div className="md:pl-10">
+                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                  Le vin chez Candide.
+                </h2>
+              </div>
+
+              <div className="max-w-2xl space-y-5 text-[1rem] leading-8 text-[var(--lpv-muted)]">
+                <p>
+                  La carte est construite autour des vigneronnes et des
+                  vignerons derrière les bouteilles, avec une attention
+                  particulière portée aux producteurs qui travaillent leur
+                  agriculture et leur terroir avec soin.
+                </p>
+
+                <p>
+                  Le vin est pensé avec la cuisine plutôt qu’à côté d’elle.
+                  On peut suivre les accords, explorer la carte ou simplement
+                  demander conseil. Une façon accessible de découvrir de
+                  nouveaux producteurs tout en comprenant un peu mieux ce
+                  qu’on boit.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* LEURS BOUTEILLES */}
+          {placeWines.length ? (
+            <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+              <div className="lpv-container pb-16 pt-10 md:pb-20 md:pt-14">
+                <div className="md:pl-10">
+                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                    Leurs bouteilles.
+                  </h2>
+                </div>
+
+                <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+                  {placeWines.slice(0, 5).map((wine) => (
+                    <Link
+                      key={wine._id}
+                      href={`/vins/${wine.slug}`}
+                      className="group relative flex min-h-[390px] flex-col bg-[var(--lpv-paper-light)] p-5 md:min-h-[450px] md:p-6"
+                    >
+                      <div className="flex h-[235px] items-center justify-center py-4 md:h-[285px]">
+                        <BottleStage
+                          image={wine.bottleImage}
+                          alt={wine.name ?? "Bouteille de vin"}
+                          color={wine.color ?? undefined}
+                          variant="card"
+                          className="h-full max-h-[255px] transition-transform duration-500 ease-out group-hover:-translate-y-1 md:max-h-[270px]"
+                        />
+                      </div>
+
+                      <div className="mt-auto border-t border-[var(--lpv-line)] pt-4">
+                        <p className="text-[0.52rem] uppercase tracking-[0.17em] text-[var(--lpv-muted)]">
+                          {[formatColor(wine.color), wine.vintage]
+                            .filter(Boolean)
+                            .join(" · ") || "Vin"}
+                        </p>
+
+                        <h3 className="lpv-display mt-3 min-h-[3.4rem] text-[clamp(1.45rem,1.6vw,1.75rem)] leading-[0.94] tracking-[-0.035em]">
+                          {wine.name}
+                        </h3>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : (
+            <section className="pb-4 pt-3 md:pb-8 md:pt-5">
+              <div>
+                <div className="md:pl-10">
+                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                    Leurs bouteilles.
+                  </h2>
+                </div>
+
+                <div className="mt-8 flex min-h-[180px] items-center justify-center px-6 py-10 text-center md:mt-10 md:min-h-[210px] md:py-12">
+                  <div>
+                    <p className="lpv-display text-[clamp(1.9rem,2.7vw,3rem)] leading-[0.92] tracking-[-0.04em]">
+                      On y travaille ;)
+                    </p>
+
+                    <p className="mx-auto mt-5 max-w-[520px] text-[0.95rem] leading-7 text-[var(--lpv-muted)]">
+                      Notre sélection de bouteilles à découvrir chez Candide arrive bientôt.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* PASSER CHEZ CANDIDE */}
+          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
+            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+              <div className="md:pl-10">
+                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                  Passer chez Candide.
+                </h2>
+
+                {place.address ? (
+                  <p className="mt-8 max-w-[29ch] text-[1.05rem] leading-7 text-[var(--lpv-ink)]/72">
+                    {place.address}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="md:pt-1">
+                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
+                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                      Type
+                    </p>
+                    <p className="text-[0.95rem]">
+                      Restaurant
+                    </p>
+                  </div>
+
+                  {place.website ? (
+                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Site web
+                      </p>
+                      <a
+                        href={place.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                      >
+                        {place.website
+                          .replace(/^https?:\/\//, "")
+                          .replace(/^www\./, "")
+                          .replace(/\/$/, "")}
+                      </a>
+                    </div>
+                  ) : null}
+
+                  {place.instagram ? (
+                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Instagram
+                      </p>
+                      <a
+                        href={place.instagram}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                      >
+                        @restaurant_candide
+                      </a>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </article>
+      </main>
+    );
+  }
+
+  const useVinDansLesVoilesPartnerLayout =
+    place.lpvPartner === true && slug === "le-vin-dans-les-voiles";
+
+  if (useVinDansLesVoilesPartnerLayout) {
+    const vinDansLesVoilesHighlights = [
+      {
+        title: "Depuis 2015",
+        text: "Fondée à Montréal par Julie Audette et Valériane Paré, l’agence travaille depuis 2015 à faire découvrir les vins et les vignerons qu’elle représente.",
+      },
+      {
+        title: "Près de 60 vignerons",
+        text: "Le portfolio rassemble près de 60 vigneronnes et vignerons sélectionnés pour leur travail, leur approche et les vins qu’ils ont envie de faire.",
+      },
+      {
+        title: "Au-delà de l’importation",
+        text: "Dégustations, ateliers et événements permettent aussi de rencontrer les vins autrement et de mieux comprendre ce qui se trouve dans le verre.",
+      },
+    ];
+
+    return (
+      <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+        <article className="lpv-container pb-24">
+
+          <div className="pt-8 md:pt-10">
+            <Link
+              href="/bonnes-adresses"
+              className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
+            >
+              <span aria-hidden="true">←</span>
+              <span>Bonnes adresses</span>
+            </Link>
+          </div>
+
+          {/* HERO */}
+          <section className="pt-8 md:pt-10">
+            <div className="grid gap-10 md:grid-cols-[0.41fr_0.59fr] md:items-center md:gap-14">
+              <div className="md:flex md:min-h-[31rem] md:translate-x-8 md:flex-col md:justify-center md:pr-6">
+                <h1 className="lpv-display max-w-[9ch] text-[clamp(4.8rem,6.7vw,7.5rem)] leading-[0.79] tracking-[-0.065em]">
+                  Le vin dans les voiles
+                </h1>
+
+                <p className="mt-9 max-w-[29ch] text-[clamp(1.05rem,1.25vw,1.25rem)] leading-[1.42] tracking-[-0.02em]">
+                  Des vignerons d’ailleurs, des bouteilles à découvrir ici.
+                </p>
+
+                <p className="mt-8 text-[0.6rem] uppercase tracking-[0.19em] text-[var(--lpv-muted)]">
+                  Montréal, Québec
+                </p>
+              </div>
+
+              <figure>
+                <div className="aspect-[1.48/1] overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/vindanslesvoiles1.jpg"
+                    alt="Le vin dans les voiles"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Le vin dans les voiles
+                </figcaption>
+              </figure>
+            </div>
+          </section>
+
+          {/* L'AGENCE */}
+          <section className="pb-16 pt-8 md:pb-20 md:pt-10">
+            <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
+              <figure className="w-full md:w-[570px]">
+                <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/vindanslesvoiles2.jpg"
+                    alt="Les vins du Vin dans les voiles"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Le vin dans les voiles
+                </figcaption>
+              </figure>
+
+              <div className="flex items-center">
+                <div className="mx-auto max-w-[39rem]">
+                  <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                    L’agence
+                  </p>
+
+                  <div className="mt-8 space-y-5 text-[1.08rem] leading-8 md:text-[1.12rem] md:leading-9">
+                    <p>
+                      Fondé à Montréal en 2015 par Julie Audette et Valériane
+                      Paré, Le vin dans les voiles est une agence
+                      d’importation privée spécialisée dans les vins naturels.
+                      Son portfolio rassemble aujourd’hui près de 60
+                      vigneronnes et vignerons.
+                    </p>
+
+                    <p>
+                      Leur travail ne s’arrête pas à faire voyager les
+                      bouteilles jusqu’au Québec. L’agence organise aussi des
+                      dégustations, des ateliers et des événements qui donnent
+                      l’occasion de découvrir les vins, les personnes qui les
+                      font et les histoires derrière eux.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* TROIS CHOSES */}
+          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+              Trois choses à savoir.
+            </h2>
+
+            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+              {vinDansLesVoilesHighlights.map((item, index) => (
+                <article
+                  key={item.title}
+                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                    index > 0
+                      ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
+                      : ""
+                  }`}
+                >
+                  <p className="text-[0.58rem] tracking-[0.2em] text-[var(--lpv-muted)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+
+                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                    {item.title}
+                  </h3>
+
+                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                    {item.text}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* POURQUOI */}
+          <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-cocoa)] text-[var(--lpv-paper)]">
+            <div className="lpv-container py-16 md:py-20">
+              <div className="grid gap-10 md:grid-cols-[0.38fr_0.62fr] md:items-center md:gap-16">
+                <div>
+                  <h2 className="lpv-display max-w-[9ch] text-[clamp(3.5rem,4.8vw,5.3rem)] leading-[0.87] tracking-[-0.055em]">
+                    Pourquoi Le vin dans les voiles.
+                  </h2>
+
+                  <p className="mt-6 max-w-[28ch] text-[1rem] leading-[1.5] opacity-70">
+                    Une place ici se mérite. Voilà ce qui nous a convaincus.
+                  </p>
+                </div>
+
+                <p className="max-w-[42ch] text-[clamp(1.25rem,1.55vw,1.6rem)] leading-[1.3] tracking-[-0.025em]">
+                  Parce qu’une bouteille arrive rarement seule. Derrière elle,
+                  il y a un vigneron, un lieu et une façon de travailler.
+                  Le vin dans les voiles fait le lien entre ces producteurs
+                  et le Québec, puis crée des occasions de les découvrir et
+                  de mieux comprendre ce qu’on boit.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* LE VIN */}
+          <section className="py-16 md:py-24">
+            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+              <div className="md:pl-10">
+                <h2 className="lpv-display max-w-[9ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                  Le vin dans leurs voiles.
+                </h2>
+              </div>
+
+              <div className="max-w-2xl space-y-5 text-[1rem] leading-8 text-[var(--lpv-muted)]">
+                <p>
+                  Le portfolio est consacré aux vins naturels et réunit près
+                  de 60 vigneronnes et vignerons. Chaque producteur arrive
+                  avec son territoire, ses cépages et sa manière de travailler,
+                  ce qui donne une sélection volontairement diversifiée.
+                </p>
+
+                <p>
+                  Pour les découvrir, on peut suivre les arrivages de l’agence,
+                  participer à une dégustation ou à un atelier, ou encore
+                  commander les vins disponibles en importation privée.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* LEURS BOUTEILLES */}
+          {placeWines.length ? (
+            <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+              <div className="lpv-container pb-16 pt-10 md:pb-20 md:pt-14">
+                <div className="md:pl-10">
+                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                    Leurs bouteilles.
+                  </h2>
+                </div>
+
+                <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+                  {placeWines.slice(0, 5).map((wine) => (
+                    <Link
+                      key={wine._id}
+                      href={`/vins/${wine.slug}`}
+                      className="group relative flex min-h-[390px] flex-col bg-[var(--lpv-paper-light)] p-5 md:min-h-[450px] md:p-6"
+                    >
+                      <div className="flex h-[235px] items-center justify-center py-4 md:h-[285px]">
+                        <BottleStage
+                          image={wine.bottleImage}
+                          alt={wine.name ?? "Bouteille de vin"}
+                          color={wine.color ?? undefined}
+                          variant="card"
+                          className="h-full max-h-[255px] transition-transform duration-500 ease-out group-hover:-translate-y-1 md:max-h-[270px]"
+                        />
+                      </div>
+
+                      <div className="mt-auto border-t border-[var(--lpv-line)] pt-4">
+                        <p className="text-[0.52rem] uppercase tracking-[0.17em] text-[var(--lpv-muted)]">
+                          {[formatColor(wine.color), wine.vintage]
+                            .filter(Boolean)
+                            .join(" · ") || "Vin"}
+                        </p>
+
+                        <h3 className="lpv-display mt-3 min-h-[3.4rem] text-[clamp(1.45rem,1.6vw,1.75rem)] leading-[0.94] tracking-[-0.035em]">
+                          {wine.name}
+                        </h3>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : (
+            <section className="pb-4 pt-3 md:pb-8 md:pt-5">
+              <div>
+                <div className="md:pl-10">
+                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                    Leurs bouteilles.
+                  </h2>
+                </div>
+
+                <div className="mt-8 flex min-h-[180px] items-center justify-center px-6 py-10 text-center md:mt-10 md:min-h-[210px] md:py-12">
+                  <div>
+                    <p className="lpv-display text-[clamp(1.9rem,2.7vw,3rem)] leading-[0.92] tracking-[-0.04em]">
+                      On y travaille ;)
+                    </p>
+
+                    <p className="mx-auto mt-5 max-w-[520px] text-[0.95rem] leading-7 text-[var(--lpv-muted)]">
+                      Notre sélection de bouteilles du Vin dans les voiles arrive bientôt.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* DÉCOUVRIR */}
+          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
+            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+              <div className="md:pl-10">
+                <h2 className="lpv-display max-w-[9ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                  Découvrir Le vin dans les voiles.
+                </h2>
+              </div>
+
+              <div className="md:pt-1">
+                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
+                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                      Type
+                    </p>
+                    <p className="text-[0.95rem]">
+                      Agence d’importation privée
+                    </p>
+                  </div>
+
+                  {place.website ? (
+                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Site web
+                      </p>
+                      <a
+                        href={place.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                      >
+                        {place.website
+                          .replace(/^https?:\/\//, "")
+                          .replace(/^www\./, "")
+                          .replace(/\/$/, "")}
+                      </a>
+                    </div>
+                  ) : null}
+
+                  {place.instagram ? (
+                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
+                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                        Instagram
+                      </p>
+                      <a
+                        href={place.instagram}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                      >
+                        @levindanslesvoiles
+                      </a>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </article>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
+      <article className="lpv-container pb-24">
+        <div className="pt-8 md:pt-10">
+          <Link href="/bonnes-adresses" className="lpv-text-link">
+            <span>←</span> Retour aux bonnes adresses
+          </Link>
+        </div>
+
+        <section className="border-b border-[var(--lpv-line)] pb-16 pt-10 md:pb-24 md:pt-16">
+          {imageSrc ? (
+            <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr]">
+              <div className="lg:sticky lg:top-24 lg:self-start">
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  {formatType(place.type)}
+                </p>
+
+                <h1 className="lpv-display mt-7 text-[clamp(4.5rem,8vw,8.5rem)] leading-[0.84]">
+                  {place.name}
+                </h1>
+
+                <p className="mt-8 max-w-lg text-lg leading-8 text-[var(--lpv-muted)]">
+                  {[place.city, place.region]
+                    .filter(Boolean)
+                    .join(" · ") || "Adresse à découvrir"}
+                </p>
+
+                {place.website ? (
+                  <div className="mt-10 border-t border-[var(--lpv-line)] pt-7">
+                    <a
+                      href={place.website}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="lpv-text-link"
+                    >
+                      Site web <span>↗</span>
+                    </a>
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="overflow-hidden bg-[var(--lpv-paper-light)]">
+                <img
+                  src={imageSrc}
+                  alt={place.name}
+                  className="min-h-[620px] w-full object-cover md:min-h-[780px]"
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="max-w-6xl">
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                {[
+                  formatType(place.type),
+                  place.city,
+                ].filter(Boolean).join(" · ")}
+              </p>
+
+              <h1 className="lpv-display mt-7 max-w-7xl text-[clamp(4rem,8vw,8rem)] leading-[0.82] tracking-[-0.055em]">
+                {place.name}
+              </h1>
+
+            </div>
+          )}
+        </section>
+
+        {facts.length > 0 ? (
+          <section className="grid gap-12 border-b border-[var(--lpv-line)] py-16 md:grid-cols-[0.36fr_0.64fr] md:py-20">
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Informations
+              </p>
+
+              <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-6xl">
+                En bref.
+              </h2>
+            </div>
+
+            <dl>
+              {facts.map(([label, value], index) => (
+                <div
+                  key={label}
+                  className={`grid gap-2 py-5 sm:grid-cols-[180px_1fr] ${
+                    index === 0
+                      ? ""
+                      : "border-t border-[var(--lpv-line)]"
+                  }`}
+                >
+                  <dt className="lpv-kicker text-[var(--lpv-muted)]">
+                    {label}
+                  </dt>
+
+                  <dd className="text-lg leading-7 text-[var(--lpv-ink)]">
+                    {label === "Site web" ? (
+                      <a
+                        href={value}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="lpv-text-link"
+                      >
+                        Visiter le site <span>↗</span>
+                      </a>
+                    ) : (
+                      value
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ) : null}
+
+        {place.description?.length ? (
+          <section className="grid gap-10 py-16 md:grid-cols-[0.38fr_0.62fr] md:py-24">
+            <div>
+              <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                Le lieu
+              </p>
+
+              <h2 className="lpv-display mt-6 text-5xl leading-[0.9] md:text-6xl">
+                Pourquoi y aller.
+              </h2>
+            </div>
+
+            <div className="lpv-prose max-w-2xl">
+              <PortableText value={place.description} />
+            </div>
+          </section>
+        ) : null}
+
+        {placeWines.length ? (
+          <section className="border-b border-[var(--lpv-line)] py-16 md:py-24">
+            <div className="flex items-end justify-between border-b border-[var(--lpv-line)] pb-7">
+              <div>
+                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                  À boire ici
+                </p>
+
+                <h2 className="lpv-display mt-5 text-5xl leading-none md:text-7xl">
+                  Les vins.
+                </h2>
+              </div>
+
+              <Link href="/vins" className="lpv-text-link hidden sm:inline-flex">
+                Tous les vins <span>→</span>
+              </Link>
+            </div>
+
+            <div className="grid gap-x-8 md:grid-cols-2 xl:grid-cols-3 xl:gap-x-12">
+              {placeWines.map((wine) => {
+                const price = formatPrice(wine.approxPrice);
+
+                return (
+                  <article
+                    key={wine._id}
+                    className="group flex min-w-0 flex-col border-b border-[var(--lpv-line)] pt-10 pb-3"
+                  >
+                    <Link
+                      href={`/vins/${wine.slug}`}
+                      className="block w-full"
+                    >
+                      <BottleStage
+                        image={wine.bottleImage}
+                        alt={wine.name ?? "Bouteille de vin"}
+                        color={wine.color ?? undefined}
+                        variant="card"
+                        className="transition duration-700 group-hover:scale-[1.025]"
+                      />
+                    </Link>
+
+                    <div className="pt-7">
+                      <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+                        {[formatColor(wine.color), wine.vintage]
+                          .filter(Boolean)
+                          .join(" · ") || "Vin"}
+                      </p>
+
+                      <Link href={`/vins/${wine.slug}`}>
+                        <h3 className="lpv-display mt-5 text-4xl leading-[0.92] transition-opacity group-hover:opacity-60 md:text-5xl">
+                          {wine.name}
+                        </h3>
+                      </Link>
+
+                      <div className="mt-7 flex items-end justify-between gap-6 border-t border-[var(--lpv-line)] pt-8 pb-1">
+                        {price ? (
+                          <p className="text-sm">{price}</p>
+                        ) : (
+                          <span />
+                        )}
+
+                        <Link
+                          href={`/vins/${wine.slug}`}
+                          className="lpv-text-link"
+                        >
+                          Voir <span>→</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        ) : null}
+      </article>
+    </main>
+  );
+}
