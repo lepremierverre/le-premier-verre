@@ -18,6 +18,7 @@ export default function ClerkLocaleProvider({
     <ClerkProvider
       localization={isEn ? enUS : frFR}
       appearance={clerkAppearance}
+      proxyUrl="/__clerk"
     >
       {children}
     </ClerkProvider>
