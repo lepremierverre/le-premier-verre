@@ -459,7 +459,7 @@ const producerPatch = {
       _key:"pervenches-cave",
       _type:"producerApproach",
       title:"Peu d’intervention",
-      text:"Vendanges manuelles, levures spontanées, élevages sur lies et mises sans filtration ou sans sulfite ajouté sur plusieurs cuvées définissent une approche peu interventionniste."
+      text:"Vendanges manuelles, levures spontanées et élevages sur lies définissent une approche peu interventionniste. Selon le millésime et la microbiologie présente, certaines cuvées peuvent recevoir une filtration grossière non stérile avant la mise en bouteilles."
     }
   ],
 
@@ -480,13 +480,15 @@ const producerPatch = {
       _key:"pervenches-cave-en",
       _type:"producerApproach",
       title:"Low intervention",
-      text:"Hand harvesting, spontaneous fermentation, lees ageing and bottling without filtration or added sulphur on several wines define a low-intervention approach."
+      text:"Hand harvesting, spontaneous fermentation and lees ageing define a low-intervention approach. Depending on the vintage and the microbiology present, some wines may receive a coarse, non-sterile filtration before bottling."
     }
   ],
 
   signatureGrapes:[
     ref("grape-chardonnay","perv-chardonnay"),
     ref("grape-pinot-noir","perv-pinot"),
+    ref("grape-pinot-gris","perv-pinot-gris"),
+    ref("grape-zweigelt","perv-zweigelt"),
     ref("grape-seyval","perv-seyval"),
     ref("grape-gewurztraminer","perv-gewurz")
   ],

@@ -223,6 +223,23 @@ export default async function ProducerPage({
       label: "Cépages",
       names: ["Pinot noir", "Gamaret", "Vidal", "Albariño"],
     },
+    "vignoble-de-la-bauge": {
+      label: "Cépages",
+      names: [
+        "Frontenac blanc",
+        "Frontenac gris",
+        "Frontenac noir",
+        "LaCrescent",
+        "Marquette",
+        "Vidal",
+        "Pinot gris",
+        "Gewurztraminer",
+        "Muscat Ottonel",
+        "Cabernet Franc",
+        "Savagnin",
+        "Sauvignon blanc",
+      ],
+    },
     "val-caudalies": {
       label: "Cépages",
       names: [
@@ -739,20 +756,26 @@ export default async function ProducerPage({
 
         {/* HERO */}
         <section className="pt-8 md:pt-10">
-          <div className="grid gap-10 md:grid-cols-[0.41fr_0.59fr] md:items-center md:gap-14">
+          <div className={`grid gap-10 md:items-center md:gap-14 ${
+              producer.slug === "les-pervenches"
+                ? "md:grid-cols-[minmax(0,0.41fr)_minmax(0,0.59fr)]"
+                : "md:grid-cols-[0.41fr_0.59fr]"
+            }`}>
 
             <div className="md:flex md:min-h-[31rem] md:translate-x-8 md:flex-col md:justify-center md:pr-6">
               <h1
                 className={`lpv-display tracking-[-0.065em] ${
-                  producer.name.length > 18
-                    ? `max-w-[8ch] text-[clamp(5.5rem,7.4vw,8.2rem)] ${
-                        producer.slug === "ferme-cidricole-equinoxe"
-                          ? "leading-[0.83]"
-                          : producer.slug === "vignoble-de-la-bauge"
-                            ? "leading-[0.88]"
-                            : "leading-[0.79]"
-                      }`
-                    : "max-w-[8ch] text-[clamp(5.6rem,7.6vw,8.4rem)] leading-[0.79]"
+                  producer.slug === "les-pervenches"
+                    ? "max-w-[8ch] text-[clamp(4.8rem,6.4vw,7.1rem)] leading-[0.79]"
+                    : producer.name.length > 18
+                      ? `max-w-[8ch] text-[clamp(5.5rem,7.4vw,8.2rem)] ${
+                          producer.slug === "ferme-cidricole-equinoxe"
+                            ? "leading-[0.83]"
+                            : producer.slug === "vignoble-de-la-bauge"
+                              ? "leading-[0.88]"
+                              : "leading-[0.79]"
+                        }`
+                      : "max-w-[8ch] text-[clamp(5.6rem,7.6vw,8.4rem)] leading-[0.79]"
                 }`}
               >
                 {producer.name}
@@ -866,7 +889,7 @@ export default async function ProducerPage({
               {producer.approach.slice(0, 3).map((item, index) => (
                 <article
                   key={item._key || `${item.title}-${index}`}
-                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[420px] md:px-9 md:py-11 ${
                     index > 0
                       ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
                       : ""
@@ -890,7 +913,7 @@ export default async function ProducerPage({
                 </article>
               ))}
               {producer.signatureGrapes?.length ? (
-                <article className="relative flex min-h-[320px] flex-col border-t border-[var(--lpv-line)] py-10 md:min-h-[355px] md:border-l md:border-t-0 md:px-9 md:py-11">
+                <article className="relative flex min-h-[320px] flex-col border-t border-[var(--lpv-line)] py-10 md:min-h-[420px] md:border-l md:border-t-0 md:px-9 md:py-11">
                   <p className="text-[0.58rem] tracking-[0.2em] text-[var(--lpv-muted)]">
                     04
                   </p>
