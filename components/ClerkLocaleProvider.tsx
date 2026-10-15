@@ -1,26 +1,23 @@
-"use client";
-
+import React from "react";
 import { ClerkProvider } from "@clerk/nextjs";
-import { enUS, frFR } from "@clerk/localizations";
-import { usePathname } from "next/navigation";
+import { frFR, enUS } from "@clerk/localizations";
 
-import { clerkAppearance } from "@/lib/clerk-theme";
-
-export default function ClerkLocaleProvider({
-  children,
-}: {
+interface ClerkLocaleProviderProps {
   children: React.ReactNode;
-}) {
-  const pathname = usePathname();
-  const isEn = pathname?.startsWith("/en") ?? false;
+  lang?: string;
+}
+
+export function ClerkLocaleProvider({ children, lang = "fr" }: ClerkLocaleProviderProps) {
+  const localization = lang === "en" ? enUS : frFR;
 
   return (
     <ClerkProvider
-      localization={isEn ? enUS : frFR}
-      appearance={clerkAppearance}
+      localization={localization}
       proxyUrl="/__clerk"
     >
       {children}
     </ClerkProvider>
   );
 }
+
+export default ClerkLocaleProvider;
