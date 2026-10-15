@@ -1,10 +1,27 @@
 import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
 
+const clerkAppearance = {
+  elements: {
+    rootBox: "w-full max-w-md mx-auto",
+    card: "shadow-none border-0 bg-transparent p-0 w-full",
+    headerTitle: "hidden",
+    headerSubtitle: "hidden",
+    socialButtonsBlockButton: "w-full bg-transparent border border-[#E5DFD5] text-[#1C1A17] hover:bg-[#EAE4D9] rounded-none py-3 text-xs tracking-widest font-medium uppercase transition-colors mb-4",
+    socialButtonsBlockButtonText: "font-medium tracking-widest uppercase text-xs text-[#1C1A17]",
+    dividerLine: "bg-[#E5DFD5]",
+    dividerText: "text-[#8C8273] text-xs uppercase tracking-widest bg-[#F7F4EE] px-3",
+    formFieldLabel: "text-xs font-semibold uppercase tracking-widest text-[#1C1A17] mb-2",
+    formFieldInput: "w-full bg-white border border-[#E5DFD5] rounded-none px-4 py-3 text-sm text-[#1C1A17] focus:outline-none focus:border-[#1C1A17]",
+    formButtonPrimary: "w-full bg-[#2B2725] hover:bg-black text-white rounded-none py-3 text-xs tracking-widest font-semibold uppercase transition-colors mt-2",
+    footerActionLink: "text-xs font-semibold text-[#1C1A17] underline hover:no-underline",
+    footerActionText: "text-xs text-[#5C5549]",
+  },
+};
+
 export default function ConnexionPage() {
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-[#F7F4EE]">
-      {/* Colonne gauche : Panneau de bienvenue */}
       <div className="p-8 md:p-16 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#E5DFD5]">
         <div>
           <Link href="/" className="inline-block text-xs uppercase tracking-widest text-[#5C5549] hover:text-black mb-12">
@@ -24,29 +41,8 @@ export default function ConnexionPage() {
         </div>
       </div>
 
-      {/* Colonne droite : Widget Clerk avec mise en forme sur mesure */}
       <div className="p-8 md:p-16 flex items-center justify-center">
-        <div className="w-full max-w-md">
-          <SignIn
-            appearance={{
-              elements: {
-                rootBox: "w-full",
-                card: "shadow-none border-0 bg-transparent p-0 w-full",
-                headerTitle: "hidden",
-                headerSubtitle: "hidden",
-                socialButtonsBlockButton: "w-full bg-transparent border border-[#E5DFD5] text-[#1C1A17] hover:bg-[#EAE4D9] rounded-none py-3 text-xs tracking-widest font-medium uppercase transition-colors",
-                socialButtonsBlockButtonText: "font-medium tracking-widest uppercase text-xs text-[#1C1A17]",
-                dividerLine: "bg-[#E5DFD5]",
-                dividerText: "text-[#8C8273] text-xs uppercase tracking-widest bg-[#F7F4EE] px-3",
-                formFieldLabel: "text-xs font-semibold uppercase tracking-widest text-[#1C1A17] mb-2",
-                formFieldInput: "w-full bg-white border border-[#E5DFD5] rounded-none px-4 py-3 text-sm text-[#1C1A17] focus:outline-none focus:border-[#1C1A17]",
-                formButtonPrimary: "w-full bg-[#2B2725] hover:bg-black text-white rounded-none py-3 text-xs tracking-widest font-semibold uppercase transition-colors mt-2",
-                footerActionLink: "text-xs font-semibold text-[#1C1A17] underline hover:no-underline",
-                footerActionText: "text-xs text-[#5C5549]",
-              },
-            }}
-          />
-        </div>
+        <SignIn appearance={clerkAppearance} />
       </div>
     </div>
   );
