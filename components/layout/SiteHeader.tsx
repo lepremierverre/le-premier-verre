@@ -10,28 +10,6 @@ import {
 
 import { SearchButton } from "@/components/search/SearchButton";
 
-const navItemsFr = [
-  ["Ce soir", "/ce-soir"],
-  ["Bouteilles", "/vins"],
-  ["Producteurs", "/producteurs"],
-  ["Régions", "/regions"],
-  ["Cépages", "/cepages"],
-  ["Accords", "/accords"],
-  ["Bonnes adresses", "/bonnes-adresses"],
-  ["À lire", "/guides"],
-];
-
-const navItemsEn = [
-  ["Tonight", "/en/tonight"],
-  ["Bottles", "/en/wines"],
-  ["Producers", "/en/producers"],
-  ["Regions", "/en/regions"],
-  ["Grapes", "/en/grapes"],
-  ["Pairings", "/en/pairings"],
-  ["Places", "/en/places"],
-  ["Read", "/en/guides"],
-];
-
 const bilingualRoutes = [
   ["/ce-soir", "/en/tonight"],
   ["/vins", "/en/wines"],
@@ -157,7 +135,7 @@ export function SiteHeader() {
   return (
     <>
       <header className="relative z-[9000] border-b border-[var(--lpv-line)] bg-[var(--lpv-paper)]">
-        <div className="lpv-container flex h-[78px] items-center justify-between">
+        <div className="w-full px-4 sm:px-8 md:px-12 flex h-[78px] items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-5">
             <button
               type="button"
@@ -208,12 +186,7 @@ export function SiteHeader() {
 
             <SearchButton locale={locale} />
 
-            {!isLoaded ? (
-              <span
-                aria-hidden="true"
-                className="h-9 w-9 animate-pulse rounded-full border border-[var(--lpv-line)]"
-              />
-            ) : isSignedIn ? (
+            {isSignedIn ? (
               <div
                 ref={accountRef}
                 className="relative"
@@ -229,7 +202,7 @@ export function SiteHeader() {
                 </button>
 
                 {accountOpen ? (
-                  <div className="absolute right-0 top-[calc(100%+12px)] w-[250px] border border-[var(--lpv-line)] bg-[var(--lpv-paper)] px-5 py-5">
+                  <div className="absolute right-0 top-[calc(100%+12px)] w-[250px] border border-[var(--lpv-line)] bg-[var(--lpv-paper)] px-5 py-5 shadow-lg">
                     <div className="pb-5">
                       <p className="truncate text-[15px] font-medium leading-5 text-[var(--lpv-ink)]">
                         {user.fullName ||
@@ -287,9 +260,10 @@ export function SiteHeader() {
             ) : (
               <Link
                 href={isEnglish ? "/en/sign-in" : "/connexion"}
-                className="hidden text-[0.68rem] font-semibold uppercase tracking-[0.18em] transition-opacity hover:opacity-50 sm:inline"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--lpv-ink)] text-[0.68rem] font-semibold uppercase tracking-[0.08em] transition-colors hover:bg-[var(--lpv-ink)] hover:text-[var(--lpv-paper-light)]"
+                aria-label={isEnglish ? "Sign in" : "Se connecter"}
               >
-                {isEnglish ? "Sign in" : "Connexion"}
+                ?
               </Link>
             )}
           </div>
