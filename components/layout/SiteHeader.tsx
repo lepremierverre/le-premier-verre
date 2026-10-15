@@ -283,9 +283,13 @@ export function SiteHeader() {
             <aside className="lpv-fade-in absolute inset-y-0 left-0 flex w-full max-w-[680px] flex-col overflow-y-auto bg-[var(--lpv-cocoa)] px-6 py-6 text-[var(--lpv-paper-light)] sm:px-10 sm:py-9">
               {/* HEADER */}
               <div className="flex items-center justify-between border-b border-white/20 pb-6">
-                <p className="lpv-display text-2xl">
+                <Link
+                  href="/en"
+                  onClick={() => setMenuOpen(false)}
+                  className="lpv-display text-2xl transition-opacity hover:opacity-70"
+                >
                   Le Premier Verre
-                </p>
+                </Link>
 
                 <button
                   type="button"
@@ -399,9 +403,13 @@ export function SiteHeader() {
 
               {/* ENTÊTE */}
               <div className="flex items-center justify-between border-b border-white/20 pb-6">
-                <p className="lpv-display text-2xl">
+                <Link
+                  href="/"
+                  onClick={() => setMenuOpen(false)}
+                  className="lpv-display text-2xl transition-opacity hover:opacity-70"
+                >
                   Le Premier Verre
-                </p>
+                </Link>
 
                 <button
                   type="button"

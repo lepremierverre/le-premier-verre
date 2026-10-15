@@ -273,7 +273,9 @@ export default async function VinsPage({
 
     const queryString = nextParams.toString();
 
-    return queryString ? `/vins?${queryString}` : "/vins";
+    return queryString
+      ? `/vins?${queryString}#catalogue`
+      : "/vins#catalogue";
   }
 
   const hasFilters = Boolean(
@@ -328,9 +330,15 @@ export default async function VinsPage({
 
         {/* MOBILE */}
         <div className="lpv-container py-10 md:hidden">
-          <h1 className="lpv-display max-w-[520px] text-[4.15rem] leading-[0.84] tracking-[-0.055em]">
-            Les bouteilles.
-          </h1>
+          <h1 className="md:hidden lpv-display max-w-[520px] text-[4.15rem] leading-[0.84] tracking-[-0.055em]">
+              Les
+              <br />
+              bouteilles.
+            </h1>
+
+            <h1 className="hidden md:block lpv-display max-w-[520px] text-[4.15rem] leading-[0.84] tracking-[-0.055em]">
+              Les bouteilles.
+            </h1>
 
           <div className="mt-8 flex items-center justify-between  pt-4">
             <p className="text-[0.62rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)]">
@@ -369,6 +377,247 @@ export default async function VinsPage({
           </div>
         </div>
       </section>
+
+      {/* D'ICI — MOBILE */}
+      {featuredQuebecWines.length > 0 ? (
+        <section className="overflow-hidden bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)] md:hidden">
+          <div className="pb-5 pt-5">
+            <div className="lpv-container">
+              <p className="lpv-kicker text-white/45">
+                Le Québec dans le verre
+              </p>
+
+              <div className="mt-3 flex items-end justify-between gap-5">
+                <h2 className="lpv-display text-[3.5rem] leading-[0.84] tracking-[-0.05em]">
+                  D’ici.
+                </h2>
+              </div>
+            </div>
+
+            <div className="mt-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex w-max snap-x snap-mandatory gap-3 px-4">
+                {featuredQuebecWines.map((wine, index) => (
+                  <article
+                    key={wine._id}
+                    className="relative flex h-[255px] w-[60vw] max-w-[235px] shrink-0 snap-start flex-col border border-black/10 bg-[var(--lpv-paper)] text-[var(--lpv-ink)] shadow-[0_10px_24px_rgba(24,18,14,0.10)]"
+                  >
+                    <Link
+                      href={`/vins/${wine.slug}`}
+                      className="flex h-full flex-col px-3.5 pb-3.5 pt-3.5"
+                    >
+                      <div className={
+                          wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                            ? "relative flex h-[150px] w-full items-center justify-center overflow-hidden bg-[#A28F80]"
+                            : "relative flex h-[150px] w-full items-center justify-center overflow-hidden"
+                        }>
+                        <BottleStage
+                          image={wine.editorialImage ?? wine.bottleImage}
+                          alt={wine.name}
+                          color={wine.color}
+                          variant="card"
+                          imageFit={
+                            wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                              ? "contain"
+                              : wine.editorialImage
+                                ? "cover"
+                                : "contain"
+                          }
+                          className={
+                            wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                              ? "!h-[150px] !w-full [&>div]:!h-[150px] [&>div]:!w-full [&_img]:!h-[195px] [&_img]:!w-auto [&_img]:!max-h-none [&_img]:!max-w-none [&_img]:rotate-[7deg] [&_img]:scale-[1.08] [&_img]:transition-transform [&_img]:duration-500 group-hover:[&_img]:rotate-[8deg] group-hover:[&_img]:scale-[1.11]"
+                              : wine.editorialImage
+                                ? "!h-[150px] !w-full [&>div]:!h-[150px] [&>div]:!w-full [&_img]:!h-full [&_img]:!w-full [&_img]:!max-h-none [&_img]:!max-w-none"
+                              : "!h-[150px] !w-full [&>div]:!h-[140px] [&_img]:!max-h-[135px] [&_img]:!max-w-[62%]"
+                          }
+                        />
+                      </div>
+
+                      <div className="mt-auto flex min-h-[78px] flex-col pt-2.5">
+                        <p className="lpv-kicker text-[0.55rem] text-[var(--lpv-cocoa)]/65">
+                          {[
+                            wine.beverageType === "cider"
+                              ? "Cidre"
+                              : formatLabel(wine.color) || "Vin",
+                            wine.alcoholFree ? "Sans alcool" : null,
+                            wine.vintage,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
+
+                        <h3 className="lpv-display mt-1.5 text-[1.2rem] leading-[0.94] tracking-[-0.03em]">
+                          {wine.name}
+                        </h3>
+
+                        {wine.producer?.name ? (
+                          <p className="mt-auto pt-1.5 text-[0.65rem] text-[var(--lpv-muted)]">
+                            {wine.producer.name}
+                          </p>
+                        ) : null}
+                      </div>
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="lpv-container mt-4 flex justify-end">
+              <Link
+                href="/vins?country=Canada#catalogue"
+                className="inline-flex items-center gap-3 border-b border-white/35 pb-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white"
+              >
+                Tous les vins du Québec
+                <span>→</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* D'ICI — DESKTOP */}
+      {featuredQuebecWines.length > 0 ? (
+        <section className="hidden overflow-hidden bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)] md:block">
+          <div className="lpv-container py-9 lg:py-10">
+
+            <div className="flex items-end justify-between gap-10">
+              <div>
+                <p className="lpv-kicker text-white/42">
+                  Le Québec dans le verre
+                </p>
+
+                <h2 className="lpv-display mt-3 text-[clamp(4.2rem,5.8vw,6.5rem)] leading-[0.84] tracking-[-0.05em]">
+                  D’ici.
+                </h2>
+              </div>
+
+              <Link
+                href="/vins?country=Canada#catalogue"
+                className="group mb-2 inline-flex items-center gap-3 border-b border-white/35 pb-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white"
+              >
+                Tous les vins du Québec
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
+              </Link>
+            </div>
+
+            <div className="mt-6 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex w-max gap-3 snap-x snap-mandatory">
+
+                {featuredQuebecWines.map((wine, index) => (
+                  <article
+                    key={wine._id}
+                    className="group relative flex h-[490px] w-[345px] shrink-0 snap-start flex-col border border-black/10 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]"
+                  >
+                    <Link
+                      href={`/vins/${wine.slug}`}
+                      className="flex h-full flex-col px-6 pb-6 pt-6"
+                    >
+                      <div className={
+                          wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                            ? "relative flex h-[305px] w-full items-center justify-center overflow-hidden bg-[#A28F80]"
+                            : "relative flex h-[305px] w-full items-center justify-center overflow-hidden"
+                        }>
+                        <BottleStage
+                          image={wine.editorialImage ?? wine.bottleImage}
+                          alt={wine.name}
+                          color={wine.color}
+                          variant="card"
+                          imageFit={
+                            wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                              ? "contain"
+                              : wine.editorialImage
+                                ? "cover"
+                                : "contain"
+                          }
+                          className={
+                            wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
+                              ? "!h-[305px] !w-full [&>div]:!h-[305px] [&>div]:!w-full [&_img]:!h-[400px] [&_img]:!w-auto [&_img]:!max-h-none [&_img]:!max-w-none [&_img]:rotate-[7deg] [&_img]:scale-[1.08] [&_img]:transition-transform [&_img]:duration-500 group-hover:[&_img]:rotate-[8deg] group-hover:[&_img]:scale-[1.11]"
+                              : wine.editorialImage
+                                ? "!h-[305px] !w-full [&>div]:!h-[305px] [&>div]:!w-full [&_img]:!h-full [&_img]:!w-full [&_img]:!max-h-none [&_img]:!max-w-none [&_img]:transition-transform [&_img]:duration-500 [&_img]:ease-out group-hover:[&_img]:scale-[1.02]"
+                              : "!h-[305px] !w-full [&>div]:!h-[285px] [&_img]:!max-h-[275px] [&_img]:!max-w-[62%] [&_img]:transition-transform [&_img]:duration-500 [&_img]:ease-out group-hover:[&_img]:-translate-y-2 group-hover:[&_img]:rotate-[0.8deg] group-hover:[&_img]:scale-[1.025]"
+                          }
+                        />
+                      </div>
+
+                      <div className="mt-auto flex min-h-[150px] flex-col pt-4">
+                        <p className="lpv-kicker text-[var(--lpv-cocoa)]/65">
+                          {[
+                            wine.beverageType === "cider"
+                              ? "Cidre"
+                              : formatLabel(wine.color) || "Vin",
+                            wine.alcoholFree ? "Sans alcool" : null,
+                            wine.vintage,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
+
+                        <h3 className="lpv-display mt-3 text-[1.8rem] leading-[0.94] tracking-[-0.035em] transition-opacity group-hover:opacity-65">
+                          {wine.name}
+                        </h3>
+
+                        {wine.producer?.name ? (
+                          <p className="mt-6 text-sm text-[var(--lpv-muted)]">
+                            {wine.producer.name}
+                          </p>
+                        ) : null}
+                      </div>
+                    </Link>
+
+                    <div className="absolute right-4 top-4 z-20 opacity-100 transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100">
+                      <FavoriteButton
+                        wineId={wine._id}
+                        size="sm"
+                      />
+                    </div>
+                  </article>
+                ))}
+
+              </div>
+            </div>
+
+            {featuredQuebecWines.length > 3 ? (
+              <div className="mt-2 flex justify-end">
+                <span className="lpv-kicker text-white/38">
+                  Glisser →
+                </span>
+              </div>
+            ) : null}
+
+          </div>
+        </section>
+      ) : null}
+
+      {/* CATALOGUE */}
+
+
+
+      <section
+        id="catalogue"
+        className="lpv-container scroll-mt-6 py-9 md:scroll-mt-8 md:py-24"
+      >
+        <div className="border-b border-[var(--lpv-line)] pb-7 md:flex md:items-end md:justify-between md:gap-5 md:pb-6">
+          <div>
+            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+              Catalogue
+            </p>
+
+            <h2 className="lpv-display mt-4 text-[3.65rem] leading-[0.86] tracking-[-0.045em] md:mt-5 md:text-7xl md:leading-none">
+              {selectedCountry === "Canada"
+                ? "Tous les vins du Québec."
+                : "Les bouteilles."}
+            </h2>
+          </div>
+
+          <div className="mt-6 flex items-center gap-3 md:mt-0">
+            <span className="h-px w-8 bg-[var(--lpv-cocoa)]/35 md:hidden" />
+            <p className="text-[0.62rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)] md:text-xs">
+              {producerFilteredWines.length} résultat
+              {producerFilteredWines.length > 1 ? "s" : ""}
+            </p>
+          </div>
+        </div>
 
       {/* BARRE DE CATALOGUE */}
       <section className="relative z-40 border-b border-[var(--lpv-line)] bg-[var(--lpv-paper)]">
@@ -584,272 +833,20 @@ export default async function VinsPage({
         </div>
       </section>
 
-      {/* D'ICI — MOBILE */}
-      {featuredQuebecWines.length > 0 ? (
-        <section className="overflow-hidden bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)] md:hidden">
-          <div className="pb-10 pt-10">
-            <div className="lpv-container">
-              <p className="lpv-kicker text-white/45">
-                Le Québec dans le verre
-              </p>
-
-              <div className="mt-3 flex items-end justify-between gap-5">
-                <h2 className="lpv-display text-[4.65rem] leading-[0.82] tracking-[-0.055em]">
-                  D’ici.
-                </h2>
-
-                <span className="lpv-kicker mb-1.5 shrink-0 text-white/45">
-                  Glisser →
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-8 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="flex w-max snap-x snap-mandatory gap-3 px-4">
-                {featuredQuebecWines.map((wine, index) => (
-                  <article
-                    key={wine._id}
-                    className="relative flex h-[438px] w-[72vw] max-w-[315px] shrink-0 snap-start flex-col border border-black/10 bg-[var(--lpv-paper)] text-[var(--lpv-ink)] shadow-[0_14px_34px_rgba(24,18,14,0.10)]"
-                  >
-                    <Link
-                      href={`/vins/${wine.slug}`}
-                      className="flex h-full flex-col px-5 pb-5 pt-5"
-                    >
-                      <div className={
-                          wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
-                            ? "relative flex h-[275px] w-full items-center justify-center overflow-hidden bg-[#A28F80]"
-                            : "relative flex h-[275px] w-full items-center justify-center overflow-hidden"
-                        }>
-                        <BottleStage
-                          image={wine.editorialImage ?? wine.bottleImage}
-                          alt={wine.name}
-                          color={wine.color}
-                          variant="card"
-                          imageFit={
-                            wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
-                              ? "contain"
-                              : wine.editorialImage
-                                ? "cover"
-                                : "contain"
-                          }
-                          className={
-                            wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
-                              ? "!h-[275px] !w-full [&>div]:!h-[275px] [&>div]:!w-full [&_img]:!h-[360px] [&_img]:!w-auto [&_img]:!max-h-none [&_img]:!max-w-none [&_img]:rotate-[7deg] [&_img]:scale-[1.08] [&_img]:transition-transform [&_img]:duration-500 group-hover:[&_img]:rotate-[8deg] group-hover:[&_img]:scale-[1.11]"
-                              : wine.editorialImage
-                                ? "!h-[275px] !w-full [&>div]:!h-[275px] [&>div]:!w-full [&_img]:!h-full [&_img]:!w-full [&_img]:!max-h-none [&_img]:!max-w-none"
-                              : "!h-[275px] !w-full [&>div]:!h-[260px] [&_img]:!max-h-[250px] [&_img]:!max-w-[62%]"
-                          }
-                        />
-                      </div>
-
-                      <div className="mt-auto flex min-h-[125px] flex-col pt-4">
-                        <p className="lpv-kicker text-[0.55rem] text-[var(--lpv-cocoa)]/65">
-                          {[
-                            wine.beverageType === "cider"
-                              ? "Cidre"
-                              : formatLabel(wine.color) || "Vin",
-                            wine.alcoholFree ? "Sans alcool" : null,
-                            wine.vintage,
-                          ]
-                            .filter(Boolean)
-                            .join(" · ")}
-                        </p>
-
-                        <h3 className="lpv-display mt-3 text-[1.75rem] leading-[0.94] tracking-[-0.035em]">
-                          {wine.name}
-                        </h3>
-
-                        {wine.producer?.name ? (
-                          <p className="mt-auto pt-3 text-xs text-[var(--lpv-muted)]">
-                            {wine.producer.name}
-                          </p>
-                        ) : null}
-                      </div>
-                    </Link>
-
-                    <div className="absolute right-4 top-4 z-20">
-                      <FavoriteButton wineId={wine._id} size="sm" variant="bare" />
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            <div className="lpv-container mt-8 flex justify-end">
-              <Link
-                href="/vins?country=Canada"
-                className="inline-flex items-center gap-3 border-b border-white/35 pb-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white"
-              >
-                Tous les vins du Québec
-                <span>→</span>
-              </Link>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {/* D'ICI — DESKTOP */}
-      {featuredQuebecWines.length > 0 ? (
-        <section className="hidden overflow-hidden bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)] md:block">
-          <div className="lpv-container py-12 lg:py-14">
-
-            <div className="flex items-end justify-between gap-10">
-              <div>
-                <p className="lpv-kicker text-white/42">
-                  Le Québec dans le verre
-                </p>
-
-                <h2 className="lpv-display mt-3 text-[clamp(4.2rem,5.8vw,6.5rem)] leading-[0.84] tracking-[-0.05em]">
-                  D’ici.
-                </h2>
-              </div>
-
-              <Link
-                href="/vins?country=Canada"
-                className="group mb-2 inline-flex items-center gap-3 border-b border-white/35 pb-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white"
-              >
-                Tous les vins du Québec
-                <span className="transition-transform duration-300 group-hover:translate-x-1">
-                  →
-                </span>
-              </Link>
-            </div>
-
-            <div className="mt-8 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="flex w-max gap-3 snap-x snap-mandatory">
-
-                {featuredQuebecWines.map((wine, index) => (
-                  <article
-                    key={wine._id}
-                    className="group relative flex h-[520px] w-[365px] shrink-0 snap-start flex-col border border-black/10 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]"
-                  >
-                    <Link
-                      href={`/vins/${wine.slug}`}
-                      className="flex h-full flex-col px-6 pb-6 pt-6"
-                    >
-                      <div className={
-                          wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
-                            ? "relative flex h-[330px] w-full items-center justify-center overflow-hidden bg-[#A28F80]"
-                            : "relative flex h-[330px] w-full items-center justify-center overflow-hidden"
-                        }>
-                        <BottleStage
-                          image={wine.editorialImage ?? wine.bottleImage}
-                          alt={wine.name}
-                          color={wine.color}
-                          variant="card"
-                          imageFit={
-                            wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
-                              ? "contain"
-                              : wine.editorialImage
-                                ? "cover"
-                                : "contain"
-                          }
-                          className={
-                            wine.slug === "earl-gelin-domaine-des-nugues-beaujolais-villages-2024-2024"
-                              ? "!h-[330px] !w-full [&>div]:!h-[330px] [&>div]:!w-full [&_img]:!h-[430px] [&_img]:!w-auto [&_img]:!max-h-none [&_img]:!max-w-none [&_img]:rotate-[7deg] [&_img]:scale-[1.08] [&_img]:transition-transform [&_img]:duration-500 group-hover:[&_img]:rotate-[8deg] group-hover:[&_img]:scale-[1.11]"
-                              : wine.editorialImage
-                                ? "!h-[330px] !w-full [&>div]:!h-[330px] [&>div]:!w-full [&_img]:!h-full [&_img]:!w-full [&_img]:!max-h-none [&_img]:!max-w-none [&_img]:transition-transform [&_img]:duration-500 [&_img]:ease-out group-hover:[&_img]:scale-[1.02]"
-                              : "!h-[330px] !w-full [&>div]:!h-[310px] [&_img]:!max-h-[300px] [&_img]:!max-w-[62%] [&_img]:transition-transform [&_img]:duration-500 [&_img]:ease-out group-hover:[&_img]:-translate-y-2 group-hover:[&_img]:rotate-[0.8deg] group-hover:[&_img]:scale-[1.025]"
-                          }
-                        />
-                      </div>
-
-                      <div className="mt-auto flex min-h-[150px] flex-col pt-4">
-                        <p className="lpv-kicker text-[var(--lpv-cocoa)]/65">
-                          {[
-                            wine.beverageType === "cider"
-                              ? "Cidre"
-                              : formatLabel(wine.color) || "Vin",
-                            wine.alcoholFree ? "Sans alcool" : null,
-                            wine.vintage,
-                          ]
-                            .filter(Boolean)
-                            .join(" · ")}
-                        </p>
-
-                        <h3 className="lpv-display mt-3 text-[1.8rem] leading-[0.94] tracking-[-0.035em] transition-opacity group-hover:opacity-65">
-                          {wine.name}
-                        </h3>
-
-                        {wine.producer?.name ? (
-                          <p className="mt-6 text-sm text-[var(--lpv-muted)]">
-                            {wine.producer.name}
-                          </p>
-                        ) : null}
-                      </div>
-                    </Link>
-
-                    <div className="absolute right-4 top-4 z-20 opacity-100 transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100">
-                      <FavoriteButton
-                        wineId={wine._id}
-                        size="sm"
-                      />
-                    </div>
-                  </article>
-                ))}
-
-              </div>
-            </div>
-
-            {featuredQuebecWines.length > 3 ? (
-              <div className="mt-2 flex justify-end">
-                <span className="lpv-kicker text-white/38">
-                  Glisser →
-                </span>
-              </div>
-            ) : null}
-
-          </div>
-        </section>
-      ) : null}
-
-      {/* CATALOGUE */}
-
-
-
-      <section className="lpv-container py-9 md:py-24">
-        <div className="border-b border-[var(--lpv-line)] pb-7 md:flex md:items-end md:justify-between md:gap-5 md:pb-6">
-          <div>
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-              Catalogue
-            </p>
-
-            <h2 className="lpv-display mt-4 text-[3.65rem] leading-[0.86] tracking-[-0.045em] md:mt-5 md:text-7xl md:leading-none">
-              Et d’ailleurs.
-            </h2>
-          </div>
-
-          <div className="mt-6 flex items-center gap-3 md:mt-0">
-            <span className="h-px w-8 bg-[var(--lpv-cocoa)]/35 md:hidden" />
-            <p className="text-[0.62rem] uppercase tracking-[0.18em] text-[var(--lpv-muted)] md:text-xs">
-              {producerFilteredWines.length} résultat
-              {producerFilteredWines.length > 1 ? "s" : ""}
-            </p>
-          </div>
-        </div>
-
         {producerFilteredWines.length > 0 ? (
           <>
             {/* MOBILE — CARTES RECTANGULAIRES LPV */}
-            <div className="grid grid-cols-2 gap-3 pt-4 md:hidden">
+            <div className="grid grid-cols-1 gap-4 pt-4 md:hidden">
               {paginatedWines.map((wine, index) => (
                 <article
                   key={wine._id}
-                  className="group relative min-w-0 border border-[var(--lpv-line)]"
+                  className="group relative min-w-0 bg-[var(--lpv-paper-light)]"
                 >
-                  <div className="relative flex h-[470px] flex-col px-5 pb-5 pt-5">
-
-                    <div className="absolute right-5 top-5 z-20">
-                      <FavoriteButton
-                        wineId={wine._id}
-                        size="sm"
-                        variant="bare"
-                      />
-                    </div>
+                  <div className="relative flex flex-col px-4 pb-5 pt-4">
 
                     <Link
                       href={`/vins/${wine.slug}`}
-                      className="mt-5 block"
+                      className="block"
                     >
                       <BottleStage
                         image={wine.editorialImage ?? wine.bottleImage}
@@ -863,13 +860,13 @@ export default async function VinsPage({
                         imageFit={wine.editorialImage ? "cover" : "contain"}
                         className={
                           wine.editorialImage
-                            ? "!h-[285px] !w-full [&>div]:!h-[265px] [&>div]:!w-full [&>div]:!overflow-hidden [&_img]:!h-[265px] [&_img]:!w-full [&_img]:!max-h-none [&_img]:!max-w-none [&_img]:!object-cover"
-                            : "!h-[285px] !w-full [&>div]:!h-[265px] [&>div]:!w-full [&_img]:!max-h-[245px] [&_img]:!max-w-[72%] [&_img]:!object-contain"
+                            ? "!h-[240px] !w-full [&>div]:!h-[240px] [&>div]:!w-full [&>div]:!overflow-hidden [&_img]:!h-[240px] [&_img]:!w-full [&_img]:!max-h-none [&_img]:!max-w-none [&_img]:!object-cover"
+                            : "!h-[240px] !w-full [&>div]:!h-[240px] [&>div]:!w-full [&>div]:!overflow-hidden [&_img]:!max-h-[225px] [&_img]:!max-w-[72%] [&_img]:!object-contain"
                         }
                       />
                     </Link>
 
-                    <div className="flex min-h-[125px] flex-1 flex-col pt-2">
+                    <div className="flex min-h-[125px] flex-1 flex-col pt-5">
                       <p className="lpv-kicker text-[0.55rem] leading-4 tracking-[0.16em] text-[var(--lpv-cocoa)]">
                         {[
                           wine.beverageType === "cider"
@@ -993,12 +990,12 @@ export default async function VinsPage({
                   {currentPage > 1 ? (
                     <Link
                       href={pageHref(currentPage - 1)}
-                      className="lpv-text-link"
+                      className="text-[0.56rem] uppercase tracking-[0.12em] text-[var(--lpv-ink)] transition-opacity hover:opacity-50 md:text-sm md:tracking-normal"
                     >
                       ← Précédent
                     </Link>
                   ) : (
-                    <span className="text-sm text-[var(--lpv-muted)]/40">
+                    <span className="text-[0.56rem] uppercase tracking-[0.12em] text-[var(--lpv-muted)]/40 md:text-sm md:tracking-normal">
                       ← Précédent
                     </span>
                   )}
@@ -1033,18 +1030,58 @@ export default async function VinsPage({
                   {currentPage < totalPages ? (
                     <Link
                       href={pageHref(currentPage + 1)}
-                      className="lpv-text-link"
+                      className="text-[0.56rem] uppercase tracking-[0.12em] text-[var(--lpv-ink)] transition-opacity hover:opacity-50 md:text-sm md:tracking-normal"
                     >
                       Suivant →
                     </Link>
                   ) : (
-                    <span className="text-sm text-[var(--lpv-muted)]/40">
+                    <span className="text-[0.56rem] uppercase tracking-[0.12em] text-[var(--lpv-muted)]/40 md:text-sm md:tracking-normal">
                       Suivant →
                     </span>
                   )}
                 </div>
               </nav>
             ) : null}
+
+            {/* INTERNATIONAL — À VENIR */}
+            <section className="mt-12 border-t border-[var(--lpv-line)] pt-8 md:mt-24 md:pt-10">
+
+              {/* MOBILE */}
+              <div className="md:hidden">
+                <h2 className="lpv-display text-[2.85rem] leading-[0.9] tracking-[-0.045em]">
+                  Le reste du monde, bientôt.
+                </h2>
+
+                <div className="mt-5 border-t border-[var(--lpv-line)] pt-4">
+                  <p className="max-w-sm text-sm leading-6 text-[var(--lpv-muted)]">
+                    On prépare la suite. De nouvelles bouteilles d’ailleurs feront bientôt leur entrée dans Le Premier Verre.
+                  </p>
+
+                  <p className="mt-5 text-[0.52rem] font-semibold uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
+                    Bientôt
+                  </p>
+                </div>
+              </div>
+
+              {/* DESKTOP */}
+              <div className="hidden md:grid md:grid-cols-[0.64fr_0.36fr] md:items-end md:gap-16">
+                <h2 className="lpv-display max-w-[760px] text-[clamp(3.4rem,4.8vw,5.25rem)] leading-[0.87] tracking-[-0.048em]">
+                  Le reste du monde,
+                  <br />
+                  bientôt.
+                </h2>
+
+                <div className="justify-self-end pb-1">
+                  <p className="max-w-sm text-sm leading-6 text-[var(--lpv-muted)]">
+                    On prépare la suite. De nouvelles bouteilles d’ailleurs feront bientôt leur entrée dans Le Premier Verre.
+                  </p>
+
+                  <p className="mt-5 text-[0.56rem] font-semibold uppercase tracking-[0.16em] text-[var(--lpv-cocoa)]">
+                    Bientôt
+                  </p>
+                </div>
+              </div>
+            </section>
 
             {/* CTA — SUGGÉRER UNE BOUTEILLE */}
             <div className="mx-auto mt-10 max-w-xl border-t border-[var(--lpv-line)] pt-7 text-center md:mt-20 md:pt-12">
