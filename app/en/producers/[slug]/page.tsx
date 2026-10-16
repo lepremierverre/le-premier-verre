@@ -748,6 +748,7 @@ export default async function ProducerPage({
 
           <PartnerShareButton
             name={producer.name}
+            imageUrl={authorizedImageSrc}
             locale="en"
             profileUrl={`/en/producers/${producer.slug}`}
             kind="producer"

@@ -4,8 +4,7 @@ import { useState } from "react";
 
 type PartnerShareButtonProps = {
   name: string;
-  imageUrl?: string;
-  location?: string;
+  imageUrl?: string | null;
   locale: "fr" | "en";
   profileUrl: string;
   kind: "producer" | "place";
@@ -13,6 +12,7 @@ type PartnerShareButtonProps = {
 
 export default function PartnerShareButton({
   name,
+  imageUrl,
   locale,
   profileUrl,
 }: PartnerShareButtonProps) {
@@ -23,6 +23,14 @@ export default function PartnerShareButton({
 
   const sharingLabel =
     locale === "fr" ? "Partage…" : "Sharing…";
+
+  async function shareUrl(url: string, text: string) {
+    await navigator.share({
+      title: `${name} — Le Premier Verre`,
+      text,
+      url,
+    });
+  }
 
   async function handleShare() {
     if (sharing) return;
@@ -37,22 +45,62 @@ export default function PartnerShareButton({
     setSharing(true);
 
     try {
-      if (navigator.share) {
-        await navigator.share({
-          title: `${name} — Le Premier Verre`,
-          text,
-          url,
-        });
+      if (navigator.share && imageUrl) {
+        try {
+          const absoluteImageUrl = new URL(
+            imageUrl,
+            window.location.origin
+          ).toString();
 
-        return;
+          const response = await fetch(absoluteImageUrl);
+
+          if (response.ok) {
+            const blob = await response.blob();
+
+            const extension =
+              blob.type === "image/png" ? "png" : "jpg";
+
+            const file = new File(
+              [blob],
+              `le-premier-verre-${name
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-|-$/g, "")}.${extension}`,
+              {
+                type: blob.type || "image/jpeg",
+              }
+            );
+
+            if (
+              navigator.canShare &&
+              navigator.canShare({ files: [file] })
+            ) {
+              await navigator.share({
+                title: `${name} — Le Premier Verre`,
+                text: `${text}\n${url}`,
+                files: [file],
+              });
+
+              return;
+            }
+          }
+        } catch (mediaError) {
+          console.warn(
+            "Media share unavailable, falling back to URL share:",
+            mediaError
+          );
+        }
       }
+
+      await shareUrl(url, text);
+      return;
 
       await navigator.clipboard.writeText(url);
 
       window.alert(
-        locale === "fr"
-          ? "Lien copié."
-          : "Link copied."
+        locale === "fr" ? "Lien copié." : "Link copied."
       );
     } catch (error) {
       if (
@@ -68,9 +116,7 @@ export default function PartnerShareButton({
         await navigator.clipboard.writeText(url);
 
         window.alert(
-          locale === "fr"
-            ? "Lien copié."
-            : "Link copied."
+          locale === "fr" ? "Lien copié." : "Link copied."
         );
       } catch {
         window.location.href = url;

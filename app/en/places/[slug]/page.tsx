@@ -180,6 +180,7 @@ export default async function PlacePage({
 
             <PartnerShareButton
               name="Saucette"
+              imageUrl="/images/lpv/bonnes%20adresses/saucette1.jpg"
               locale="en"
               profileUrl="/en/places/saucette"
               kind="place"
@@ -538,6 +539,7 @@ export default async function PlacePage({
 
             <PartnerShareButton
               name="Beyt"
+              imageUrl="/images/lpv/bonnes%20adresses/beyt3.jpg"
               locale="en"
               profileUrl="/en/places/beyt"
               kind="place"
@@ -889,6 +891,7 @@ export default async function PlacePage({
 
             <PartnerShareButton
               name="Buvette Pastek"
+              imageUrl="/images/lpv/bonnes%20adresses/pastek1.jpg"
               locale="en"
               profileUrl="/en/places/buvette-pastek"
               kind="place"
@@ -1240,6 +1243,7 @@ export default async function PlacePage({
 
             <PartnerShareButton
               name="Candide"
+              imageUrl="/images/lpv/bonnes%20adresses/candide1.jpg"
               locale="en"
               profileUrl="/en/places/candide"
               kind="place"
@@ -1592,6 +1596,7 @@ export default async function PlacePage({
 
             <PartnerShareButton
               name="Le vin dans les voiles"
+              imageUrl="/images/lpv/bonnes%20adresses/vindanslesvoiles1.jpg"
               locale="en"
               profileUrl="/en/places/le-vin-dans-les-voiles"
               kind="place"
@@ -1936,6 +1941,7 @@ export default async function PlacePage({
 
             <PartnerShareButton
               name="Polari"
+              imageUrl="/images/lpv/bonnes%20adresses/polari1.jpg"
               locale="en"
               profileUrl="/en/places/polari"
               kind="place"
