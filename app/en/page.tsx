@@ -416,15 +416,15 @@ export default async function HomePage() {
                   </h3>
 
                   <p className="mt-3 text-[13px] text-[var(--lpv-muted)]">
-                    In the Townships
+                    In the Eastern Townships
                     {featuredProducer.municipality ? (
-                      <> · {featuredProducer.municipality}, Québec</>
+                      <> · {featuredProducer.municipality}, Quebec</>
                     ) : null}
                   </p>
 
                   {featuredProducer.oneLiner ? (
                     <p className="mt-5 max-w-[560px] text-[16px] leading-7 text-[var(--lpv-ink)]">
-                      At Bergeville, everything revolves around bubbles. Québec sparkling wines made with precision, without losing sight of the pleasure.
+                      At Bergeville, everything revolves around bubbles. Quebec sparkling wines made with precision, without losing sight of the pleasure.
                     </p>
                   ) : null}
 
@@ -598,7 +598,7 @@ export default async function HomePage() {
             </h2>
 
             <p className="mt-8 max-w-xl text-base leading-8 text-white/68">
-              A bottle, une adresse et une idée à garder sous la main.
+              A bottle, a place and an idea worth keeping close.
             </p>
 
             <Link

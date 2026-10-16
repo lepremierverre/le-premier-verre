@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PartnerShareButton from "@/components/share/PartnerShareButton";
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
@@ -168,7 +169,7 @@ export default async function PlacePage({
       <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
         <article className="lpv-container pb-24">
 
-          <div className="pt-8 md:pt-10">
+          <div className="flex items-center justify-between pt-8 md:block md:pt-10">
             <Link
               href="/en/places"
               className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
@@ -176,6 +177,13 @@ export default async function PlacePage({
               <span aria-hidden="true">←</span>
               <span>Places</span>
             </Link>
+
+            <PartnerShareButton
+              name="Saucette"
+              locale="en"
+              profileUrl="/en/places/saucette"
+              kind="place"
+            />
           </div>
 
           {/* HERO */}
@@ -203,6 +211,10 @@ export default async function PlacePage({
                     className="h-full w-full object-cover"
                   />
                 </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Saucette
+                </figcaption>
               </figure>
             </div>
           </section>
@@ -210,7 +222,7 @@ export default async function PlacePage({
           {/* THE PLACE */}
           <section className="pb-16 pt-8 md:pb-20 md:pt-10">
             <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
-              <figure className="w-full md:w-[570px]">
+              <figure className="hidden w-full md:block md:w-[570px]">
                 <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
                   <img
                     src="/images/lpv/bonnes%20adresses/saucette2.jpg"
@@ -218,6 +230,10 @@ export default async function PlacePage({
                     className="h-full w-full object-cover"
                   />
                 </div>
+
+                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                  © Saucette
+                </figcaption>
               </figure>
 
               <div className="flex items-center">
@@ -246,20 +262,34 @@ export default async function PlacePage({
                   </div>
                 </div>
               </div>
+
+              <figure className="mt-10 md:hidden">
+                <div className="h-[430px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src="/images/lpv/bonnes%20adresses/saucette2.jpg"
+                    alt="Inside Saucette"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-2 text-right text-[0.55rem] text-[var(--lpv-muted)]">
+                  © Saucette
+                </figcaption>
+              </figure>
             </div>
           </section>
 
           {/* THREE THINGS */}
-          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
-            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+          <section className="pb-12 pt-2 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[12ch] text-[2.9rem] leading-[0.88] tracking-[-0.05em] md:max-w-[15ch] md:text-[clamp(3.2rem,4.4vw,4.9rem)] md:leading-[0.9]">
               Three things to know.
             </h2>
 
-            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+            <div className="mt-8 grid border-t border-[var(--lpv-line)] md:mt-14 md:grid-cols-3">
               {saucetteHighlights.map((item, index) => (
                 <article
                   key={item.title}
-                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                  className={`relative flex flex-col py-6 md:min-h-[355px] md:px-9 md:py-11 ${
                     index > 0
                       ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
                       : ""
@@ -269,11 +299,11 @@ export default async function PlacePage({
                     {String(index + 1).padStart(2, "0")}
                   </p>
 
-                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                  <h3 className="lpv-display mt-4 max-w-[13ch] text-[1.8rem] leading-[0.94] tracking-[-0.04em] md:mt-8 md:min-h-[5.3rem] md:max-w-[11ch] md:text-[clamp(2rem,2.6vw,2.8rem)]">
                     {item.title}
                   </h3>
 
-                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                  <p className="max-w-sm pt-4 text-[0.88rem] leading-6 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0 md:text-sm md:leading-7">
                     {item.text}
                   </p>
                 </article>
@@ -308,7 +338,7 @@ export default async function PlacePage({
 
           {/* WINE AT SAUCETTE */}
           <section className="py-16 md:py-24">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
                 <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
                   Wine at Saucette.
@@ -401,41 +431,43 @@ export default async function PlacePage({
           )}
 
           {/* VISIT */}
-          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+          <section className="pb-5 pt-9 md:pb-16 md:pt-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:max-w-[8ch] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Stop by Saucette.
                 </h2>
 
                 {place.address ? (
-                  <p className="mt-8 max-w-[29ch] text-[1.05rem] leading-7 text-[var(--lpv-ink)]/72">
+                  <p className="mt-5 max-w-[29ch] text-[0.95rem] leading-6 text-[var(--lpv-ink)]/72 md:mt-8 md:text-[1.05rem] md:leading-7">
                     {place.address}
                   </p>
                 ) : null}
               </div>
 
-              <div className="md:pt-1">
-                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
-                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+              <div className="border-t border-[var(--lpv-line)] pt-5 md:pt-7">
+                <div className="grid gap-5 md:grid-cols-3 md:gap-8">
+
+                  <div>
+                    <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                       Type
                     </p>
-                    <p className="text-[0.95rem]">
+                    <p className="mt-2 text-[0.9rem]">
                       Wine shop + wine bar
                     </p>
                   </div>
 
                   {place.website ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Website
                       </p>
                       <a
                         href={place.website}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         {place.website
                           .replace(/^https?:\/\//, "")
@@ -446,22 +478,24 @@ export default async function PlacePage({
                   ) : null}
 
                   {place.instagram ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Instagram
                       </p>
                       <a
                         href={place.instagram}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         @saucettecaviste
                       </a>
                     </div>
                   ) : null}
+
                 </div>
               </div>
+
             </div>
           </section>
 
@@ -493,7 +527,7 @@ export default async function PlacePage({
       <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
         <article className="lpv-container pb-24">
 
-          <div className="pt-8 md:pt-10">
+          <div className="flex items-center justify-between pt-8 md:block md:pt-10">
             <Link
               href="/en/places"
               className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
@@ -501,6 +535,13 @@ export default async function PlacePage({
               <span aria-hidden="true">←</span>
               <span>Places</span>
             </Link>
+
+            <PartnerShareButton
+              name="Beyt"
+              locale="en"
+              profileUrl="/en/places/beyt"
+              kind="place"
+            />
           </div>
 
           {/* HERO */}
@@ -539,7 +580,7 @@ export default async function PlacePage({
           {/* THE PLACE */}
           <section className="pb-16 pt-8 md:pb-20 md:pt-10">
             <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
-              <figure className="w-full md:w-[570px]">
+              <figure className="hidden w-full md:block md:w-[570px]">
                 <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
                   <img
                     src="/images/lpv/bonnes%20adresses/beyt1.jpg"
@@ -576,20 +617,34 @@ export default async function PlacePage({
                   </div>
                 </div>
               </div>
+
+              <figure className="mt-10 md:hidden">
+                              <div className="h-[430px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                                <img
+                                  src="/images/lpv/bonnes%20adresses/beyt1.jpg"
+                                  alt="Inside Beyt"
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+
+                              <figcaption className="mt-2 text-right text-[0.55rem] text-[var(--lpv-muted)]">
+                                © Beyt
+                              </figcaption>
+                            </figure>
             </div>
           </section>
 
           {/* THREE THINGS */}
-          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
-            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+          <section className="pb-12 pt-2 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[12ch] text-[2.9rem] leading-[0.88] tracking-[-0.05em] md:max-w-[15ch] md:text-[clamp(3.2rem,4.4vw,4.9rem)] md:leading-[0.9]">
               Three things to know.
             </h2>
 
-            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+            <div className="mt-8 grid border-t border-[var(--lpv-line)] md:mt-14 md:grid-cols-3">
               {beytHighlights.map((item, index) => (
                 <article
                   key={item.title}
-                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                  className={`relative flex flex-col py-6 md:min-h-[355px] md:px-9 md:py-11 ${
                     index > 0
                       ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
                       : ""
@@ -599,11 +654,11 @@ export default async function PlacePage({
                     {String(index + 1).padStart(2, "0")}
                   </p>
 
-                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                  <h3 className="lpv-display mt-4 max-w-[13ch] text-[1.8rem] leading-[0.94] tracking-[-0.04em] md:mt-8 md:min-h-[5.3rem] md:max-w-[11ch] md:text-[clamp(2rem,2.6vw,2.8rem)]">
                     {item.title}
                   </h3>
 
-                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                  <p className="max-w-sm pt-4 text-[0.88rem] leading-6 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0 md:text-sm md:leading-7">
                     {item.text}
                   </p>
                 </article>
@@ -638,9 +693,9 @@ export default async function PlacePage({
 
           {/* WINE AT BEYT */}
           <section className="py-16 md:py-24">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:max-w-[8ch] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Wine at Beyt.
                 </h2>
               </div>
@@ -731,41 +786,41 @@ export default async function PlacePage({
           )}
 
           {/* VISIT */}
-          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+          <section className="pb-5 pt-9 md:pb-16 md:pt-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:max-w-[8ch] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Stop by Beyt.
                 </h2>
 
                 {place.address ? (
-                  <p className="mt-8 max-w-[29ch] text-[1.05rem] leading-7 text-[var(--lpv-ink)]/72">
+                  <p className="mt-5 max-w-[29ch] text-[0.95rem] leading-6 text-[var(--lpv-ink)]/72 md:mt-8 md:text-[1.05rem] md:leading-7">
                     {place.address}
                   </p>
                 ) : null}
               </div>
 
-              <div className="md:pt-1">
-                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
-                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+              <div className="border-t border-[var(--lpv-line)] pt-5 md:pt-7">
+                <div className="grid gap-5 md:grid-cols-3 md:gap-8">
+                  <div>
+                    <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                       Type
                     </p>
-                    <p className="text-[0.95rem]">
+                    <p className="mt-2 text-[0.9rem]">
                       Wine bar &amp; restaurant
                     </p>
                   </div>
 
                   {place.website ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Website
                       </p>
                       <a
                         href={place.website}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         {place.website
                           .replace(/^https?:\/\//, "")
@@ -776,15 +831,15 @@ export default async function PlacePage({
                   ) : null}
 
                   {place.instagram ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Instagram
                       </p>
                       <a
                         href={place.instagram}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         @beytcaveamanger
                       </a>
@@ -823,7 +878,7 @@ export default async function PlacePage({
       <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
         <article className="lpv-container pb-24">
 
-          <div className="pt-8 md:pt-10">
+          <div className="flex items-center justify-between pt-8 md:block md:pt-10">
             <Link
               href="/en/places"
               className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
@@ -831,6 +886,13 @@ export default async function PlacePage({
               <span aria-hidden="true">←</span>
               <span>Places</span>
             </Link>
+
+            <PartnerShareButton
+              name="Buvette Pastek"
+              locale="en"
+              profileUrl="/en/places/buvette-pastek"
+              kind="place"
+            />
           </div>
 
           {/* HERO */}
@@ -869,7 +931,7 @@ export default async function PlacePage({
           {/* THE PLACE */}
           <section className="pb-16 pt-8 md:pb-20 md:pt-10">
             <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
-              <figure className="w-full md:w-[570px]">
+              <figure className="hidden w-full md:block md:w-[570px]">
                 <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
                   <img
                     src="/images/lpv/bonnes%20adresses/pastek2.jpg"
@@ -907,20 +969,34 @@ export default async function PlacePage({
                   </div>
                 </div>
               </div>
+
+              <figure className="mt-10 md:hidden">
+                              <div className="h-[430px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                                <img
+                                  src="/images/lpv/bonnes%20adresses/pastek2.jpg"
+                                  alt="Inside Buvette Pastek"
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+
+                              <figcaption className="mt-2 text-right text-[0.55rem] text-[var(--lpv-muted)]">
+                                © Buvette Pastek
+                              </figcaption>
+                            </figure>
             </div>
           </section>
 
           {/* THREE THINGS */}
-          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
-            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+          <section className="pb-12 pt-2 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[12ch] text-[2.9rem] leading-[0.88] tracking-[-0.05em] md:max-w-[15ch] md:text-[clamp(3.2rem,4.4vw,4.9rem)] md:leading-[0.9]">
               Three things to know.
             </h2>
 
-            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+            <div className="mt-8 grid border-t border-[var(--lpv-line)] md:mt-14 md:grid-cols-3">
               {pastekHighlights.map((item, index) => (
                 <article
                   key={item.title}
-                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                  className={`relative flex flex-col py-6 md:min-h-[355px] md:px-9 md:py-11 ${
                     index > 0
                       ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
                       : ""
@@ -930,11 +1006,11 @@ export default async function PlacePage({
                     {String(index + 1).padStart(2, "0")}
                   </p>
 
-                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                  <h3 className="lpv-display mt-4 max-w-[13ch] text-[1.8rem] leading-[0.94] tracking-[-0.04em] md:mt-8 md:min-h-[5.3rem] md:max-w-[11ch] md:text-[clamp(2rem,2.6vw,2.8rem)]">
                     {item.title}
                   </h3>
 
-                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                  <p className="max-w-sm pt-4 text-[0.88rem] leading-6 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0 md:text-sm md:leading-7">
                     {item.text}
                   </p>
                 </article>
@@ -969,9 +1045,9 @@ export default async function PlacePage({
 
           {/* WINE AT PASTEK */}
           <section className="py-16 md:py-24">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:max-w-[8ch] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Wine at Pastek.
                 </h2>
               </div>
@@ -1061,41 +1137,41 @@ export default async function PlacePage({
           )}
 
           {/* VISIT PASTEK */}
-          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+          <section className="pb-5 pt-9 md:pb-16 md:pt-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:max-w-[8ch] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Stop by Pastek.
                 </h2>
 
                 {place.address ? (
-                  <p className="mt-8 max-w-[29ch] text-[1.05rem] leading-7 text-[var(--lpv-ink)]/72">
+                  <p className="mt-5 max-w-[29ch] text-[0.95rem] leading-6 text-[var(--lpv-ink)]/72 md:mt-8 md:text-[1.05rem] md:leading-7">
                     {place.address}
                   </p>
                 ) : null}
               </div>
 
-              <div className="md:pt-1">
-                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
-                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+              <div className="border-t border-[var(--lpv-line)] pt-5 md:pt-7">
+                <div className="grid gap-5 md:grid-cols-3 md:gap-8">
+                  <div>
+                    <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                       Type
                     </p>
-                    <p className="text-[0.95rem]">
+                    <p className="mt-2 text-[0.9rem]">
                       Wine bar
                     </p>
                   </div>
 
                   {place.website ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Website
                       </p>
                       <a
                         href={place.website}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         {place.website
                           .replace(/^https?:\/\//, "")
@@ -1106,15 +1182,15 @@ export default async function PlacePage({
                   ) : null}
 
                   {place.instagram ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Instagram
                       </p>
                       <a
                         href={place.instagram}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         @buvettepastek
                       </a>
@@ -1153,7 +1229,7 @@ export default async function PlacePage({
       <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
         <article className="lpv-container pb-24">
 
-          <div className="pt-8 md:pt-10">
+          <div className="flex items-center justify-between pt-8 md:block md:pt-10">
             <Link
               href="/en/places"
               className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
@@ -1161,6 +1237,13 @@ export default async function PlacePage({
               <span aria-hidden="true">←</span>
               <span>Places</span>
             </Link>
+
+            <PartnerShareButton
+              name="Candide"
+              locale="en"
+              profileUrl="/en/places/candide"
+              kind="place"
+            />
           </div>
 
           {/* HERO */}
@@ -1199,7 +1282,7 @@ export default async function PlacePage({
           {/* THE PLACE */}
           <section className="pb-16 pt-8 md:pb-20 md:pt-10">
             <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
-              <figure className="w-full md:w-[570px]">
+              <figure className="hidden w-full md:block md:w-[570px]">
                 <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
                   <img
                     src="/images/lpv/bonnes%20adresses/candide2.jpg"
@@ -1236,20 +1319,34 @@ export default async function PlacePage({
                   </div>
                 </div>
               </div>
+
+              <figure className="mt-10 md:hidden">
+                              <div className="h-[430px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                                <img
+                                  src="/images/lpv/bonnes%20adresses/candide2.jpg"
+                                  alt="At Candide in Montreal"
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+
+                              <figcaption className="mt-2 text-right text-[0.55rem] text-[var(--lpv-muted)]">
+                                © Candide
+                              </figcaption>
+                            </figure>
             </div>
           </section>
 
           {/* THREE THINGS */}
-          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
-            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+          <section className="pb-12 pt-2 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[12ch] text-[2.9rem] leading-[0.88] tracking-[-0.05em] md:max-w-[15ch] md:text-[clamp(3.2rem,4.4vw,4.9rem)] md:leading-[0.9]">
               Three things to know.
             </h2>
 
-            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+            <div className="mt-8 grid border-t border-[var(--lpv-line)] md:mt-14 md:grid-cols-3">
               {candideHighlights.map((item, index) => (
                 <article
                   key={item.title}
-                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                  className={`relative flex flex-col py-6 md:min-h-[355px] md:px-9 md:py-11 ${
                     index > 0
                       ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
                       : ""
@@ -1259,11 +1356,11 @@ export default async function PlacePage({
                     {String(index + 1).padStart(2, "0")}
                   </p>
 
-                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                  <h3 className="lpv-display mt-4 max-w-[13ch] text-[1.8rem] leading-[0.94] tracking-[-0.04em] md:mt-8 md:min-h-[5.3rem] md:max-w-[11ch] md:text-[clamp(2rem,2.6vw,2.8rem)]">
                     {item.title}
                   </h3>
 
-                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                  <p className="max-w-sm pt-4 text-[0.88rem] leading-6 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0 md:text-sm md:leading-7">
                     {item.text}
                   </p>
                 </article>
@@ -1299,9 +1396,9 @@ export default async function PlacePage({
 
           {/* WINE AT CANDIDE */}
           <section className="py-16 md:py-24">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:max-w-[8ch] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Wine at Candide.
                 </h2>
               </div>
@@ -1392,41 +1489,41 @@ export default async function PlacePage({
           )}
 
           {/* VISIT CANDIDE */}
-          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+          <section className="pb-5 pt-9 md:pb-16 md:pt-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:max-w-[8ch] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Stop by Candide.
                 </h2>
 
                 {place.address ? (
-                  <p className="mt-8 max-w-[29ch] text-[1.05rem] leading-7 text-[var(--lpv-ink)]/72">
+                  <p className="mt-5 max-w-[29ch] text-[0.95rem] leading-6 text-[var(--lpv-ink)]/72 md:mt-8 md:text-[1.05rem] md:leading-7">
                     {place.address}
                   </p>
                 ) : null}
               </div>
 
-              <div className="md:pt-1">
-                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
-                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+              <div className="border-t border-[var(--lpv-line)] pt-5 md:pt-7">
+                <div className="grid gap-5 md:grid-cols-3 md:gap-8">
+                  <div>
+                    <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                       Type
                     </p>
-                    <p className="text-[0.95rem]">
+                    <p className="mt-2 text-[0.9rem]">
                       Restaurant
                     </p>
                   </div>
 
                   {place.website ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Website
                       </p>
                       <a
                         href={place.website}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         {place.website
                           .replace(/^https?:\/\//, "")
@@ -1437,15 +1534,15 @@ export default async function PlacePage({
                   ) : null}
 
                   {place.instagram ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Instagram
                       </p>
                       <a
                         href={place.instagram}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         @restaurant_candide
                       </a>
@@ -1484,7 +1581,7 @@ export default async function PlacePage({
       <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
         <article className="lpv-container pb-24">
 
-          <div className="pt-8 md:pt-10">
+          <div className="flex items-center justify-between pt-8 md:block md:pt-10">
             <Link
               href="/en/places"
               className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
@@ -1492,6 +1589,13 @@ export default async function PlacePage({
               <span aria-hidden="true">←</span>
               <span>Places</span>
             </Link>
+
+            <PartnerShareButton
+              name="Le vin dans les voiles"
+              locale="en"
+              profileUrl="/en/places/le-vin-dans-les-voiles"
+              kind="place"
+            />
           </div>
 
           {/* HERO */}
@@ -1530,7 +1634,7 @@ export default async function PlacePage({
           {/* THE AGENCY */}
           <section className="pb-16 pt-8 md:pb-20 md:pt-10">
             <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
-              <figure className="w-full md:w-[570px]">
+              <figure className="hidden w-full md:block md:w-[570px]">
                 <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
                   <img
                     src="/images/lpv/bonnes%20adresses/vindanslesvoiles2.jpg"
@@ -1567,20 +1671,34 @@ export default async function PlacePage({
                   </div>
                 </div>
               </div>
+
+              <figure className="mt-10 md:hidden">
+                              <div className="h-[430px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                                <img
+                                  src="/images/lpv/bonnes%20adresses/vindanslesvoiles2.jpg"
+                                  alt="Wines represented by Le vin dans les voiles"
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+
+                              <figcaption className="mt-2 text-right text-[0.55rem] text-[var(--lpv-muted)]">
+                                © Le vin dans les voiles
+                              </figcaption>
+                            </figure>
             </div>
           </section>
 
           {/* THREE THINGS */}
-          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
-            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+          <section className="pb-12 pt-2 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[12ch] text-[2.9rem] leading-[0.88] tracking-[-0.05em] md:max-w-[15ch] md:text-[clamp(3.2rem,4.4vw,4.9rem)] md:leading-[0.9]">
               Three things to know.
             </h2>
 
-            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+            <div className="mt-8 grid border-t border-[var(--lpv-line)] md:mt-14 md:grid-cols-3">
               {vinDansLesVoilesHighlights.map((item, index) => (
                 <article
                   key={item.title}
-                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                  className={`relative flex flex-col py-6 md:min-h-[355px] md:px-9 md:py-11 ${
                     index > 0
                       ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
                       : ""
@@ -1590,11 +1708,11 @@ export default async function PlacePage({
                     {String(index + 1).padStart(2, "0")}
                   </p>
 
-                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                  <h3 className="lpv-display mt-4 max-w-[13ch] text-[1.8rem] leading-[0.94] tracking-[-0.04em] md:mt-8 md:min-h-[5.3rem] md:max-w-[11ch] md:text-[clamp(2rem,2.6vw,2.8rem)]">
                     {item.title}
                   </h3>
 
-                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                  <p className="max-w-sm pt-4 text-[0.88rem] leading-6 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0 md:text-sm md:leading-7">
                     {item.text}
                   </p>
                 </article>
@@ -1629,9 +1747,9 @@ export default async function PlacePage({
 
           {/* THE WINE */}
           <section className="py-16 md:py-24">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[9ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   The wine in their sails.
                 </h2>
               </div>
@@ -1721,35 +1839,35 @@ export default async function PlacePage({
           )}
 
           {/* DISCOVER */}
-          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+          <section className="pb-5 pt-9 md:pb-16 md:pt-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[9ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Discover Le vin dans les voiles.
                 </h2>
               </div>
 
-              <div className="md:pt-1">
-                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
-                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+              <div className="border-t border-[var(--lpv-line)] pt-5 md:pt-7">
+                <div className="grid gap-5 md:grid-cols-3 md:gap-8">
+                  <div>
+                    <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                       Type
                     </p>
-                    <p className="text-[0.95rem]">
+                    <p className="mt-2 text-[0.9rem]">
                       Private wine import agency
                     </p>
                   </div>
 
                   {place.website ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Website
                       </p>
                       <a
                         href={place.website}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         {place.website
                           .replace(/^https?:\/\//, "")
@@ -1760,15 +1878,15 @@ export default async function PlacePage({
                   ) : null}
 
                   {place.instagram ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Instagram
                       </p>
                       <a
                         href={place.instagram}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         @levindanslesvoiles
                       </a>
@@ -1807,7 +1925,7 @@ export default async function PlacePage({
       <main className="min-h-screen bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
         <article className="lpv-container pb-24">
 
-          <div className="pt-8 md:pt-10">
+          <div className="flex items-center justify-between pt-8 md:block md:pt-10">
             <Link
               href="/en/places"
               className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
@@ -1815,6 +1933,13 @@ export default async function PlacePage({
               <span aria-hidden="true">←</span>
               <span>Places</span>
             </Link>
+
+            <PartnerShareButton
+              name="Polari"
+              locale="en"
+              profileUrl="/en/places/polari"
+              kind="place"
+            />
           </div>
 
           {/* HERO */}
@@ -1853,7 +1978,7 @@ export default async function PlacePage({
           {/* THE PLACE */}
           <section className="pb-16 pt-8 md:pb-20 md:pt-10">
             <div className="grid gap-10 md:grid-cols-[570px_minmax(0,1fr)] md:gap-12">
-              <figure className="w-full md:w-[570px]">
+              <figure className="hidden w-full md:block md:w-[570px]">
                 <div className="h-[520px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
                   <img
                     src="/images/lpv/bonnes%20adresses/polari2.jpg"
@@ -1890,20 +2015,34 @@ export default async function PlacePage({
                   </div>
                 </div>
               </div>
+
+              <figure className="mt-10 md:hidden">
+                              <div className="h-[430px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                                <img
+                                  src="/images/lpv/bonnes%20adresses/polari2.jpg"
+                                  alt="Inside Polari in Montreal"
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+
+                              <figcaption className="mt-2 text-right text-[0.55rem] text-[var(--lpv-muted)]">
+                                © Polari
+                              </figcaption>
+                            </figure>
             </div>
           </section>
 
           {/* THREE THINGS */}
-          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
-            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+          <section className="pb-12 pt-2 md:pb-28 md:pt-14">
+            <h2 className="lpv-display max-w-[12ch] text-[2.9rem] leading-[0.88] tracking-[-0.05em] md:max-w-[15ch] md:text-[clamp(3.2rem,4.4vw,4.9rem)] md:leading-[0.9]">
               Three things to know.
             </h2>
 
-            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-3">
+            <div className="mt-8 grid border-t border-[var(--lpv-line)] md:mt-14 md:grid-cols-3">
               {polariHighlights.map((item, index) => (
                 <article
                   key={item.title}
-                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                  className={`relative flex flex-col py-6 md:min-h-[355px] md:px-9 md:py-11 ${
                     index > 0
                       ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
                       : ""
@@ -1913,11 +2052,11 @@ export default async function PlacePage({
                     {String(index + 1).padStart(2, "0")}
                   </p>
 
-                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                  <h3 className="lpv-display mt-4 max-w-[13ch] text-[1.8rem] leading-[0.94] tracking-[-0.04em] md:mt-8 md:min-h-[5.3rem] md:max-w-[11ch] md:text-[clamp(2rem,2.6vw,2.8rem)]">
                     {item.title}
                   </h3>
 
-                  <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0">
+                  <p className="max-w-sm pt-4 text-[0.88rem] leading-6 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[215px] md:pt-0 md:text-sm md:leading-7">
                     {item.text}
                   </p>
                 </article>
@@ -1952,9 +2091,9 @@ export default async function PlacePage({
 
           {/* WINE AT POLARI */}
           <section className="py-16 md:py-24">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:max-w-[8ch] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Wine at Polari.
                 </h2>
               </div>
@@ -2045,41 +2184,41 @@ export default async function PlacePage({
           )}
 
           {/* STOP BY POLARI */}
-          <section className="pb-12 pt-16 md:pb-16 md:pt-20">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+          <section className="pb-5 pt-9 md:pb-16 md:pt-20">
+            <div className="grid gap-7 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
               <div className="md:pl-10">
-                <h2 className="lpv-display max-w-[8ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+                <h2 className="lpv-display max-w-[9ch] text-[3.15rem] leading-[0.87] tracking-[-0.055em] md:max-w-[8ch] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Stop by Polari.
                 </h2>
 
                 {place.address ? (
-                  <p className="mt-8 max-w-[29ch] text-[1.05rem] leading-7 text-[var(--lpv-ink)]/72">
+                  <p className="mt-5 max-w-[29ch] text-[0.95rem] leading-6 text-[var(--lpv-ink)]/72 md:mt-8 md:text-[1.05rem] md:leading-7">
                     {place.address}
                   </p>
                 ) : null}
               </div>
 
-              <div className="md:pt-1">
-                <div className="max-w-2xl border-t border-[var(--lpv-line)]">
-                  <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+              <div className="border-t border-[var(--lpv-line)] pt-5 md:pt-7">
+                <div className="grid gap-5 md:grid-cols-3 md:gap-8">
+                  <div>
+                    <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                       Type
                     </p>
-                    <p className="text-[0.95rem]">
+                    <p className="mt-2 text-[0.9rem]">
                       Wine bar
                     </p>
                   </div>
 
                   {place.website ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Website
                       </p>
                       <a
                         href={place.website}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         {place.website
                           .replace(/^https?:\/\//, "")
@@ -2090,15 +2229,15 @@ export default async function PlacePage({
                   ) : null}
 
                   {place.instagram ? (
-                    <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                      <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <div>
+                      <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                         Instagram
                       </p>
                       <a
                         href={place.instagram}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                        className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                       >
                         @polari.vin
                       </a>
@@ -2114,7 +2253,28 @@ export default async function PlacePage({
     );
   }
 
+  const translateEnglishPlaceName = (value?: string | null) => {
+    if (!value) return value;
+
+    const normalized = value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+
+    const translations: Record<string, string> = {
+      montreal: "Montreal",
+      "cantons-de-l'est": "Eastern Townships",
+      "cantons-de-l’est": "Eastern Townships",
+      "cantons de l'est": "Eastern Townships",
+      "cantons de l’est": "Eastern Townships",
+    };
+
+    return translations[normalized] ?? value;
+  };
+
   const genericLocation = [place.city, place.region]
+    .map(translateEnglishPlaceName)
     .filter((value, index, array) => value && array.indexOf(value) === index)
     .join(", ");
 
@@ -2151,18 +2311,18 @@ export default async function PlacePage({
         </div>
 
         {/* TYPOGRAPHIC HERO */}
-        <section className="pb-16 pt-14 md:pb-24 md:pt-20">
+        <section className="pb-6 pt-9 md:pb-24 md:pt-20">
           <h1
             className={`lpv-display tracking-[-0.065em] ${
               place.name.length > 20
-                ? "max-w-[11ch] text-[clamp(4.6rem,7.4vw,8rem)] leading-[0.82]"
-                : "max-w-[10ch] text-[clamp(5.4rem,8.5vw,9.2rem)] leading-[0.78]"
+                ? "max-w-[11ch] text-[3.85rem] leading-[0.84] md:text-[clamp(4.6rem,7.4vw,8rem)] md:leading-[0.82]"
+                : "max-w-[11ch] text-[3.85rem] leading-[0.84] md:max-w-[10ch] md:text-[clamp(5.4rem,8.5vw,9.2rem)] md:leading-[0.78]"
             }`}
           >
             {place.name}
           </h1>
 
-          <p className="mt-8 max-w-[29ch] translate-x-[8px] text-[clamp(1.05rem,1.25vw,1.25rem)] leading-[1.42] tracking-[-0.02em]">
+          <p className="mt-5 max-w-[29ch] text-[0.82rem] leading-5 text-[var(--lpv-muted)] md:mt-8 md:translate-x-[8px] md:text-[clamp(1.05rem,1.25vw,1.25rem)] md:leading-[1.42] md:tracking-[-0.02em] md:text-[var(--lpv-ink)]">
             {[formatType(place.type), genericLocation]
               .filter(Boolean)
               .join(" · ")}
@@ -2171,15 +2331,15 @@ export default async function PlacePage({
 
         {/* DESCRIPTION */}
         {genericDescription.length ? (
-          <section className="border-t border-[var(--lpv-line)] py-14 md:py-20">
-            <div className="grid gap-10 md:grid-cols-[0.27fr_0.73fr] md:gap-16">
+          <section className="border-t border-[var(--lpv-line)] py-6 md:py-20">
+            <div className="grid gap-4 md:grid-cols-[0.27fr_0.73fr] md:gap-16">
               <div>
-                <h2 className="lpv-display max-w-[8ch] text-[clamp(3rem,4vw,4.4rem)] leading-[0.9] tracking-[-0.05em]">
+                <h2 className="lpv-display max-w-[9ch] text-[2.55rem] leading-[0.9] tracking-[-0.05em] md:max-w-[8ch] md:text-[clamp(3rem,4vw,4.4rem)]">
                   The place.
                 </h2>
               </div>
 
-              <div className="lpv-prose max-w-[46rem] text-[1.08rem] leading-8 md:text-[1.16rem] md:leading-9">
+              <div className="lpv-prose max-w-[47rem] text-[0.94rem] leading-7 text-[var(--lpv-ink)] md:max-w-[46rem] md:text-[1.16rem] md:leading-9">
                 <PortableText value={genericDescription} />
               </div>
             </div>
@@ -2193,18 +2353,18 @@ export default async function PlacePage({
               {genericHighlights.slice(0, 3).map((item, index) => (
                 <div
                   key={`${item}-${index}`}
-                  className={`flex min-h-[150px] items-center py-8 md:min-h-[175px] md:px-9 ${
+                  className={`flex min-h-0 items-center py-6 md:min-h-[175px] md:px-9 md:py-8 ${
                     index > 0
                       ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
                       : ""
                   }`}
                 >
                   <div>
-                    <p className="mb-5 text-[0.55rem] tracking-[0.2em] text-[var(--lpv-muted)]">
+                    <p className="mb-3 text-[0.57rem] tracking-[0.21em] text-[var(--lpv-cocoa)] md:mb-5 md:text-[0.55rem] md:tracking-[0.2em] md:text-[var(--lpv-muted)]">
                       {String(index + 1).padStart(2, "0")}
                     </p>
 
-                    <p className="lpv-display max-w-[13ch] text-[clamp(1.65rem,2.15vw,2.25rem)] leading-[0.95] tracking-[-0.035em]">
+                    <p className="lpv-display max-w-[15ch] text-[1.55rem] leading-[0.95] tracking-[-0.035em] md:max-w-[13ch] md:text-[clamp(1.65rem,2.15vw,2.25rem)]">
                       {item}
                     </p>
                   </div>
@@ -2216,9 +2376,9 @@ export default async function PlacePage({
 
         {/* THEIR BOTTLES */}
         <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
-          <div className="lpv-container pb-10 pt-16 md:pb-14 md:pt-20">
+          <div className="lpv-container pb-10 pt-10 md:pb-14 md:pt-20">
             <div className="flex items-end justify-between gap-8">
-              <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+              <h2 className="lpv-display text-[2.85rem] leading-[0.9] tracking-[-0.05em] md:text-[clamp(3.2rem,4.5vw,5rem)]">
                 Their bottles.
               </h2>
 
@@ -2235,12 +2395,12 @@ export default async function PlacePage({
 
             {placeWines.length ? (
               <>
-                <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+                <div className="mt-8 grid grid-cols-2 gap-2.5 md:mt-12 md:grid-cols-5 md:gap-4">
                   {placeWines.slice(0, 5).map((wine) => (
                     <Link
                       key={wine._id}
                       href={`/en/wines/${wine.slug}`}
-                      className="group relative flex min-h-[390px] flex-col bg-[var(--lpv-paper-light)] p-5 md:min-h-[450px] md:p-6"
+                      className="group relative flex min-h-[300px] flex-col bg-[var(--lpv-paper-light)] p-3.5 md:min-h-[450px] md:p-6"
                     >
                       <div className="flex h-[235px] items-center justify-center py-4 md:h-[285px]">
                         <BottleStage
@@ -2259,7 +2419,7 @@ export default async function PlacePage({
                             .join(" · ") || "Wine"}
                         </p>
 
-                        <h3 className="lpv-display mt-3 min-h-[3.4rem] text-[clamp(1.45rem,1.6vw,1.75rem)] leading-[0.94] tracking-[-0.035em]">
+                        <h3 className="lpv-display mt-2 min-h-[2.8rem] text-[1.25rem] leading-[0.94] tracking-[-0.035em] md:mt-3 md:min-h-[3.4rem] md:text-[clamp(1.45rem,1.6vw,1.75rem)]">
                           {wine.name}
                         </h3>
                       </div>
@@ -2276,7 +2436,7 @@ export default async function PlacePage({
                 </Link>
               </>
             ) : (
-              <div className="mt-8 flex min-h-[120px] items-center justify-center px-6 py-6 text-center md:min-h-[145px]">
+              <div className="mt-5 flex min-h-[100px] items-center justify-center px-4 py-5 text-center md:mt-8 md:min-h-[145px] md:px-6 md:py-6">
                 <div>
                   <p className="lpv-display text-[clamp(1.9rem,2.7vw,3rem)] leading-[0.92] tracking-[-0.04em]">
                     We’re working on it ;)
@@ -2292,34 +2452,34 @@ export default async function PlacePage({
         </section>
 
         {/* STOP BY */}
-        <section className="pb-12 pt-16 md:pb-16 md:pt-20">
-          <div className="grid gap-12 md:grid-cols-[0.42fr_0.58fr] md:gap-20">
+        <section className="pb-7 pt-7 md:pb-16 md:pt-20">
+          <div className="grid gap-8 md:grid-cols-[0.42fr_0.58fr] md:gap-20">
             <div>
-              <h2 className="lpv-display max-w-[9ch] text-[clamp(3.6rem,5vw,5.5rem)] leading-[0.88] tracking-[-0.055em]">
+              <h2 className="lpv-display max-w-[10ch] text-[3rem] leading-[0.87] tracking-[-0.055em] md:max-w-[9ch] md:text-[clamp(3.6rem,5vw,5.5rem)] md:leading-[0.88]">
                 Stop by {place.name}.
               </h2>
 
               {place.address ? (
-                <p className="mt-8 max-w-[29ch] text-[1rem] leading-7 text-[var(--lpv-muted)]">
+                <p className="mt-5 max-w-[29ch] text-[0.95rem] leading-6 text-[var(--lpv-ink)]/72 md:mt-8 md:text-[1rem] md:leading-7 md:text-[var(--lpv-muted)]">
                   {place.address}
                 </p>
               ) : null}
             </div>
 
-            <div className="border-t border-[var(--lpv-line)]">
-              <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+            <div className="grid gap-5 border-t border-[var(--lpv-line)] pt-6 md:block md:pt-0">
+              <div>
+                <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                   Type
                 </p>
 
-                <p className="text-[0.95rem]">
+                <p className="mt-2 text-[0.9rem]">
                   {formatType(place.type)}
                 </p>
               </div>
 
               {place.website ? (
-                <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                  <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                <div>
+                  <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                     Website
                   </p>
 
@@ -2327,7 +2487,7 @@ export default async function PlacePage({
                     href={place.website}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                    className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                   >
                     {place.website
                       .replace(/^https?:\/\//, "")
@@ -2338,8 +2498,8 @@ export default async function PlacePage({
               ) : null}
 
               {place.instagram && genericInstagramHandle ? (
-                <div className="grid gap-3 border-b border-[var(--lpv-line)] py-6 sm:grid-cols-[150px_1fr]">
-                  <p className="text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                <div>
+                  <p className="text-[0.5rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
                     Instagram
                   </p>
 
@@ -2347,7 +2507,7 @@ export default async function PlacePage({
                     href={place.instagram}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
+                    className="mt-2 inline-block text-[0.9rem] underline decoration-[0.05em] underline-offset-[4px] transition-opacity hover:opacity-55"
                   >
                     {genericInstagramHandle}
                   </a>
@@ -2358,9 +2518,9 @@ export default async function PlacePage({
         </section>
 
         {/* CONTACT */}
-        <section className="pb-0 pt-4 md:pb-1 md:pt-5">
-          <div className="flex justify-end">
-            <p className="max-w-[31rem] text-[0.72rem] leading-5 text-[var(--lpv-muted)] md:text-right">
+        <section className="mt-7 border-t border-[var(--lpv-line)] pb-2 pt-5 md:mt-0 md:border-t-0 md:pb-4 md:pt-5">
+          <div className="flex justify-start md:justify-end">
+            <p className="max-w-[31rem] text-[0.68rem] leading-[1.55] text-[var(--lpv-muted)] md:text-right md:text-[0.72rem] md:leading-5">
               Do you represent this place?
               <br />
               For an update or a collaboration,{" "}

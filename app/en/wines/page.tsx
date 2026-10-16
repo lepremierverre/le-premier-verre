@@ -633,8 +633,8 @@ export default async function VinsPage({
                 { label: "Alcohol-free", value: "alcohol-free" },
               ].map((item) => {
                 const href = item.value
-                  ? `/vins?type=${item.value}`
-                  : "/vins";
+                  ? `/en/wines?type=${item.value}#catalogue`
+                  : "/en/wines#catalogue";
 
                 const active = selectedType === item.value;
 

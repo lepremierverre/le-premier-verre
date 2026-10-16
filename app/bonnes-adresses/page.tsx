@@ -194,24 +194,24 @@ export default async function PlacesPage({
       <section className="border-b border-[var(--lpv-line)]">
         <div className="lpv-container grid gap-6 py-10 md:grid-cols-[0.68fr_0.32fr] md:items-end md:gap-10 md:py-24">
           <div>
-            <p className="lpv-kicker text-[var(--lpv-cocoa)]">
+            <p className="lpv-kicker hidden text-[var(--lpv-cocoa)] md:block">
               Répertoire
             </p>
 
-            <h1 className="lpv-display mt-4 max-w-5xl text-[clamp(4rem,16vw,5rem)] leading-[0.82] tracking-[-0.055em] md:mt-7 md:text-[clamp(4.8rem,10vw,10rem)]">
+            <h1 className="lpv-display max-w-5xl text-[clamp(4rem,16vw,5rem)] leading-[0.82] tracking-[-0.055em] md:mt-7 md:text-[clamp(4.8rem,10vw,10rem)]">
               Les bonnes
               <br />
               adresses.
             </h1>
           </div>
 
-          <div className="border-t border-[var(--lpv-line)] pt-4 md:border-t-0 md:pb-2 md:pt-6">
+          <div className="pt-0 md:border-t-0 md:pb-2 md:pt-6">
             <p className="max-w-md text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
               Restaurants, bars à vin, cavistes et endroits où l’on aime
               revenir pour boire un bon verre.
             </p>
 
-            <p className="mt-5 text-xs uppercase tracking-[0.18em] text-[var(--lpv-cocoa)] md:mt-7">
+            <p className="mt-7 hidden text-xs uppercase tracking-[0.18em] text-[var(--lpv-cocoa)] md:block">
               {places.length} adresse{places.length !== 1 ? "s" : ""} à découvrir
             </p>
           </div>
@@ -223,24 +223,24 @@ export default async function PlacesPage({
         <>
           {/* MOBILE */}
           <section className="overflow-hidden bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)] md:hidden">
-            <div className="pb-10 pt-11">
+            <div className="pb-5 pt-5">
               <div className="lpv-container">
                 <p className="lpv-kicker text-white/50">
                   Avec nous
                 </p>
 
-                <h2 className="lpv-display mt-3 text-[3.7rem] leading-[0.86] tracking-[-0.05em]">
+                <h2 className="lpv-display mt-3 text-[3.5rem] leading-[0.84] tracking-[-0.05em]">
                   De plus près.
                 </h2>
 
-                <p className="mt-5 max-w-[30rem] text-sm leading-6 text-white/60">
+                <p className="mt-3 max-w-[300px] text-[0.7rem] leading-[1.45] text-white/55">
                   Des fiches réalisées avec les établissements et des
                   informations validées directement avec eux.
                 </p>
               </div>
 
-              <div className="mt-8 overflow-x-auto pl-[max(1rem,calc((100vw-1280px)/2))] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                <div className="flex w-max snap-x snap-mandatory gap-3 pr-4">
+              <div className="mt-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex w-max snap-x snap-mandatory gap-3 px-4">
                   {featuredPlaces.map((place) => {
                     const authorizedImage = getAuthorizedImage(place);
 
@@ -274,13 +274,13 @@ export default async function PlacesPage({
                     return (
                       <article
                         key={place._id}
-                        className="w-[72vw] max-w-[315px] shrink-0 snap-start bg-[var(--lpv-paper)] text-[var(--lpv-ink)]"
+                        className="w-[62vw] max-w-[255px] shrink-0 snap-start bg-[var(--lpv-paper)] text-[var(--lpv-ink)]"
                       >
                         <Link
                           href={`/bonnes-adresses/${place.slug}`}
-                          className="flex h-[420px] flex-col"
+                          className="flex h-[340px] flex-col"
                         >
-                          <div className="h-[238px] shrink-0 overflow-hidden bg-[var(--lpv-paper-light)]">
+                          <div className="h-[185px] shrink-0 overflow-hidden bg-[var(--lpv-paper-light)]">
                             {imageSrc ? (
                               <img
                                 src={imageSrc}
@@ -296,17 +296,17 @@ export default async function PlacesPage({
                             )}
                           </div>
 
-                          <div className="flex min-h-0 flex-1 flex-col px-5 pb-5 pt-5">
-                            <p className="text-[0.53rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                          <div className="flex min-h-0 flex-1 flex-col px-4 pb-4 pt-4">
+                            <p className="text-[0.48rem] font-semibold uppercase tracking-[0.17em] text-[var(--lpv-cocoa)]">
                               Avec nous
                             </p>
 
-                            <h3 className="lpv-display mt-3 text-[2rem] leading-[0.92] tracking-[-0.035em]">
+                            <h3 className="lpv-display mt-2 text-[1.65rem] leading-[0.92] tracking-[-0.035em]">
                               {place.name}
                             </h3>
 
                             {location ? (
-                              <p className="mt-auto border-t border-[var(--lpv-line)] pt-3 text-[0.55rem] uppercase leading-4 tracking-[0.15em] text-[var(--lpv-muted)]">
+                              <p className="mt-auto border-t border-[var(--lpv-line)] pt-2.5 text-[0.48rem] uppercase leading-4 tracking-[0.14em] text-[var(--lpv-muted)]">
                                 {location}
                               </p>
                             ) : null}
@@ -318,7 +318,7 @@ export default async function PlacesPage({
                 </div>
               </div>
 
-              <div className="lpv-container mt-6">
+              <div className="lpv-container mt-4">
                 <p className="text-right text-[0.55rem] uppercase tracking-[0.18em] text-white/35">
                   {featuredPlaces.length} avec nous
                 </p>
@@ -447,14 +447,10 @@ export default async function PlacesPage({
           id="repertoire"
           className="scroll-mt-20 bg-[var(--lpv-paper)] md:hidden"
         >
-          <div className="lpv-container pb-9 pt-11">
-            <div className="flex items-end justify-between gap-5 pb-7">
+          <div className="lpv-container pb-7 pt-8">
+            <div className="flex items-end justify-between gap-5 pb-5">
               <div>
-                <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-                  Le répertoire
-                </p>
-
-                <h2 className="lpv-display mt-3 text-[3.65rem] leading-[0.85] tracking-[-0.05em]">
+                <h2 className="lpv-display text-[3.35rem] leading-[0.86] tracking-[-0.05em]">
                   Le Québec,
                   <br />
                   adresse par adresse.
@@ -507,10 +503,10 @@ export default async function PlacesPage({
                     );
 
                     return (
-                      <article key={place._id} className="min-w-0">
+                      <article key={place._id} className="h-full min-w-0">
                         <Link
                           href={`/bonnes-adresses/${place.slug}`}
-                          className="flex min-h-[230px] flex-col bg-[var(--lpv-paper-light)] px-4 pb-4 pt-4"
+                          className="flex h-full min-h-[230px] flex-col bg-[var(--lpv-paper-light)] px-4 pb-4 pt-4"
                         >
                           <div className="flex items-start justify-between gap-4">
                             {place.lpvPartner ? (
@@ -528,10 +524,12 @@ export default async function PlacesPage({
                             </span>
                           </div>
 
-                          <div className="mt-auto">
-                            <h3 className="lpv-display max-w-full text-[1.8rem] leading-[0.91] tracking-[-0.04em]">
-                              {place.name}
-                            </h3>
+                          <div className="mt-auto grid h-[140px] grid-rows-[88px_1fr]">
+                            <div className="flex items-end">
+                              <h3 className="lpv-display max-w-full text-[1.8rem] leading-[0.91] tracking-[-0.04em]">
+                                {place.name}
+                              </h3>
+                            </div>
 
                             <div className="mt-4 border-t border-[var(--lpv-line)] pt-3">
                               <p className="text-[0.48rem] uppercase leading-4 tracking-[0.12em] text-[var(--lpv-muted)]">
@@ -548,7 +546,7 @@ export default async function PlacesPage({
                 {totalPages > 1 ? (
                   <nav
                     aria-label="Pagination des bonnes adresses mobile"
-                    className="mt-8 flex items-center justify-between gap-3 pt-2"
+                    className="mt-6 flex items-center justify-between gap-2 border-t border-[var(--lpv-line)] pt-5"
                   >
                     <div>
                       {currentPage > 1 ? (
@@ -557,12 +555,12 @@ export default async function PlacesPage({
                             page: currentPage - 1,
                             anchor: "repertoire",
                           })}
-                          className="lpv-text-link"
+                          className="text-[0.56rem] uppercase tracking-[0.12em] text-[var(--lpv-ink)] transition-opacity hover:opacity-50"
                         >
                           ← Précédent
                         </Link>
                       ) : (
-                        <span className="text-sm text-[var(--lpv-muted)]/40">
+                        <span className="text-[0.56rem] uppercase tracking-[0.12em] text-[var(--lpv-muted)]/40">
                           ← Précédent
                         </span>
                       )}
@@ -600,12 +598,12 @@ export default async function PlacesPage({
                             page: currentPage + 1,
                             anchor: "repertoire",
                           })}
-                          className="lpv-text-link"
+                          className="text-[0.56rem] uppercase tracking-[0.12em] text-[var(--lpv-ink)] transition-opacity hover:opacity-50"
                         >
                           Suivant →
                         </Link>
                       ) : (
-                        <span className="text-sm text-[var(--lpv-muted)]/40">
+                        <span className="text-[0.56rem] uppercase tracking-[0.12em] text-[var(--lpv-muted)]/40">
                           Suivant →
                         </span>
                       )}

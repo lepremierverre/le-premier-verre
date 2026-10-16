@@ -281,11 +281,7 @@ export default async function ProducersPage({
       {/* MOBILE — HERO */}
       <section className="border-b border-[var(--lpv-line)] md:hidden">
         <div className="lpv-container pb-10 pt-9">
-          <p className="lpv-kicker text-[var(--lpv-cocoa)]">
-            Producteurs
-          </p>
-
-          <h1 className="lpv-display mt-5 text-[4.15rem] leading-[0.84] tracking-[-0.055em]">
+          <h1 className="lpv-display text-[4.15rem] leading-[0.84] tracking-[-0.055em]">
             Ceux qui font
             <br />
             le vin d’ici.
@@ -315,25 +311,25 @@ export default async function ProducersPage({
         <>
           {/* MOBILE — AVEC NOUS */}
           <section className="overflow-hidden bg-[var(--lpv-cocoa)] text-[var(--lpv-paper-light)] md:hidden">
-            <div className="pb-10 pt-10">
+            <div className="pb-5 pt-5">
               <div className="lpv-container">
                 <p className="lpv-kicker text-white/45">
                   Avec nous
                 </p>
 
                 <div className="mt-3 flex items-end justify-between gap-5">
-                  <h2 className="lpv-display text-[4.25rem] leading-[0.83] tracking-[-0.055em]">
+                  <h2 className="lpv-display text-[3.5rem] leading-[0.84] tracking-[-0.05em]">
                     De plus près.
                   </h2>
                 </div>
 
-                <p className="mt-5 max-w-[320px] text-[0.78rem] leading-5 text-white/55">
+                <p className="mt-3 max-w-[300px] text-[0.7rem] leading-[1.45] text-white/55">
                   Des fiches réalisées avec les producteurs et validées
                   directement avec eux.
                 </p>
               </div>
 
-              <div className="mt-7 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="mt-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <div className="flex w-max snap-x snap-mandatory gap-3 px-4">
                   {featuredProducers.map((producer) => {
                     const image = getAuthorizedImage(producer);
@@ -361,13 +357,13 @@ export default async function ProducersPage({
                     return (
                       <article
                         key={producer._id}
-                        className="w-[72vw] max-w-[315px] shrink-0 snap-start bg-[var(--lpv-paper)] text-[var(--lpv-ink)]"
+                        className="w-[62vw] max-w-[255px] shrink-0 snap-start bg-[var(--lpv-paper)] text-[var(--lpv-ink)]"
                       >
                         <Link
                           href={`/producteurs/${producer.slug}`}
-                          className="flex h-[420px] flex-col"
+                          className="flex h-[340px] flex-col"
                         >
-                          <div className="h-[238px] shrink-0 overflow-hidden bg-[var(--lpv-paper-light)]">
+                          <div className="h-[185px] shrink-0 overflow-hidden bg-[var(--lpv-paper-light)]">
                             {imageSrc ? (
                               <img
                                 src={imageSrc}
@@ -387,17 +383,17 @@ export default async function ProducersPage({
                             )}
                           </div>
 
-                          <div className="flex min-h-0 flex-1 flex-col px-5 pb-5 pt-5">
-                            <p className="text-[0.53rem] font-semibold uppercase tracking-[0.18em] text-[var(--lpv-cocoa)]">
+                          <div className="flex min-h-0 flex-1 flex-col px-4 pb-4 pt-4">
+                            <p className="text-[0.48rem] font-semibold uppercase tracking-[0.17em] text-[var(--lpv-cocoa)]">
                               Avec nous
                             </p>
 
-                            <h3 className="lpv-display mt-3 text-[2rem] leading-[0.92] tracking-[-0.035em]">
+                            <h3 className="lpv-display mt-2 text-[1.65rem] leading-[0.92] tracking-[-0.035em]">
                               {producer.name}
                             </h3>
 
                             {location ? (
-                              <p className="mt-auto border-t border-[var(--lpv-line)] pt-3 text-[0.55rem] uppercase leading-4 tracking-[0.15em] text-[var(--lpv-muted)]">
+                              <p className="mt-auto border-t border-[var(--lpv-line)] pt-2.5 text-[0.48rem] uppercase leading-4 tracking-[0.14em] text-[var(--lpv-muted)]">
                                 {location}
                               </p>
                             ) : null}
@@ -409,7 +405,7 @@ export default async function ProducersPage({
                 </div>
               </div>
 
-              <div className="lpv-container mt-6">
+              <div className="lpv-container mt-4">
                 <p className="text-right text-[0.55rem] uppercase tracking-[0.18em] text-white/35">
                   {featuredProducers.length} avec nous
                 </p>
@@ -693,14 +689,14 @@ export default async function ProducersPage({
                     return (
                       <article
                         key={producer._id}
-                        className="min-w-0"
+                        className="h-full min-w-0"
                       >
                         <Link
                           href={`/producteurs/${producer.slug}`}
                           className={
                             showInternational
-                              ? "flex min-h-[285px] flex-col bg-[var(--lpv-paper-light)] px-4 pb-4 pt-4"
-                              : "flex min-h-[230px] flex-col bg-[var(--lpv-paper-light)] px-4 pb-4 pt-4"
+                              ? "flex h-full min-h-[285px] flex-col bg-[var(--lpv-paper-light)] px-4 pb-4 pt-4"
+                              : "flex h-full min-h-[230px] flex-col bg-[var(--lpv-paper-light)] px-4 pb-4 pt-4"
                           }
                         >
                           <div className="flex items-start justify-between gap-4">
@@ -736,10 +732,12 @@ export default async function ProducersPage({
                               </div>
                             </div>
                           ) : (
-                            <div className="mt-auto">
-                              <h3 className="lpv-display max-w-full text-[1.8rem] leading-[0.91] tracking-[-0.04em]">
-                                {producer.name}
-                              </h3>
+                            <div className="mt-auto grid h-[140px] grid-rows-[88px_1fr]">
+                              <div className="flex items-end">
+                                <h3 className="lpv-display max-w-full text-[1.8rem] leading-[0.91] tracking-[-0.04em]">
+                                  {producer.name}
+                                </h3>
+                              </div>
 
                               <div className="mt-4 border-t border-[var(--lpv-line)] pt-3">
                                 <p className="text-[0.48rem] uppercase leading-4 tracking-[0.12em] text-[var(--lpv-muted)]">

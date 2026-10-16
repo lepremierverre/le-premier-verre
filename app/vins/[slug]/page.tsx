@@ -181,7 +181,7 @@ export default async function WinePage({
         <article className="mx-auto max-w-[1500px] px-5 pb-0 pt-7 sm:px-8 md:px-10 lg:px-10">
 
           {/* NAVIGATION + ACTIONS */}
-          <div className="mb-12 flex items-center justify-between gap-6 md:mb-14">
+          <div className="mb-8 flex items-center justify-between gap-6 md:mb-14">
             <Link
               href="/vins"
               className="text-[0.65rem] uppercase tracking-[0.24em] transition-opacity hover:opacity-60"
@@ -213,8 +213,8 @@ export default async function WinePage({
 
 
           {/* HERO */}
-          <section className="pb-14 md:pb-20">
-            <div className="grid gap-10 md:grid-cols-[0.46fr_0.54fr] md:gap-14 lg:gap-20">
+          <section className="pb-8 md:pb-20">
+            <div className="grid gap-7 md:grid-cols-[0.46fr_0.54fr] md:gap-14 lg:gap-20">
 
               {/* IDENTITÉ DU VIN */}
               <div className="flex md:pl-[58px]">
@@ -223,28 +223,28 @@ export default async function WinePage({
 
                   <div className="md:pt-[calc(17%+10px)]">
 
-                    <h1 className="lpv-display max-w-[620px] text-[clamp(5.5rem,7.8vw,8.2rem)] leading-[0.84] tracking-[-0.05em]">
+                    <h1 className="lpv-display max-w-[620px] text-[4.25rem] leading-[0.84] tracking-[-0.05em] md:text-[clamp(5.5rem,7.8vw,8.2rem)]">
                       {wine.name}
                     </h1>
 
                     {wine.oneLiner ? (
-                      <p className="mt-[32px] max-w-[485px] text-[1.3rem] leading-[1.58] md:ml-[36px]">
+                      <p className="mt-6 max-w-[485px] text-[1.08rem] leading-[1.5] md:ml-[36px] md:mt-[32px] md:text-[1.3rem] md:leading-[1.58]">
                         {wine.oneLiner}
                       </p>
                     ) : null}
 
-                    <div className="mt-[110px] w-fit max-w-full border border-[var(--lpv-cocoa)]/20 bg-transparent px-7 py-[18px]">
+                    <div className="mt-8 w-full max-w-full border-y border-[var(--lpv-line)] bg-transparent py-4 md:mt-[110px] md:w-fit md:border md:border-[var(--lpv-cocoa)]/20 md:px-7 md:py-[18px]">
 
-                      <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 md:gap-x-5">
 
-                        <span className="lpv-display text-[1.08rem] leading-none">
+                        <span className="lpv-display text-[0.95rem] leading-none md:text-[1.08rem]">
                           {wine.beverageType === "cider" ? (wine.alcoholFree ? "Cidre sans alcool" : "Cidre") : wine.color === "white" ? "Blanc" : wine.color === "red" ? "Rouge" : wine.color === "rose" ? "Rosé" : "Vin"}
                         </span>
 
                         {wine.vintage ? (
                           <>
                             <span className="text-[0.7rem] text-[var(--lpv-muted)]">·</span>
-                            <span className="lpv-display text-[1.08rem] leading-none">
+                            <span className="lpv-display text-[0.95rem] leading-none md:text-[1.08rem]">
                               {wine.vintage}
                             </span>
                           </>
@@ -253,7 +253,7 @@ export default async function WinePage({
                         {wine.appellation?.name || wine.country?.name ? (
                           <>
                             <span className="text-[0.7rem] text-[var(--lpv-muted)]">·</span>
-                            <span className="lpv-display text-[1.08rem] leading-none">
+                            <span className="lpv-display text-[0.95rem] leading-none md:text-[1.08rem]">
                               {wine.appellation?.name || wine.country?.name}
                             </span>
                           </>
@@ -262,7 +262,7 @@ export default async function WinePage({
                         {wine.region?.name ? (
                           <>
                             <span className="text-[0.7rem] text-[var(--lpv-muted)]">·</span>
-                            <span className="lpv-display text-[1.08rem] leading-none">
+                            <span className="lpv-display text-[0.95rem] leading-none md:text-[1.08rem]">
                               {wine.region.name}
                             </span>
                           </>
@@ -277,24 +277,24 @@ export default async function WinePage({
 
 
                   {/* PRODUCTEUR + DISPONIBILITÉ */}
-                  <div className="mt-14 md:mt-[38px] md:pb-[4px]">
+                  <div className="mt-7 md:mt-[38px] md:pb-[4px]">
 
                     {wine.producer?.name ? (
                       <div>
 
-                        <p className="mb-3 text-[0.62rem] uppercase tracking-[0.22em] text-[var(--lpv-muted)]">
+                        <p className="mb-2 text-[0.56rem] uppercase tracking-[0.22em] text-[var(--lpv-muted)] md:mb-3 md:text-[0.62rem]">
                           Producteur
                         </p>
 
                         {wine.producer?.slug ? (
                           <Link
                             href={`/producteurs/${wine.producer.slug}`}
-                            className="lpv-display inline-flex items-baseline gap-3 text-[clamp(2.6rem,3.4vw,3.5rem)] leading-[0.95] tracking-[-0.04em] transition-opacity hover:opacity-55"
+                            className="lpv-display inline-flex items-baseline gap-3 text-[2.15rem] leading-[0.95] tracking-[-0.04em] transition-opacity hover:opacity-55 md:text-[clamp(2.6rem,3.4vw,3.5rem)]"
                           >
                             {wine.producer.name}
                           </Link>
                         ) : (
-                          <p className="lpv-display text-[clamp(2.6rem,3.4vw,3.5rem)] leading-[0.95] tracking-[-0.04em]">
+                          <p className="lpv-display text-[2.15rem] leading-[0.95] tracking-[-0.04em] md:text-[clamp(2.6rem,3.4vw,3.5rem)]">
                             {wine.producer.name}
                           </p>
                         )}
@@ -304,9 +304,9 @@ export default async function WinePage({
 
 
                     {/* DISPONIBILITÉ */}
-                    <div className="mt-5">
+                    <div className="mt-4 md:mt-5">
 
-                      <p className="mb-2 text-[0.68rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
+                      <p className="mb-1.5 text-[0.56rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)] md:mb-2 md:text-[0.68rem]">
                         Où le trouver
                       </p>
 
@@ -317,7 +317,7 @@ export default async function WinePage({
                         locale="fr"
                         target="_blank"
                         rel="noreferrer"
-                        className="lpv-display inline-flex items-baseline gap-2 text-[1.28rem] leading-6 tracking-[-0.02em] transition-opacity hover:opacity-55"
+                        className="lpv-display inline-flex items-baseline gap-2 text-[1.12rem] leading-5 tracking-[-0.02em] transition-opacity hover:opacity-55 md:text-[1.28rem] md:leading-6"
                       >
                         {purchaseLabel || "Voir le point de vente"}
                       </WhereToBuyLink>
@@ -390,23 +390,23 @@ export default async function WinePage({
         <article className="mx-auto max-w-[1500px] px-5 pb-0 sm:px-8 md:px-10 lg:px-10">
 
           {/* REPÈRES */}
-          <section className="pb-16 pt-10 md:pb-20 md:pt-4">
+          <section className="pb-10 pt-6 md:pb-20 md:pt-4">
 
-            <h2 className="lpv-display text-[clamp(2.9rem,4.3vw,4.3rem)] leading-none tracking-[-0.04em]">
+            <h2 className="lpv-display text-[2.55rem] leading-[0.92] tracking-[-0.04em] md:text-[clamp(2.9rem,4.3vw,4.3rem)] md:leading-none">
               {wine.beverageType === "cider" ? "Le cidre en quelques repères." : "Le vin en quelques repères."}
             </h2>
 
 
-            <div className="mt-12 grid border-t border-[var(--lpv-line)] md:grid-cols-4">
+            <div className="mt-7 grid border-t border-[var(--lpv-line)] md:mt-12 md:grid-cols-4">
 
               {/* 01 */}
-              <div className="border-b border-[var(--lpv-line)] py-8 md:border-b-0 md:border-r md:px-8 md:first:pl-8">
+              <div className="border-b border-[var(--lpv-line)] py-6 md:border-b-0 md:border-r md:px-8 md:py-8 md:first:pl-8">
 
-                <h3 className="lpv-display text-[1.8rem] leading-none tracking-[-0.035em]">
+                <h3 className="lpv-display text-[1.6rem] leading-none tracking-[-0.035em] md:text-[1.8rem]">
                   Le profil
                 </h3>
 
-                <div className="mt-9 max-w-[290px] space-y-5">
+                <div className="mt-5 max-w-[290px] space-y-4 md:mt-9 md:space-y-5">
 
                   <div>
                     <p className="text-[0.64rem] uppercase tracking-[0.18em] text-[var(--lpv-ink)]/60">
@@ -440,13 +440,13 @@ export default async function WinePage({
 
 
               {/* 02 */}
-              <div className="border-b border-[var(--lpv-line)] py-8 md:border-b-0 md:border-r md:px-8">
+              <div className="border-b border-[var(--lpv-line)] py-6 md:border-b-0 md:border-r md:px-8 md:py-8">
 
-                <h3 className="lpv-display text-[1.8rem] leading-none tracking-[-0.035em]">
+                <h3 className="lpv-display text-[1.6rem] leading-none tracking-[-0.035em] md:text-[1.8rem]">
                   Dans le verre
                 </h3>
 
-                <p className="mt-9 max-w-[260px] text-[1.05rem] leading-7 text-[var(--lpv-ink)]">
+                <p className="mt-5 max-w-[260px] text-[0.95rem] leading-6 text-[var(--lpv-ink)] md:mt-9 md:text-[1.05rem] md:leading-7">
                   {wine.tastingKeywords?.length
                     ? wine.tastingKeywords.join(" · ")
                     : "—"}
@@ -456,13 +456,13 @@ export default async function WinePage({
 
 
               {/* 03 */}
-              <div className="border-b border-[var(--lpv-line)] py-8 md:border-b-0 md:border-r md:px-8">
+              <div className="border-b border-[var(--lpv-line)] py-6 md:border-b-0 md:border-r md:px-8 md:py-8">
 
-                <h3 className="lpv-display text-[1.8rem] leading-none tracking-[-0.035em]">
+                <h3 className="lpv-display text-[1.6rem] leading-none tracking-[-0.035em] md:text-[1.8rem]">
                   {wine.beverageType === "cider" ? "Les variétés de pommes" : "Les cépages"}
                 </h3>
 
-                <p className="mt-9 max-w-[260px] text-[1.05rem] leading-7 text-[var(--lpv-ink)]">
+                <p className="mt-5 max-w-[260px] text-[0.95rem] leading-6 text-[var(--lpv-ink)] md:mt-9 md:text-[1.05rem] md:leading-7">
                   {wine.beverageType === "cider"
                     ? (wine.appleVarieties?.length
                         ? wine.appleVarieties.join(" · ")
@@ -479,13 +479,13 @@ export default async function WinePage({
 
 
               {/* 04 */}
-              <div className="py-8 md:px-8">
+              <div className="py-6 md:px-8 md:py-8">
 
-                <h3 className="lpv-display text-[1.8rem] leading-none tracking-[-0.035em]">
+                <h3 className="lpv-display text-[1.6rem] leading-none tracking-[-0.035em] md:text-[1.8rem]">
                   Pour l’apprécier
                 </h3>
 
-                <div className="mt-9 max-w-[280px] space-y-4 text-[1.05rem] leading-[1.55] text-[var(--lpv-ink)]">
+                <div className="mt-5 max-w-[280px] space-y-3 text-[0.95rem] leading-[1.5] text-[var(--lpv-ink)] md:mt-9 md:space-y-4 md:text-[1.05rem] md:leading-[1.55]">
 
                   {wine.servingTemperature ? (
                     <p>

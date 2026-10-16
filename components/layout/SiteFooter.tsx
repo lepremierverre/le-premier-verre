@@ -78,7 +78,7 @@ export function SiteFooter() {
 
           <p>
             {isEnglish
-              ? "Québec · Bottles, places, stories"
+              ? "Quebec · Bottles, places, stories"
               : "Québec · Des bouteilles, des lieux, des histoires"}
           </p>
         </div>

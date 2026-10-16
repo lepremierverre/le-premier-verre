@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PartnerShareButton from "@/components/share/PartnerShareButton";
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
@@ -392,7 +393,7 @@ export default async function ProducerPage({
             <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
               <div className="lpv-container pb-16 pt-10 md:pb-20 md:pt-14">
                 <div className="flex items-end justify-between gap-8">
-                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                  <h2 className="lpv-display text-[2.85rem] leading-[0.9] tracking-[-0.05em] md:text-[clamp(3.2rem,4.5vw,5rem)]">
                     Their bottles.
                   </h2>
 
@@ -405,14 +406,14 @@ export default async function ProducerPage({
                   </Link>
                 </div>
 
-                <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+                <div className="mt-8 grid grid-cols-2 gap-2.5 md:mt-12 md:grid-cols-5 md:gap-4">
                   {selectedWines.map((wine) => (
                     <Link
                       key={wine._id}
                       href={`/en/wines/${wine.slug}`}
-                      className="group relative flex min-h-[390px] flex-col bg-[var(--lpv-paper-light)] p-5 md:min-h-[450px] md:p-6"
+                      className="group relative flex min-h-[300px] flex-col bg-[var(--lpv-paper-light)] p-3.5 md:min-h-[450px] md:p-6"
                     >
-                      <div className="flex h-[290px] w-full items-center justify-center overflow-hidden md:h-[330px]">
+                      <div className="flex h-[205px] w-full items-center justify-center overflow-hidden md:h-[330px]">
                         <BottleStage
                           image={wine.editorialImage ?? wine.bottleImage}
                           alt={wine.name ?? "Bottle"}
@@ -423,14 +424,14 @@ export default async function ProducerPage({
                         />
                       </div>
 
-                      <div className="mt-auto pt-4">
+                      <div className="mt-auto pt-3 md:pt-4">
                         <p className="text-[0.52rem] uppercase tracking-[0.17em] text-[var(--lpv-muted)]">
                           {[formatColor(wine.color), wine.vintage]
                             .filter(Boolean)
                             .join(" · ") || "Bottle"}
                         </p>
 
-                        <h3 className="lpv-display mt-3 min-h-[3.4rem] text-[clamp(1.45rem,1.6vw,1.75rem)] leading-[0.94] tracking-[-0.035em]">
+                        <h3 className="lpv-display mt-2 min-h-[2.8rem] text-[1.25rem] leading-[0.94] tracking-[-0.035em] md:mt-3 md:min-h-[3.4rem] md:text-[clamp(1.45rem,1.6vw,1.75rem)]">
                           {wine.name}
                         </h3>
                       </div>
@@ -461,7 +462,7 @@ export default async function ProducerPage({
           data={{ producerId: producer._id }}
         />
 
-        <article className="lpv-container pb-12 md:pb-16">
+        <article className="lpv-container pb-5 md:pb-16">
           <div className="pt-8 md:pt-10">
             <Link
               href="/en/producers"
@@ -472,50 +473,50 @@ export default async function ProducerPage({
             </Link>
           </div>
 
-          <section className="pb-10 pt-14 md:pb-12 md:pt-16">
-            <h1 className="lpv-display max-w-[12ch] text-[clamp(4.6rem,7vw,7.6rem)] leading-[0.84] tracking-[-0.06em]">
+          <section className="pb-6 pt-9 md:pb-12 md:pt-16">
+            <h1 className="lpv-display max-w-[11ch] text-[3.85rem] leading-[0.84] tracking-[-0.06em] md:max-w-[12ch] md:text-[clamp(4.6rem,7vw,7.6rem)]">
               {producer.name}
             </h1>
 
             {producer.municipality || producer.region?.name ? (
-              <p className="mt-3 translate-x-[6px] text-[0.95rem] leading-6 text-[var(--lpv-ink)]">
+              <p className="mt-3 text-[0.82rem] leading-5 text-[var(--lpv-muted)] md:translate-x-[6px] md:text-[0.95rem] md:leading-6 md:text-[var(--lpv-ink)]">
                 {[producer.municipality, producer.region?.name]
                   .filter(Boolean)
                   .join(", ")}
               </p>
             ) : null}
 
-            <div className="mt-12 grid border-t border-[var(--lpv-line)] md:grid-cols-[minmax(0,2.15fr)_minmax(260px,1fr)]">
-              <div className="py-8 md:px-9 md:py-10">
+            <div className="mt-8 grid border-t border-[var(--lpv-line)] md:mt-12 md:grid-cols-[minmax(0,2.15fr)_minmax(260px,1fr)]">
+              <div className="py-6 md:px-9 md:py-10">
                 <p className="text-[0.57rem] uppercase tracking-[0.21em] text-[var(--lpv-cocoa)]">
                   The estate
                 </p>
 
                 {producer.bioEn?.length ? (
-                  <div className="mt-6 max-w-[47rem] text-[1rem] leading-8 text-[var(--lpv-ink)] [&_p]:mb-4 [&_p:last-child]:mb-0">
+                  <div className="mt-4 max-w-[47rem] text-[0.94rem] leading-7 text-[var(--lpv-ink)] md:mt-6 md:text-[1rem] md:leading-8 [&_p]:mb-4 [&_p:last-child]:mb-0">
                     <PortableText value={producer.bioEn} />
                   </div>
                 ) : producer.oneLinerEn ? (
-                  <p className="mt-6 max-w-[47rem] text-[1rem] leading-8 text-[var(--lpv-ink)]">
+                  <p className="mt-4 max-w-[47rem] text-[0.94rem] leading-7 text-[var(--lpv-ink)] md:mt-6 md:text-[1rem] md:leading-8">
                     {producer.oneLinerEn}
                   </p>
                 ) : producer.bio?.length ? (
-                  <div className="mt-6 max-w-[47rem] text-[1rem] leading-8 text-[var(--lpv-ink)] [&_p]:mb-4 [&_p:last-child]:mb-0">
+                  <div className="mt-4 max-w-[47rem] text-[0.94rem] leading-7 text-[var(--lpv-ink)] md:mt-6 md:text-[1rem] md:leading-8 [&_p]:mb-4 [&_p:last-child]:mb-0">
                     <PortableText value={producer.bio} />
                   </div>
                 ) : producer.oneLiner ? (
-                  <p className="mt-6 max-w-[47rem] text-[1rem] leading-8 text-[var(--lpv-ink)]">
+                  <p className="mt-4 max-w-[47rem] text-[0.94rem] leading-7 text-[var(--lpv-ink)] md:mt-6 md:text-[1rem] md:leading-8">
                     {producer.oneLiner}
                   </p>
                 ) : null}
               </div>
 
               {varieties?.names.length ? (
-                <div className="border-t border-[var(--lpv-line)] py-8 md:border-l md:border-t-0 md:px-9 md:py-10">
+                <div className="border-t border-[var(--lpv-line)] py-6 md:border-l md:border-t-0 md:px-9 md:py-10">
                   <p className="text-[0.57rem] uppercase tracking-[0.21em] text-[var(--lpv-cocoa)]">
                     {varieties.label}
                   </p>
-                  <p className="mt-6 text-[1rem] leading-8">
+                  <p className="mt-4 text-[0.92rem] leading-7 md:mt-6 md:text-[1rem] md:leading-8">
                     {varieties.names.join(" · ")}
                   </p>
                 </div>
@@ -527,7 +528,7 @@ export default async function ProducerPage({
             <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
               <div className="lpv-container pb-16 pt-10 md:pb-20 md:pt-14">
                 <div className="flex items-end justify-between gap-8">
-                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                  <h2 className="lpv-display text-[2.85rem] leading-[0.9] tracking-[-0.05em] md:text-[clamp(3.2rem,4.5vw,5rem)]">
                     Their bottles.
                   </h2>
 
@@ -540,14 +541,14 @@ export default async function ProducerPage({
                   </Link>
                 </div>
 
-                <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+                <div className="mt-8 grid grid-cols-2 gap-2.5 md:mt-12 md:grid-cols-5 md:gap-4">
                   {selectedWines.map((wine) => (
                     <Link
                       key={wine._id}
                       href={`/en/wines/${wine.slug}`}
-                      className="group relative flex min-h-[390px] flex-col bg-[var(--lpv-paper-light)] p-5 md:min-h-[450px] md:p-6"
+                      className="group relative flex min-h-[300px] flex-col bg-[var(--lpv-paper-light)] p-3.5 md:min-h-[450px] md:p-6"
                     >
-                      <div className="flex h-[290px] w-full items-center justify-center overflow-hidden md:h-[330px]">
+                      <div className="flex h-[205px] w-full items-center justify-center overflow-hidden md:h-[330px]">
                         <BottleStage
                           image={wine.editorialImage ?? wine.bottleImage}
                           alt={wine.name ?? "Wine bottle"}
@@ -558,7 +559,7 @@ export default async function ProducerPage({
                         />
                       </div>
 
-                      <div className="mt-auto pt-4">
+                      <div className="mt-auto pt-3 md:pt-4">
                         <p className="text-[0.55rem] uppercase tracking-[0.16em] text-[var(--lpv-muted)]">
                           {wine.beverageType === "cider"
                             ? (wine.alcoholFree
@@ -580,8 +581,8 @@ export default async function ProducerPage({
           ) : null}
 
           {hasActualVisitInformation ? (
-            <section className="pb-12 pt-12 md:pb-16 md:pt-16">
-              <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+            <section className="pb-7 pt-7 md:pb-16 md:pt-16">
+              <div className="grid gap-8 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
                 <div className="md:pl-10">
                   <h2 className="lpv-display max-w-[8ch] text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
                     Visit the estate.
@@ -605,7 +606,7 @@ export default async function ProducerPage({
                     </p>
                   ) : null}
 
-                  <div className="grid max-w-2xl gap-9 md:grid-cols-1">
+                  <div className="grid max-w-2xl gap-6 md:grid-cols-1 md:gap-9">
                     {typeof producer.openToVisitors === "boolean" ? (
                       <div>
                         <p className="mb-2 text-[0.55rem] uppercase tracking-[0.2em] text-[var(--lpv-muted)]">
@@ -666,7 +667,7 @@ export default async function ProducerPage({
 
           {!hasActualVisitInformation &&
           (producer.website || producer.instagram) ? (
-            <section className="flex justify-end pb-8 pt-8 md:pb-10 md:pt-10">
+            <section className="flex justify-end pb-5 pt-5 md:pb-10 md:pt-10">
               <div className="w-full max-w-[31rem] md:text-right">
                 {producer.website ? (
                   <div>
@@ -708,9 +709,9 @@ export default async function ProducerPage({
             </section>
           ) : null}
 
-          <section className="pb-3 pt-4 md:pb-4 md:pt-5">
-            <div className="flex justify-end">
-              <p className="max-w-[31rem] text-[0.72rem] leading-5 text-[var(--lpv-muted)] md:text-right">
+          <section className="border-t border-[var(--lpv-line)] pb-2 pt-5 md:border-t-0 md:pb-4 md:pt-5">
+            <div className="flex justify-start md:justify-end">
+              <p className="max-w-[31rem] text-[0.68rem] leading-[1.55] text-[var(--lpv-muted)] md:text-right md:text-[0.72rem] md:leading-5">
                 Do you represent this producer?
                 <br />
                 For an update or collaboration,{" "}
@@ -735,8 +736,8 @@ export default async function ProducerPage({
         data={{ producerId: producer._id }}
       />
 
-      <article className="lpv-container pb-24">
-        <div className="pt-8 md:pt-10">
+      <article className="lpv-container pb-5 md:pb-24">
+        <div className="flex items-center justify-between pt-8 md:block md:pt-10">
           <Link
             href="/en/producers"
             className="inline-flex items-center gap-3 py-2.5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-50"
@@ -744,41 +745,54 @@ export default async function ProducerPage({
             <span aria-hidden="true">←</span>
             <span>Producers</span>
           </Link>
+
+          <PartnerShareButton
+            name={producer.name}
+            locale="en"
+            profileUrl={`/en/producers/${producer.slug}`}
+            kind="producer"
+          />
         </div>
 
         {/* HERO */}
-        <section className="pt-8 md:pt-10">
-          <div className="grid gap-10 md:grid-cols-[0.41fr_0.59fr] md:items-center md:gap-14">
+        <section className="pt-5 md:pt-10">
+          <div className={`grid gap-7 md:items-center md:gap-14 ${
+              producer.slug === "les-pervenches"
+                ? "md:grid-cols-[minmax(0,0.41fr)_minmax(0,0.59fr)]"
+                : "md:grid-cols-[0.41fr_0.59fr]"
+            }`}>
 
             <div className="md:flex md:min-h-[31rem] md:translate-x-8 md:flex-col md:justify-center md:pr-6">
               <h1
                 className={`lpv-display tracking-[-0.065em] ${
-                  producer.name.length > 18
-                    ? `max-w-[8ch] text-[clamp(5.5rem,7.4vw,8.2rem)] ${
-                        producer.slug === "ferme-cidricole-equinoxe"
-                          ? "leading-[0.83]"
-                          : producer.slug === "vignoble-de-la-bauge"
-                            ? "leading-[0.88]"
-                            : "leading-[0.79]"
-                      }`
-                    : "max-w-[8ch] text-[clamp(5.6rem,7.6vw,8.4rem)] leading-[0.79]"
+                  producer.slug === "les-pervenches"
+                    ? "max-w-[8ch] text-[3.9rem] leading-[0.82] md:text-[clamp(4.8rem,6.4vw,7.1rem)] md:leading-[0.79]"
+                    : producer.name.length > 18
+                      ? `max-w-[9ch] text-[4rem] md:max-w-[8ch] md:text-[clamp(5.5rem,7.4vw,8.2rem)] ${
+                          producer.slug === "ferme-cidricole-equinoxe"
+                            ? "leading-[0.83]"
+                            : producer.slug === "vignoble-de-la-bauge"
+                              ? "leading-[0.88]"
+                              : "leading-[0.79]"
+                        }`
+                      : "max-w-[9ch] text-[4.15rem] leading-[0.82] md:max-w-[8ch] md:text-[clamp(5.6rem,7.6vw,8.4rem)] md:leading-[0.79]"
                 }`}
               >
                 {producer.name}
               </h1>
 
               {producer.oneLinerEn || producer.oneLiner ? (
-                <p className="mt-9 max-w-[29ch] text-[clamp(1.05rem,1.25vw,1.25rem)] leading-[1.42] tracking-[-0.02em]">
+                <p className="mt-5 max-w-[30ch] text-[1.05rem] leading-[1.45] tracking-[-0.02em] md:mt-9 md:max-w-[29ch] md:text-[clamp(1.05rem,1.25vw,1.25rem)] md:leading-[1.42]">
                   {producer.oneLinerEn || producer.oneLiner}
                 </p>
               ) : producer.shortBioEn || producer.shortBio ? (
-                <p className="mt-9 max-w-[29ch] text-lg leading-8">
+                <p className="mt-5 max-w-[30ch] text-[1.05rem] leading-[1.45] md:mt-9 md:max-w-[29ch] md:text-lg md:leading-8">
                   {producer.shortBioEn || producer.shortBio}
                 </p>
               ) : null}
 
               {producer.municipality || producer.region?.name ? (
-                <p className="mt-8 text-[0.6rem] uppercase tracking-[0.19em] text-[var(--lpv-muted)]">
+                <p className="mt-5 text-[0.56rem] uppercase tracking-[0.19em] text-[var(--lpv-muted)] md:mt-8 md:text-[0.6rem]">
                   {producer.municipality
                     ? `${producer.municipality}, Quebec`
                     : producer.region?.name}
@@ -788,7 +802,7 @@ export default async function ProducerPage({
 
             {authorizedImageSrc ? (
               <figure>
-                <div className="aspect-[1.48/1] overflow-hidden bg-[var(--lpv-paper-light)]">
+                <div className="h-[410px] overflow-hidden bg-[var(--lpv-paper-light)] md:h-auto md:aspect-[1.48/1]">
                   <img
                     src={authorizedImageSrc}
                     alt={producer.name}
@@ -800,7 +814,7 @@ export default async function ProducerPage({
                   />
                 </div>
 
-                <figcaption className="mt-3 text-right text-[0.6rem] text-[var(--lpv-muted)]">
+                <figcaption className="mt-2 text-right text-[0.55rem] text-[var(--lpv-muted)] md:mt-3 md:text-[0.6rem]">
                   © {producer.slug === "domaine-du-ridge"
                     ? "Le Premier Verre"
                     : producer.mediaCredit || "Emmanuelle Roberge"}
@@ -813,14 +827,14 @@ export default async function ProducerPage({
 
         {/* LE DOMAINE */}
         {producer.bioEn?.length || producer.bio?.length ? (
-          <section className="pb-16 pt-8 md:pb-20 md:pt-10">
+          <section className="pb-10 pt-7 md:pb-20 md:pt-10">
             <div className={`grid gap-10 md:gap-12 ${
                 ["vignoble-pigeon-hill", "ferme-cidricole-equinoxe"].includes(producer.slug)
                   ? "md:grid-cols-[520px_minmax(0,1fr)]"
                   : "md:grid-cols-[570px_minmax(0,1fr)]"
               }`}>
 
-              <figure className={`w-full ${
+              <figure className={`hidden w-full md:block ${
                   ["vignoble-pigeon-hill", "ferme-cidricole-equinoxe"].includes(producer.slug)
                     ? "md:w-[520px]"
                     : "md:w-[570px]"
@@ -847,35 +861,60 @@ export default async function ProducerPage({
                   </figcaption>
                 </figure>
 
-              <div className="flex items-center md:pl-0">
+              <div className="flex items-center pb-8 pt-1 md:pb-0 md:pt-0 md:pl-0">
                 <div className="mx-auto max-w-[39rem]">
                   <p className="lpv-kicker text-[var(--lpv-cocoa)]">
                     The estate
                   </p>
 
-                  <div className="lpv-prose mt-8 text-[1.08rem] leading-8 md:text-[1.12rem] md:leading-9">
+                  <div className="lpv-prose mt-5 text-[1rem] leading-[1.75] md:mt-8 md:text-[1.12rem] md:leading-9">
                     <PortableText value={producer.bioEn || producer.bio || []} />
                   </div>
                 </div>
               </div>
 
             </div>
+
+              {/* MOBILE — respiration photo après le texte */}
+              <figure className="mt-2 md:hidden">
+                <div className="h-[430px] w-full overflow-hidden bg-[var(--lpv-paper-light)]">
+                  <img
+                    src={
+                      producer.secondaryImage
+                        ? urlFor(producer.secondaryImage).width(900).fit("max").url()
+                        : producer.slug === "domaine-du-ridge"
+                          ? "/images/lpv/producteurs/Fouloir%206%20copie.jpg"
+                          : "/images/lpv/producteurs/bergeville%20image2.jpg"
+                    }
+                    alt={`${producer.name} at the estate`}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <figcaption className="mt-2 text-right text-[0.55rem] text-[var(--lpv-muted)]">
+                  © {producer.secondaryImageCredit ||
+                    (producer.slug === "domaine-du-ridge"
+                      ? "Domaine du Ridge"
+                      : producer.mediaCredit || "Emmanuelle Roberge")}
+                </figcaption>
+              </figure>
+
           </section>
         ) : null}
 
         {/* TROIS CHOSES */}
         {displayedApproach.length ? (
-          <section className="pb-16 pt-8 md:pb-28 md:pt-14">
+          <section className="pb-12 pt-7 md:pb-28 md:pt-14">
 
-            <h2 className="lpv-display max-w-[15ch] text-[clamp(3.2rem,4.4vw,4.9rem)] leading-[0.9] tracking-[-0.05em]">
+            <h2 className="lpv-display max-w-[12ch] text-[2.9rem] leading-[0.88] tracking-[-0.05em] md:max-w-[15ch] md:text-[clamp(3.2rem,4.4vw,4.9rem)] md:leading-[0.9]">
               Four things to know.
             </h2>
 
-            <div className="mt-14 grid border-t border-[var(--lpv-line)] md:grid-cols-4">
+            <div className="mt-8 grid border-t border-[var(--lpv-line)] md:mt-14 md:grid-cols-4">
               {displayedApproach.slice(0, 3).map((item, index) => (
                 <article
                   key={item._key || `${item.title}-${index}`}
-                  className={`relative flex min-h-[320px] flex-col py-10 md:min-h-[355px] md:px-9 md:py-11 ${
+                  className={`relative flex flex-col py-6 md:min-h-[355px] md:px-9 md:py-11 ${
                     index > 0
                       ? "border-t border-[var(--lpv-line)] md:border-l md:border-t-0"
                       : ""
@@ -886,29 +925,29 @@ export default async function ProducerPage({
                   </p>
 
                   {item.title ? (
-                    <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[11ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                    <h3 className="lpv-display mt-4 max-w-[13ch] text-[1.8rem] leading-[0.94] tracking-[-0.04em] md:mt-8 md:min-h-[5.3rem] md:max-w-[11ch] md:text-[clamp(2rem,2.6vw,2.8rem)]">
                       {item.title}
                     </h3>
                   ) : null}
 
                   {item.text ? (
-                    <p className="max-w-sm pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[225px] md:pt-0">
+                    <p className="max-w-sm pt-4 text-[0.88rem] leading-6 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[225px] md:pt-0">
                       {item.text}
                     </p>
                   ) : null}
                 </article>
               ))}
               {producer.signatureGrapes?.length ? (
-                <article className="relative flex min-h-[320px] flex-col border-t border-[var(--lpv-line)] py-10 md:min-h-[355px] md:border-l md:border-t-0 md:px-9 md:py-11">
+                <article className="relative flex flex-col border-t border-[var(--lpv-line)] py-6 md:min-h-[355px] md:border-l md:border-t-0 md:px-9 md:py-11">
                   <p className="text-[0.58rem] tracking-[0.2em] text-[var(--lpv-muted)]">
                     04
                   </p>
 
-                  <h3 className="lpv-display mt-8 min-h-[5.3rem] max-w-[10ch] text-[clamp(2rem,2.6vw,2.8rem)] leading-[0.94] tracking-[-0.04em]">
+                  <h3 className="lpv-display mt-4 max-w-[13ch] text-[1.8rem] leading-[0.94] tracking-[-0.04em] md:mt-8 md:min-h-[5.3rem] md:max-w-[10ch] md:text-[clamp(2rem,2.6vw,2.8rem)]">
                     In the vineyard
                   </h3>
 
-                  <p className="max-w-[22ch] pt-12 text-sm leading-7 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[225px] md:pt-0">
+                  <p className="max-w-[28ch] pt-4 text-[0.88rem] leading-6 text-[var(--lpv-muted)] md:absolute md:left-9 md:right-9 md:top-[225px] md:pt-0">
                     {producer.signatureGrapes
                       .map((grape) =>
                         grape.name === "Saint-Pépin" ? "St. Pepin" : grape.name
@@ -926,21 +965,21 @@ export default async function ProducerPage({
         {/* POURQUOI BERGEVILLE */}
         {producer.whyWeFollowEn || producer.whyWeFollow ? (
           <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-cocoa)] text-[var(--lpv-paper)]">
-            <div className="lpv-container py-16 md:py-20">
+            <div className="lpv-container py-10 md:py-20">
 
-              <div className="grid gap-10 md:grid-cols-[0.38fr_0.62fr] md:items-center md:gap-16">
+              <div className="grid gap-7 md:grid-cols-[0.38fr_0.62fr] md:items-center md:gap-16">
 
                 <div>
-                  <h2 className="lpv-display mt-6 max-w-[8ch] text-[clamp(3.5rem,4.8vw,5.3rem)] leading-[0.87] tracking-[-0.055em]">
+                  <h2 className="lpv-display max-w-[9ch] text-[3rem] leading-[0.87] tracking-[-0.055em] md:mt-6 md:max-w-[8ch] md:text-[clamp(3.5rem,4.8vw,5.3rem)]">
                     Why {producer.name.replace(/^Domaine\\s+/i, "")}.
                   </h2>
 
-                  <p className="mt-6 max-w-[28ch] text-[1rem] leading-[1.5] opacity-70">
+                  <p className="mt-4 max-w-[30ch] text-[0.85rem] leading-[1.5] opacity-65 md:mt-6 md:max-w-[28ch] md:text-[1rem]">
                     A place here is earned. This is what convinced us.
                   </p>
                 </div>
 
-                <p className="max-w-[40ch] text-[clamp(1.55rem,2vw,2.15rem)] leading-[1.22] tracking-[-0.03em]">
+                <p className="max-w-[40ch] text-[1.12rem] leading-[1.4] tracking-[-0.025em] md:text-[clamp(1.55rem,2vw,2.15rem)] md:leading-[1.22] md:tracking-[-0.03em]">
                   {producer.whyWeFollowEn || producer.whyWeFollow}
                 </p>
 
@@ -953,11 +992,11 @@ export default async function ProducerPage({
         {/* 5 BOUTEILLES — SÉLECTION */}
         {selectedWines.length ? (
           <section className="relative left-1/2 w-screen -translate-x-1/2 bg-[var(--lpv-paper)] text-[var(--lpv-ink)]">
-            <div className="lpv-container pb-20 pt-12 md:pb-24 md:pt-16">
+            <div className="lpv-container pb-14 pt-10 md:pb-24 md:pt-16">
 
               <div className="flex items-end justify-between gap-8">
                 <div>
-                  <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+                  <h2 className="lpv-display text-[2.85rem] leading-[0.9] tracking-[-0.05em] md:text-[clamp(3.2rem,4.5vw,5rem)]">
                     5 wines to know.
                   </h2>
                 </div>
@@ -971,14 +1010,14 @@ export default async function ProducerPage({
                 </Link>
               </div>
 
-              <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+              <div className="mt-8 grid grid-cols-2 gap-2.5 md:mt-12 md:grid-cols-5 md:gap-4">
                 {selectedWines.map((wine, index) => (
                   <Link
                     key={wine._id}
                     href={`/en/wines/${wine.slug}`}
-                    className="group relative flex min-h-[390px] flex-col bg-[var(--lpv-paper-light)] p-5 md:min-h-[450px] md:p-6"
+                    className="group relative flex min-h-[300px] flex-col bg-[var(--lpv-paper-light)] p-3.5 md:min-h-[450px] md:p-6"
                   >
-                    <div className="flex h-[290px] w-full items-center justify-center overflow-hidden md:h-[330px]">
+                    <div className="flex h-[205px] w-full items-center justify-center overflow-hidden md:h-[330px]">
                       <BottleStage
                         image={wine.editorialImage ?? wine.bottleImage}
                         alt={wine.name ?? "Wine bottle"}
@@ -989,7 +1028,7 @@ export default async function ProducerPage({
                       />
                     </div>
 
-                    <div className="mt-auto pt-4">
+                    <div className="mt-auto pt-3 md:pt-4">
                       <p className="text-[0.52rem] uppercase tracking-[0.17em] text-[var(--lpv-muted)]">
                         {wine.beverageType === "cider"
                             ? (wine.alcoholFree
@@ -1000,7 +1039,7 @@ export default async function ProducerPage({
                                 .join(" · ") || "Wine")}
                       </p>
 
-                      <h3 className="lpv-display mt-3 min-h-[3.4rem] text-[clamp(1.45rem,1.6vw,1.75rem)] leading-[0.94] tracking-[-0.035em]">
+                      <h3 className="lpv-display mt-2 min-h-[2.8rem] text-[1.25rem] leading-[0.94] tracking-[-0.035em] md:mt-3 md:min-h-[3.4rem] md:text-[clamp(1.45rem,1.6vw,1.75rem)]">
                         {wine.name}
                       </h3>
                     </div>
@@ -1044,7 +1083,7 @@ export default async function ProducerPage({
         ) : ["les-bacchantes", "vignoble-pigeon-hill", "ferme-cidricole-equinoxe"].includes(producer.slug) ? (
           <section className="pb-12 pt-12 md:pb-20 md:pt-20">
             <div>
-              <h2 className="lpv-display text-[clamp(3.2rem,4.5vw,5rem)] leading-[0.9] tracking-[-0.05em]">
+              <h2 className="lpv-display text-[2.85rem] leading-[0.9] tracking-[-0.05em] md:text-[clamp(3.2rem,4.5vw,5rem)]">
                 5 wines to know.
               </h2>
 
@@ -1069,22 +1108,22 @@ export default async function ProducerPage({
 
         {/* VISITER */}
         {hasVisitInformation ? (
-          <section className="pb-12 pt-8 md:pb-16 md:pt-10 pt-12 md:pt-16">
-            <div className="grid gap-12 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
+          <section className="pb-5 pt-10 md:pb-16 md:pt-16">
+            <div className="grid gap-8 md:grid-cols-[0.36fr_0.64fr] md:gap-20">
 
               <div className="md:pl-10">
-<h2 className="lpv-display max-w-[9ch] text-[clamp(3.7rem,5vw,5.6rem)] leading-[0.87] tracking-[-0.055em]">
+<h2 className="lpv-display max-w-[10ch] text-[3rem] leading-[0.87] tracking-[-0.055em] md:max-w-[9ch] md:text-[clamp(3.7rem,5vw,5.6rem)]">
                   Visit {producer.slug === "domaine-du-ridge"
                       ? producer.name
                       : producer.name.replace(/^Domaine\s+/i, "")}.
                 </h2>
 
                 {producer.address ? (
-                  <p className="mt-8 max-w-[29ch] text-[1.05rem] leading-7 text-[var(--lpv-ink)]/72">
+                  <p className="mt-5 max-w-[29ch] text-[0.95rem] leading-6 text-[var(--lpv-ink)]/72 md:mt-8 md:text-[1.05rem] md:leading-7">
                     {producer.address}
                   </p>
                 ) : producer.municipality ? (
-                  <p className="mt-8 text-sm leading-6 text-[var(--lpv-muted)]">
+                  <p className="mt-5 text-sm leading-6 text-[var(--lpv-muted)] md:mt-8">
                     {producer.municipality}, Quebec
                   </p>
                 ) : null}
@@ -1093,12 +1132,12 @@ export default async function ProducerPage({
               <div className="md:pt-1">
 
                 {producer.visitDetailsEn || producer.visitDetails ? (
-                  <p className="mb-12 max-w-2xl text-[1rem] leading-8 text-[var(--lpv-muted)]">
+                  <p className="mb-7 max-w-2xl text-[0.92rem] leading-7 text-[var(--lpv-muted)] md:mb-12 md:text-[1rem] md:leading-8">
                     {producer.visitDetailsEn || producer.visitDetails}
                   </p>
                 ) : null}
 
-                <div className="grid max-w-2xl gap-9 md:grid-cols-1">
+                <div className="grid max-w-2xl gap-6 md:grid-cols-1 md:gap-9">
 
                   {typeof producer.openToVisitors === "boolean" ? (
                     <div>

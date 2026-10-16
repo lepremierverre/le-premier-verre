@@ -85,7 +85,7 @@ export default async function RegionsPage() {
               <p className="max-w-md text-[0.95rem] leading-7 text-[var(--lpv-muted)] md:text-base md:leading-8">
                 Climates, soils and ways of making wine that give each region
                 its own identity. Explore the regions followed by Le Premier
-                Verre, here in Québec and around the world.
+                Verre, here in Quebec and around the world.
               </p>
 
               <p className="lpv-kicker mt-5 text-[var(--lpv-cocoa)] md:mt-8">
