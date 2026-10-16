@@ -130,6 +130,16 @@ export default function PartnerShareButton({
     <div className="md:hidden">
       <button
         type="button"
+        onClick={() => {
+          window.location.href = "instagram-stories://share";
+        }}
+        className="mb-2 rounded-full border border-[var(--lpv-line)] px-3 py-2 text-[10px] uppercase tracking-[0.12em] text-[var(--lpv-ink)]"
+      >
+        Tester Story Instagram
+      </button>
+
+      <button
+        type="button"
         onClick={handleShare}
         disabled={sharing}
         aria-label={sharing ? sharingLabel : label}
