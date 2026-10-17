@@ -65,6 +65,7 @@ type Wine = {
   body?: number;
   sweetness?: number;
   roundness?: number;
+  acidity?: number;
 
   servingTemperature?: string;
   decant?: boolean;
@@ -139,9 +140,10 @@ export default async function WinePage({
   const hasEditorialImage = Boolean(wine.editorialImage?.asset);
 
   if (hasEditorialImage) {
-    const wineBody = Math.max(1, Math.min(5, wine.body ?? 3));
-    const wineSweetness = Math.max(1, Math.min(5, wine.sweetness ?? 3));
-    const wineRoundness = Math.max(1, Math.min(5, wine.roundness ?? 3));
+    const wineBody = wine.body == null ? null : Math.max(1, Math.min(5, wine.body));
+    const wineSweetness = wine.sweetness == null ? null : Math.max(1, Math.min(5, wine.sweetness));
+    const wineRoundness = wine.roundness == null ? null : Math.max(1, Math.min(5, wine.roundness));
+    const wineAcidity = wine.acidity == null ? null : Math.max(1, Math.min(5, wine.acidity));
 
     const DotScale = ({
       value,
@@ -410,10 +412,10 @@ export default async function WinePage({
 
                   <div>
                     <p className="text-[0.64rem] uppercase tracking-[0.18em] text-[var(--lpv-ink)]/60">
-                      Corps
+                      En bouche
                     </p>
                     <p className="mt-1.5 text-[1.08rem] leading-6 text-[var(--lpv-ink)]">
-                      {wineBody <= 2 ? "Plutôt léger" : wineBody >= 4 ? "Plutôt puissant" : "Équilibré"}
+                      {wineBody == null ? "—" : wineBody <= 2 ? "Léger" : wineBody >= 4 ? "Riche" : "Équilibré"}
                     </p>
                   </div>
 
@@ -422,16 +424,16 @@ export default async function WinePage({
                       Sucre
                     </p>
                     <p className="mt-1.5 text-[1.08rem] leading-6 text-[var(--lpv-ink)]">
-                      {wineSweetness <= 2 ? "Sec" : wineSweetness >= 4 ? "Plutôt doux" : "Entre sec et doux"}
+                      {wineSweetness == null ? "—" : wineSweetness <= 2 ? "Très peu" : wineSweetness >= 4 ? "Élevé" : "Modéré"}
                     </p>
                   </div>
 
                   <div>
                     <p className="text-[0.64rem] uppercase tracking-[0.18em] text-[var(--lpv-ink)]/60">
-                      Texture
+                      Fraîcheur
                     </p>
                     <p className="mt-1.5 text-[1.08rem] leading-6 text-[var(--lpv-ink)]">
-                      {wineRoundness <= 2 ? "Vif" : wineRoundness >= 4 ? "Rond" : "Entre vif et rond"}
+                      {wineAcidity == null ? "—" : wineAcidity <= 2 ? "Douce" : wineAcidity >= 4 ? "Élevée" : "Modérée"}
                     </p>
                   </div>
 
