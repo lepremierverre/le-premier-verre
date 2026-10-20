@@ -37,6 +37,19 @@ export async function GET() {
       ORDER BY table_name
     `;
 
+    const counts = await prisma.$queryRaw<
+      Array<{
+        users: bigint;
+        cellar_bottles: bigint;
+        shop_products: bigint;
+      }>
+    >`
+      SELECT
+        (SELECT COUNT(*) FROM "User") AS users,
+        (SELECT COUNT(*) FROM "CellarBottle") AS cellar_bottles,
+        (SELECT COUNT(*) FROM "ShopProduct") AS shop_products
+    `;
+
     return NextResponse.json({
       database: identity[0]?.database ?? null,
       schema: identity[0]?.schema ?? null,
@@ -45,6 +58,11 @@ export async function GET() {
       hasAnalyticsEvent: tables.some(
         (row) => row.table_name === "AnalyticsEvent"
       ),
+      counts: {
+        users: Number(counts[0]?.users ?? 0),
+        cellarBottles: Number(counts[0]?.cellar_bottles ?? 0),
+        shopProducts: Number(counts[0]?.shop_products ?? 0),
+      },
     });
   } catch (error) {
     console.error("DB diagnostic error:", error);
