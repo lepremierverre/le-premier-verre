@@ -2,7 +2,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { SanityImageSource } from "@sanity/image-url";
 
+import { auth } from "@clerk/nextjs/server";
+
 import { client } from "@/sanity/lib/client";
+import { getUserTasteDna } from "@/lib/user-taste-dna";
+import {
+  scoreTasteCompatibility,
+  type RecommendationWine as TasteRecommendationWine,
+} from "@/lib/recommendation-engine";
 import BottleStage from "@/components/wine/BottleStage";
 import FavoriteButton from "@/components/favorites/FavoriteButton";
 import { VIBE_PROFILES } from "@/lib/vibes/profiles";
@@ -229,7 +236,49 @@ export default async function AccordPage({
 
   const pool = buildVibeCandidatePool(wines, vibe);
 
-  const recommendations = pool.eligible
+  const { userId } = await auth();
+  const tasteDna = userId
+    ? await getUserTasteDna(userId)
+    : null;
+
+  const rankedCandidates = tasteDna
+    ? pool.eligible
+        .map((candidate, originalIndex) => {
+          const taste = scoreTasteCompatibility(
+            candidate.wine as TasteRecommendationWine,
+            tasteDna
+          );
+
+          return {
+            candidate,
+            originalIndex,
+            tasteScore: taste.score,
+          };
+        })
+        .sort((a, b) => {
+          const confidence = tasteDna.overallConfidence;
+
+          if (confidence <= 0) {
+            return a.originalIndex - b.originalIndex;
+          }
+
+          const strength =
+            0.35 * Math.pow(confidence, 0.85);
+
+          const scoreA =
+            a.candidate.adjustedScore * (1 - strength) +
+            a.tasteScore * strength;
+
+          const scoreB =
+            b.candidate.adjustedScore * (1 - strength) +
+            b.tasteScore * strength;
+
+          return scoreB - scoreA;
+        })
+        .map((item) => item.candidate)
+    : pool.eligible;
+
+  const recommendations = rankedCandidates
     .slice(0, 4)
     .map((candidate) => ({
       ...candidate.wine,

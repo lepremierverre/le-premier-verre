@@ -1,5 +1,7 @@
+import { auth } from "@clerk/nextjs/server";
 import { client } from "@/sanity/lib/client";
 import { buildTasteDna } from "@/lib/taste-dna";
+import { getUserTasteDna } from "@/lib/user-taste-dna";
 import {
   buildRecommendationPool,
   type FinalRecommendationCandidate,
@@ -193,16 +195,20 @@ export async function getPairingRecommendations(
       : wine.alcoholFree !== true
   );
 
-  const anonymousTaste = buildTasteDna({
-    preferences: {},
-    favorites: [],
-    journal: [],
-  });
+  const { userId } = await auth();
+
+  const tasteDna = userId
+    ? await getUserTasteDna(userId)
+    : buildTasteDna({
+        preferences: {},
+        favorites: [],
+        journal: [],
+      });
 
   const recommendationPool = buildRecommendationPool(
     eligibleWines,
     food,
-    anonymousTaste
+    tasteDna
   );
 
   return {
