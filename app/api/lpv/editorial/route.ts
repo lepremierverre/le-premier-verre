@@ -4,12 +4,8 @@ import { client } from "@/sanity/lib/client";
 const editorialQuery = `{
   "articles": *[
     _type == "article" &&
-    !(_id in path("drafts.**")) &&
-    !(slug.current in [
-      "recevoir-sans-se-compliquer-la-vie",
-      "une-journee-cantons-de-l-est",
-      "comment-choisir-une-bouteille-quand-on-ne-connait-rien-au-vin"
-    ])
+    published == true &&
+    !(_id in path("drafts.**"))
   ] | order(publishedAt desc, _createdAt desc) {
     _id,
     title,
