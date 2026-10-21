@@ -605,6 +605,10 @@ export async function getArticle(slug: string) {
   return client.fetch(articleBySlugQuery, { slug });
 }
 
+export async function getGuide(slug: string) {
+  return client.fetch(guideBySlugQuery, { slug });
+}
+
 export async function getRelatedArticles(category?: string, currentId?: string) {
   if (!category || !currentId) {
     return client.fetch(
