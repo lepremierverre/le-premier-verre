@@ -41,7 +41,12 @@ const editorialMapQuery = `{
 
   "articles": *[
     _type == "article" &&
-    published == true
+    !(_id in path("drafts.**")) &&
+    !(slug.current in [
+      "recevoir-sans-se-compliquer-la-vie",
+      "une-journee-cantons-de-l-est",
+      "comment-choisir-une-bouteille-quand-on-ne-connait-rien-au-vin"
+    ])
   ] | order(publishedAt desc, _createdAt desc)[0...3] {
     _id,
     title,
