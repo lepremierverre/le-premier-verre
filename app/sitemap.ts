@@ -20,10 +20,8 @@ const staticPages: StaticPair[] = [
   { fr: "", en: "/en", changeFrequency: "weekly", priority: 1 },
   { fr: "/ce-soir", en: "/en/tonight", changeFrequency: "weekly", priority: 0.9 },
   { fr: "/vins", en: "/en/wines", changeFrequency: "daily", priority: 0.9 },
-  { fr: "/accords", en: "/en/pairings", changeFrequency: "weekly", priority: 0.9 },
   { fr: "/producteurs", en: "/en/producers", changeFrequency: "weekly", priority: 0.8 },
   { fr: "/regions", en: "/en/regions", changeFrequency: "weekly", priority: 0.8 },
-  { fr: "/cepages", en: "/en/grapes", changeFrequency: "monthly", priority: 0.8 },
   { fr: "/bonnes-adresses", en: "/en/places", changeFrequency: "weekly", priority: 0.8 },
   { fr: "/guides", en: "/en/guides", changeFrequency: "weekly", priority: 0.8 },
   { fr: "/blog", en: "/en/journal", changeFrequency: "weekly", priority: 0.8 },
@@ -207,10 +205,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticEntries(),
     ...dynamicEntries(wines, "vins", "wines", 0.8, "weekly"),
-    ...dynamicEntries(foods, "accords", "pairings", 0.8, "weekly"),
     ...dynamicEntries(producers, "producteurs", "producers", 0.7, "monthly"),
     ...dynamicEntries(regions, "regions", "regions", 0.7, "monthly"),
-    ...dynamicEntries(grapes, "cepages", "grapes", 0.7, "monthly"),
     ...dynamicEntries(articles, "blog", "journal", 0.8, "monthly"),
     ...dynamicEntries(guides, "guides", "guides", 0.8, "monthly"),
   ];
