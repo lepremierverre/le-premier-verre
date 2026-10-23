@@ -30,6 +30,15 @@ export const metadata: Metadata = {
   description:
     "Une plateforme québécoise pour découvrir des vins, des producteurs, des bonnes adresses et des guides avec simplicité.",
 
+  alternates: {
+    canonical: "/",
+    languages: {
+      "fr-CA": "/",
+      "en-CA": "/en",
+      "x-default": "/",
+    },
+  },
+
   verification: {
     google: "Sa-BZlUqEkzGY_W2pKwmF_q0Bf_sj8OfGxoJ0_2DN08",
     other: {
