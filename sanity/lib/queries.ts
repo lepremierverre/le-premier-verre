@@ -347,6 +347,7 @@ export const producerBySlugQuery = `*[_type == "producer" && slug.current == $sl
   openToVisitors,
   visitDetails,
   visitDetailsEn,
+  visitUrl,
   address,
   reservationRequired,
   website,

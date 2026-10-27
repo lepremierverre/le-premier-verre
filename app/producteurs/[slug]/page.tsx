@@ -75,6 +75,7 @@ type Producer = {
 
   openToVisitors?: boolean;
   visitDetails?: string;
+  visitUrl?: string;
   address?: string;
   reservationRequired?: boolean;
   website?: string;
@@ -176,6 +177,7 @@ export default async function ProducerPage({
     producer.openToVisitors !== undefined ||
     Boolean(producer.address) ||
     Boolean(producer.visitDetails) ||
+    Boolean(producer.visitUrl) ||
     Boolean(producer.website) ||
     Boolean(producer.instagram);
 
@@ -603,9 +605,23 @@ export default async function ProducerPage({
 
                 <div className="md:pt-1">
                   {producer.visitDetails ? (
-                    <p className="mb-7 max-w-2xl text-[0.92rem] leading-7 text-[var(--lpv-muted)] md:mb-12 md:text-[1rem] md:leading-8">
-                      {producer.visitDetails}
-                    </p>
+                    <div className="mb-7 max-w-2xl md:mb-12">
+                      <p className="text-[0.92rem] leading-7 text-[var(--lpv-muted)] md:text-[1rem] md:leading-8">
+                        {producer.visitDetails}
+                      </p>
+
+                      {producer.visitUrl ? (
+                        <a
+                          href={producer.visitUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-4 inline-flex items-center gap-3 text-[0.6rem] uppercase tracking-[0.17em] underline decoration-[0.05em] underline-offset-[5px] transition-opacity hover:opacity-55"
+                        >
+                          <span>Informations et réservations</span>
+                          <span aria-hidden="true">→</span>
+                        </a>
+                      ) : null}
+                    </div>
                   ) : null}
 
                   <div className="grid max-w-2xl gap-6 md:grid-cols-1 md:gap-9">
@@ -1067,6 +1083,17 @@ export default async function ProducerPage({
                   </div>
                 ) : null}
 
+                {producer.slug === "vin-nordiq" && selectedWines.length === 3 ? (
+                  <div className="col-span-2 flex min-h-[190px] items-center justify-center px-6 text-center md:min-h-[450px] md:px-12">
+                    <div className="max-w-[22rem]">
+                      <p className="lpv-display text-[clamp(1.8rem,2.2vw,2.45rem)] leading-[0.95] tracking-[-0.04em]">
+                        Les prochaines<br />
+                        arrivent bientôt ;)
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
+
                 {producer.slug === "pinard-et-filles" && selectedWines.length < 5 ? (
                   <div className="col-span-2 flex min-h-[190px] items-center px-2 md:min-h-[450px] md:px-12">
                     <div className="max-w-[22rem]">
@@ -1145,9 +1172,23 @@ export default async function ProducerPage({
               <div className="md:pt-1">
 
                 {producer.visitDetails ? (
-                  <p className="mb-7 max-w-2xl text-[0.92rem] leading-7 text-[var(--lpv-muted)] md:mb-12 md:text-[1rem] md:leading-8">
-                    {producer.visitDetails}
-                  </p>
+                  <div className="mb-7 max-w-2xl md:mb-12">
+                    <p className="text-[0.92rem] leading-7 text-[var(--lpv-muted)] md:text-[1rem] md:leading-8">
+                      {producer.visitDetails}
+                    </p>
+
+                    {producer.visitUrl ? (
+                      <a
+                        href={producer.visitUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-4 inline-flex items-center gap-3 text-[0.6rem] uppercase tracking-[0.17em] underline decoration-[0.05em] underline-offset-[5px] transition-opacity hover:opacity-55"
+                      >
+                        <span>Informations et réservations</span>
+                        <span aria-hidden="true">→</span>
+                      </a>
+                    ) : null}
+                  </div>
                 ) : null}
 
                 <div className="grid max-w-2xl gap-6 md:grid-cols-1 md:gap-9">
